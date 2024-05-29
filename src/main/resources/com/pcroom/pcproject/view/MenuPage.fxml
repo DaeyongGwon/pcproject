@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="TOP_CENTER" style="-fx-background-color: #292930;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.MenuPageController">
+    <children>
+        <Label alignment="TOP_CENTER" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10px;" text="[1주년 이벤트] 1시간만 접속해도 아이스티 증정! 카운터에서 받아가세요." textFill="#fff282" />
+        <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="593.0" spacing="10" style="-fx-background-color: #292930;">
+         <GridPane prefHeight="30.0" prefWidth="516.0">
+            <columnConstraints>
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                  <Button contentDisplay="CENTER" style="-fx-background-color: white; -fx-border-color: transparent;" text="전체" />
+                  <Button text="인기상품" GridPane.columnIndex="1" />
+                  <Button text="추천상품" GridPane.columnIndex="2" />
+                  <Button text="세트상품" GridPane.columnIndex="3" />
+                  <Button text="신규상품" GridPane.columnIndex="4" />
+                  <Button text="할인상품" GridPane.columnIndex="5" />
+                  <Button text="추가메뉴" GridPane.columnIndex="6" />
+                  <Button text="과자" GridPane.columnIndex="7" />
+                  <Button text="탄산음료" GridPane.columnIndex="8" />
+            </children>
+         </GridPane>
+        </HBox>
+        <ScrollPane fx:id="scrollPane" fitToWidth="true" maxHeight="500.0" style="-fx-background-color: #292930;" vbarPolicy="ALWAYS">
+            <content>
+                <FlowPane fx:id="menuItemsPane" alignment="TOP_CENTER" hgap="10" style="-fx-background-color: #292930;" vgap="10">
+                </FlowPane>
+            </content>
+        </ScrollPane>
+    </children>
+</VBox>
