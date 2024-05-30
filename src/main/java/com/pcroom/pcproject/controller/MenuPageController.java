@@ -47,16 +47,32 @@ public class MenuPageController {
     public void initialize() {
         scrollPane.setFitToHeight(true);
         // 예제 메뉴 아이템 추가
-        for (int i = 0; i < 5; i++) {
-            addMenuItem("미트볼 치즈 스파게티", "존맛탱", "8400", "10000", new String[]{"할인상품"}, "/images/4.jpeg");
-            addMenuItem("네넴띤", "존맛탱", "3000", "4000", new String[]{"인기상품"}, "/images/5.png");
-            addMenuItem("이썩는 아이스크림", "존맛탱", "1500", "2000", new String[]{"아이스크림"}, "/images/6.png");
-            addMenuItem("5쥥어", "마치 널 닮음", "5000", "1억", new String[]{"과자"}, "/images/7.jpeg");
-            addMenuItem("메뉴 " + (i + 1), "설명", "가격", "", new String[]{"라벨1", "라벨2", "라벨3"}, "/images/no_image.jpeg");
-            addMenuItem("메뉴 " + (i + 1), "설명", "가격", "", new String[]{"라벨1", "라벨2"}, "/images/meat.jpeg");
-            addMenuItem("메뉴 " + (i + 1), "설명", "가격", "", new String[]{"라벨1"}, "/images/2.jpeg");
-            addMenuItem("메뉴 " + (i + 1), "설명", "가격", "", new String[]{"라벨1", "라벨2", "라벨3", "라벨4"}, "/images/3.jpeg");
-        }
+        addMenuItem("붉닭 볶음면", "죤내죤내매움", "1500", "2000", new String[]{"추가메뉴", "할인상품", "인기상품"}, "/images/8.jpeg");
+        addMenuItem("소불고기 덥밥", "존맛 그자체", "5000", "7000", new String[]{"추가메뉴", "추천상품", "인기상품"}, "/images/9.jpeg");
+        addMenuItem("미트볼 치즈 스파게티", "존맛탱", "8400", "10000", new String[]{"할인상품"}, "/images/4.jpeg");
+        addMenuItem("네넴띤", "맛있다", "3000", "4000", new String[]{"인기상품"}, "/images/5.png");
+        addMenuItem("이썩는 아이스크림", "달다", "1500", "2000", new String[]{"아이스크림"}, "/images/6.png");
+        addMenuItem("오징어", "너 닮음", "5000", "1억", new String[]{"과자"}, "/images/7.jpeg");
+        addMenuItem("피자", "존맛탱", "15000", "20000", new String[]{"인기상품", "추천상품"}, "/images/3.jpeg");
+        addMenuItem("붉닭 볶음면", "죤내죤내매움", "1500", "2000", new String[]{"추가메뉴", "할인상품", "인기상품"}, "/images/8.jpeg");
+        addMenuItem("소불고기 덥밥", "존맛 그자체", "5000", "7000", new String[]{"추가메뉴", "추천상품", "인기상품"}, "/images/9.jpeg");
+        addMenuItem("와플", "와플와플와플", "2000", "2500", new String[]{"과자", "추가메뉴"}, "/images/1.jpeg");
+        addMenuItem("미트볼 치즈 스파게티", "존맛탱", "8400", "10000", new String[]{"할인상품"}, "/images/4.jpeg");
+        addMenuItem("네넴띤", "맛있다", "3000", "4000", new String[]{"인기상품"}, "/images/5.png");
+        addMenuItem("이썩는 아이스크림", "달다", "1500", "2000", new String[]{"아이스크림"}, "/images/6.png");
+        addMenuItem("오징어", "너 닮음", "5000", "1억", new String[]{"과자"}, "/images/7.jpeg");
+        addMenuItem("피자", "존맛탱", "15000", "20000", new String[]{"인기상품", "추천상품"}, "/images/3.jpeg");
+        addMenuItem("소불고기 덥밥", "존맛 그자체", "5000", "7000", new String[]{"추가메뉴", "추천상품", "인기상품"}, "/images/9.jpeg");
+        addMenuItem("붉닭 볶음면", "죤내죤내매움", "1500", "2000", new String[]{"추가메뉴", "할인상품", "인기상품"}, "/images/8.jpeg");
+        addMenuItem("와플", "와플와플와플", "2000", "2500", new String[]{"과자", "추가메뉴"}, "/images/1.jpeg");
+        addMenuItem("미트볼 치즈 스파게티", "존맛탱", "8400", "10000", new String[]{"할인상품"}, "/images/4.jpeg");
+        addMenuItem("네넴띤", "맛있다", "3000", "4000", new String[]{"인기상품"}, "/images/5.png");
+        addMenuItem("이썩는 아이스크림", "달다", "1500", "2000", new String[]{"아이스크림"}, "/images/6.png");
+        addMenuItem("오징어", "너 닮음", "5000", "1억", new String[]{"과자"}, "/images/7.jpeg");
+        addMenuItem("소불고기 덥밥", "존맛 그자체", "5000", "7000", new String[]{"추가메뉴", "추천상품", "인기상품"}, "/images/9.jpeg");
+        addMenuItem("붉닭 볶음면", "죤내죤내매움", "1500", "2000", new String[]{"추가메뉴", "할인상품", "인기상품"}, "/images/8.jpeg");
+        addMenuItem("와플", "와플와플와플", "2000", "2500", new String[]{"과자", "추가메뉴"}, "/images/1.jpeg");
+        addMenuItem("피자", "존맛탱", "15000", "20000", new String[]{"인기상품", "추천상품"}, "/images/3.jpeg");
         menuItemsPane.getChildren().forEach(node -> allItems.add(node));
 
         scrollPane.setFitToWidth(true);
@@ -80,8 +96,13 @@ public class MenuPageController {
                     VBox infoBox = (VBox) itemBox.getCenter();
                     List<Label> labels = new ArrayList<>();
                     infoBox.getChildren().forEach(child -> {
-                        if (child instanceof Label) {
-                            labels.add((Label) child);
+                        if (child instanceof HBox) {
+                            HBox hbox = (HBox) child;
+                            hbox.getChildren().forEach(grandChild -> {
+                                if (grandChild instanceof Label) {
+                                    labels.add((Label) grandChild);
+                                }
+                            });
                         }
                     });
 
@@ -104,7 +125,6 @@ public class MenuPageController {
             menuItemsPane.getChildren().addAll(filteredItems);
         }
     }
-
 
     private void addMenuItem(String title, String description, String price, String oldPrice, String[] labels, String imagePath) {
         BorderPane itemBox = new BorderPane();
@@ -134,77 +154,73 @@ public class MenuPageController {
 
                 VBox infoBox = new VBox(5); // Create a new VBox for the item information
                 infoBox.setAlignment(Pos.TOP_LEFT); // VBox를 왼쪽 정렬로 설정
-                infoBox.setStyle("-fx-padding: 10;"); // Padding 추가
+                infoBox.setStyle("-fx-padding: 6;"); // Padding 추가
 
+
+                // 라벨을 수평으로 나열하도록 수정
+                HBox labelContainer = new HBox();
+                labelContainer.setAlignment(Pos.CENTER_LEFT); // 라벨을 왼쪽 정렬로 설정
+                labelContainer.setSpacing(4); // 라벨 사이의 간격 조정
+
+                // 라벨 추가
+                for (String label : labels) {
+                    Label lblLabel = new Label(label);
+                    lblLabel.setStyle("-fx-padding: 2px; -fx-alignment: center;");
+
+                    // 각 라벨에 대해 다른 색상 설정
+                    if (label.equals("인기상품")) {
+                        lblLabel.setStyle("-fx-font-size: 10px; -fx-background-color: yellow; -fx-padding: 2px; -fx-text-fill: black; -fx-alignment: center;");
+                    } else if (label.equals("추천상품")) {
+                        lblLabel.setStyle("-fx-font-size: 10px; -fx-background-color: green; -fx-padding: 2px; -fx-text-fill: white; -fx-alignment: center;");
+                    } else if (label.equals("세트상품")) {
+                        lblLabel.setStyle("-fx-font-size: 10px; -fx-background-color: red; -fx-padding: 2px; -fx-text-fill: white; -fx-alignment: center;");
+                    } else if (label.equals("할인상품")) {
+                        lblLabel.setStyle("-fx-font-size: 10px; -fx-background-color: orange; -fx-padding: 2px; -fx-text-fill: black; -fx-alignment: center;");
+                    } else if (label.equals("추가메뉴")) {
+                        lblLabel.setStyle("-fx-font-size: 10px; -fx-background-color: gray; -fx-padding: 2px; -fx-text-fill: black; -fx-alignment: center;");
+                    } else {
+                        lblLabel.setStyle("-fx-font-size: 10px; -fx-background-color: purple; -fx-padding: 2px; -fx-text-fill: white; -fx-alignment: center;");
+                    }
+
+                    labelContainer.getChildren().add(lblLabel); // 라벨을 컨테이너에 추가
+                }
+
+                infoBox.getChildren().add(labelContainer); // 라벨 컨테이너를 infoBox에 추가
+
+                // 상품명 타이틀 텍스트
                 Label lblTitle = new Label(title);
-                lblTitle.setStyle("-fx-font-weight: bold; -fx-alignment: center-left;"); // Label을 왼쪽 정렬로 설정
+                lblTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-alignment: center-left;"); // Label을 왼쪽 정렬로 설정
                 infoBox.getChildren().add(lblTitle);
-
+                // 상품 설명
                 if (!description.isEmpty()) {
                     Label lblDescription = new Label(description);
                     lblDescription.setStyle("-fx-description: center-left;"); // Label을 왼쪽 정렬로 설정
                     infoBox.getChildren().add(lblDescription);
                 }
 
+                // 상품 가격 텍스트
                 if (!oldPrice.isEmpty()) {
                     HBox priceBox = new HBox(5); // Create an HBox for the prices with spacing
                     priceBox.setAlignment(Pos.CENTER_LEFT); // HBox를 왼쪽 정렬로 설정
-
+                    // 상품 가격
                     Label lblPrice = new Label(price);
-                    lblPrice.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: red;"); // 현재 가격을 빨간색으로 설정
+                    lblPrice.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: red;"); // 현재 가격을 빨간색으로 설정
                     priceBox.getChildren().add(lblPrice);
-
+                    // 상품 옛 가격
                     Text txtOldPrice = new Text(oldPrice);
-                    txtOldPrice.setStyle("-fx-font-size: 15px; -fx-fill: gray;"); // 이전 가격을 회색으로 설정
+                    txtOldPrice.setStyle("-fx-font-size: 14px; -fx-fill: gray;"); // 이전 가격을 회색으로 설정
                     txtOldPrice.setStrikethrough(true); // 가로 줄 추가
                     priceBox.getChildren().add(txtOldPrice);
 
                     infoBox.getChildren().add(priceBox); // 가격 HBox를 infoBox에 추가
                 } else {
                     Label lblPrice = new Label(price);
-                    lblPrice.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-alignment: center-left;");
+                    lblPrice.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-alignment: center-left;");
                     infoBox.getChildren().add(lblPrice);
                 }
-
-                for (String label : labels) {
-                    Label lblLabel = new Label(label);// 폰트 설정
-                    lblLabel.setStyle("-fx-padding: 2px; -fx-alignment: center;");
-
-                    // 각 라벨에 대해 다른 색상 설정
-                    if (label.equals("인기상품")) {
-                        //배경 노란색 글자색은 검정색으로
-                        lblLabel.setStyle("-fx-background-color: yellow; -fx-padding: 2px; -fx-alignment: center;");
-                        lblLabel.setTextFill(Color.BLACK);
-                    } else if (label.equals("추천상품")) {
-                        //배경 초록색 글자색은 흰색으로
-                        lblLabel.setStyle("-fx-background-color: green; -fx-padding: 2px; -fx-alignment: center;");
-                        lblLabel.setTextFill(Color.WHITE);
-                    } else if (label.equals("세트상품")) {
-                        //배경 빨간색 글자색은 흰색으로
-                        lblLabel.setStyle("-fx-background-color: red; -fx-padding: 2px; -fx-alignment: center;");
-                        lblLabel.setTextFill(Color.WHITE);
-                    } else if (label.equals("할인상품")) {
-                        //배경을 오렌지로하고 글자색은 잘보이는것으로
-                        lblLabel.setStyle("-fx-background-color: orange; -fx-padding: 2px; -fx-alignment: center;");
-                        lblLabel.setTextFill(Color.BLACK);
-                    } else if (label.equals("추가메뉴")) {
-                        //배경을 보라색으로하고 글자색은 검정색으로
-                        lblLabel.setStyle("-fx-background-color: purple; -fx-padding: 2px; -fx-alignment: center;");
-                        lblLabel.setTextFill(Color.BLACK);
-                    } else {
-                        //배경을 회색으로하고 글자색은 검정색으로
-                        lblLabel.setStyle("-fx-background-color: light gray; -fx-padding: 2px; -fx-alignment: center;");
-                        lblLabel.setTextFill(Color.BLACK);
-                    }
-
-                    // 라벨을 HBox에 추가하여 가로로 정렬
-                    HBox.setMargin(lblLabel, new Insets(0, 5, 0, 0)); // 라벨 간의 간격 조정
-                    infoBox.getChildren().add(lblLabel);
-                }
-
-
                 itemBox.setTop(imageContainer); // 이미지 컨테이너를 상단에 배치
                 itemBox.setCenter(infoBox); // 정보를 중앙에 배치
+
             } else {
                 System.err.println("이미지를 로드하는데 실패했습니다. 이미지 경로: " + imagePath);
             }
@@ -213,10 +229,9 @@ public class MenuPageController {
             e.printStackTrace();
         }
 
-        // 아이템 박스 간의 간격을 1.5배로 늘림
+        // 아이템 박스 간의 간격 설정
         menuItemsPane.setHgap(20); // 수평 간격 설정
         menuItemsPane.setVgap(20); // 수직 간격 설정
         menuItemsPane.getChildren().add(itemBox);
     }
 }
-

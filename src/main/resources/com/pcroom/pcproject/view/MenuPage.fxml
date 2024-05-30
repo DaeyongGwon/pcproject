@@ -33,37 +33,37 @@
                             <content>
                                 <HBox fx:id="categoryBox" alignment="CENTER" minHeight="75.0" prefHeight="75.0" prefWidth="667.0" spacing="5" style="-fx-background-color: #f4f4f4;">
                                     <!-- 카테고리 버튼들 -->
-                                    <Button styleClass="button" text="전체" onAction="#filterByCategory" HBox.hgrow="ALWAYS">
+                                    <Button onAction="#filterByCategory" styleClass="button" text="전체" HBox.hgrow="ALWAYS">
                                         <font>
                                             <Font name="D2Coding Bold" size="16.0" />
                                         </font>
                                     </Button>
-                                    <Button styleClass="button" text="인기상품" onAction="#filterByCategory" HBox.hgrow="ALWAYS">
+                                    <Button onAction="#filterByCategory" styleClass="button" text="인기상품" HBox.hgrow="ALWAYS">
                                         <font>
                                             <Font name="D2Coding Bold" size="16.0" />
                                         </font>
                                     </Button>
-                                    <Button styleClass="button" text="추천상품" onAction="#filterByCategory" HBox.hgrow="ALWAYS">
+                                    <Button onAction="#filterByCategory" styleClass="button" text="추천상품" HBox.hgrow="ALWAYS">
                                         <font>
                                             <Font name="D2Coding Bold" size="16.0" />
                                         </font>
                                     </Button>
-                                    <Button styleClass="button" text="세트상품" onAction="#filterByCategory" HBox.hgrow="ALWAYS">
+                                    <Button onAction="#filterByCategory" styleClass="button" text="세트상품" HBox.hgrow="ALWAYS">
                                         <font>
                                             <Font name="D2Coding Bold" size="16.0" />
                                         </font>
                                     </Button>
-                                    <Button styleClass="button" text="신규상품" onAction="#filterByCategory" HBox.hgrow="ALWAYS">
+                                    <Button onAction="#filterByCategory" styleClass="button" text="신규상품" HBox.hgrow="ALWAYS">
                                         <font>
                                             <Font name="D2Coding Bold" size="16.0" />
                                         </font>
                                     </Button>
-                                    <Button styleClass="button" text="할인상품" onAction="#filterByCategory" HBox.hgrow="ALWAYS">
+                                    <Button onAction="#filterByCategory" styleClass="button" text="할인상품" HBox.hgrow="ALWAYS">
                                         <font>
                                             <Font name="D2Coding Bold" size="16.0" />
                                         </font>
                                     </Button>
-                                    <Button styleClass="button" text="추가메뉴" onAction="#filterByCategory" HBox.hgrow="ALWAYS">
+                                    <Button onAction="#filterByCategory" styleClass="button" text="추가메뉴" HBox.hgrow="ALWAYS">
                                         <font>
                                             <Font name="D2Coding Bold" size="16.0" />
                                         </font>
@@ -88,10 +88,11 @@
         </HBox>
         <ScrollPane fx:id="scrollPane" fitToWidth="true" style="-fx-background-color: #292930;" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
             <content>
-                <FlowPane fx:id="menuItemsPane" alignment="BOTTOM_CENTER" hgap="10" rowValignment="BOTTOM" style="-fx-background-color: #292930;" vgap="10">
+                <FlowPane fx:id="menuItemsPane" alignment="TOP_CENTER" hgap="10" rowValignment="TOP" style="-fx-background-color: #292930;" vgap="10">
                     <!-- 메뉴 아이템들 -->
                 </FlowPane>
             </content>
         </ScrollPane>
     </children>
 </VBox>
+
