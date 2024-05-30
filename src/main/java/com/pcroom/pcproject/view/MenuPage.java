@@ -14,7 +14,7 @@ public class MenuPage extends Application {
     public void start(Stage primaryStage) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainPage.class.getResource("MenuPage.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+            Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
             primaryStage.setTitle("메뉴 페이지");
             primaryStage.setScene(scene);
             primaryStage.show();
