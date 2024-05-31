@@ -8,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -131,7 +130,7 @@ public class MenuPageController {
         BorderPane itemBox = new BorderPane();
         itemBox.setPrefSize(180, 260); // Set the preferred size of the item box
         // 박스 내부 항목들 왼쪽 정렬
-        itemBox.setStyle("-fx-font-family: 'D2Coding'; -fx-background-color: white; -fx-background-radius: 10px; -fx-alignment: center-left;");
+        itemBox.setStyle("-fx-font-family: 'D2Coding'; -fx-background-color: white; -fx-background-radius: 10px; -fx-alignment: center-left; -fx-opacity: 1; -fx-transition: opacity 0.3s;");
 
         try (InputStream imageStream = getClass().getResourceAsStream(imagePath)) {
             if (imageStream != null) {
@@ -223,7 +222,8 @@ public class MenuPageController {
                 // "담기" 버튼 생성
                 Button addButton = new Button("담기");
                 addButton.setStyle("-fx-font-family: 'D2Coding'; -fx-padding: 8px 5px; -fx-background-color: #fbe54d; -fx-text-fill: black; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 7px; -fx-alignment: center;");
-                //높이 딲맞게
+
+                //넓이 딲맞게
                 addButton.setPrefHeight(30);
                 addButton.setMaxWidth(Double.MAX_VALUE);
                 HBox.setHgrow(addButton, Priority.ALWAYS);
@@ -232,15 +232,21 @@ public class MenuPageController {
 
                 // 버튼을 담을 HBox 생성
                 HBox buttonContainer = new HBox();
-                buttonContainer.setAlignment(Pos.BOTTOM_CENTER); // 버튼을 왼쪽 정렬로 설정
+                buttonContainer.setAlignment(Pos.TOP_CENTER); // 버튼을 왼쪽 정렬로 설정
                 // 패딩 탑 10
-                buttonContainer.setStyle("-fx-padding: 5px 0px 0px 0px;");
+                buttonContainer.setStyle("-fx-padding: 0px 6px 8px 6px;");
                 buttonContainer.getChildren().add(addButton); // 버튼을 컨테이너에 추가
+                // imageBox의 하부로
+                itemBox.setBottom(null);
+
 
                 // 마우스를 itemBox 위에 올렸을 때 이벤트 처리
                 itemBox.setOnMouseEntered(event -> {
                     // 배경을 투명하게 만들어줍니다.
                     itemBox.setStyle("-fx-background-color: rgba(255, 255, 255, 0.5); -fx-background-radius: 10px; -fx-alignment: center-left;");
+                    imageContainer.setOpacity(0.5);
+                    infoBox.setOpacity(0.5);
+
 
                     // priceBox와 lblDescription을 숨기고 addButton을 보이도록 설정합니다.
                     priceBox.setVisible(false);
@@ -248,7 +254,10 @@ public class MenuPageController {
                     addButton.setVisible(true); // addButton을 보이도록 설정
 
                     // addButton을 infoBox에 추가합니다.
-                    infoBox.getChildren().add(buttonContainer);
+//                    infoBox.getChildren().add(buttonContainer);
+                    buttonContainer.setOpacity(1);
+//                    addButton.setOpacity(1);
+                    itemBox.setBottom(buttonContainer);
                     infoBox.getChildren().remove(priceBox);
                     infoBox.getChildren().remove(lblDescription);
                     // 사라질 때 생기는 빈 공간을 없애기 위해 높이를 고정합니다.
@@ -259,19 +268,22 @@ public class MenuPageController {
                 itemBox.setOnMouseExited(event -> {
                     // 불투명했던 배경을 원래대로 복구합니다.
                     itemBox.setStyle("-fx-background-color: white; -fx-background-radius: 10px; -fx-alignment: center-left;");
-
+                    imageContainer.opacityProperty().setValue(1); // 이미지를 투명하게 설정
+                    infoBox.opacityProperty().setValue(1);
                     // priceBox와 lblDescription이 보이지 않을 때 addButton을 숨기도록 설정합니다.
                     if (!itemBox.isHover()) {
                         priceBox.setVisible(true);
                         lblDescription.setVisible(true);
                         addButton.setVisible(false); // addButton을 숨기도록 설정
-
                         // addButton을 infoBox에서 제거합니다.
                         infoBox.getChildren().add(priceBox);
                         infoBox.getChildren().add(lblDescription);
-                        infoBox.getChildren().remove(buttonContainer);
+                        //infoBox.getChildren().remove(buttonContainer);
+                        itemBox.setBottom(null);
+
                     }
                 });
+
 
             } else {
                 System.err.println("이미지를 로드하는데 실패했습니다. 이미지 경로: " + imagePath);
