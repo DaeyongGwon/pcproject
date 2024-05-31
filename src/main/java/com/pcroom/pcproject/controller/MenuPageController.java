@@ -45,37 +45,6 @@ public class MenuPageController {
     public void initialize() {
         scrollPane.setFitToHeight(true);
 
-        /*
-        // 예제 메뉴 아이템 추가
-        addMenuItem("붉닭 볶음면", "죤내죤내매움", "1500", "2000", new String[]{"추가메뉴", "할인상품", "인기상품"}, "/images/8.jpeg");
-        addMenuItem("소불고기 덥밥", "존맛 그자체", "5000", "7000", new String[]{"추가메뉴", "추천상품", "인기상품"}, "/images/9.jpeg");
-        addMenuItem("미트볼 치즈 스파게티", "존맛탱", "8400", "10000", new String[]{"할인상품"}, "/images/4.jpeg");
-        addMenuItem("네넴띤", "맛있다", "3000", "4000", new String[]{"인기상품"}, "/images/5.png");
-        addMenuItem("이썩는 아이스크림", "달다", "1500", "2000", new String[]{"아이스크림"}, "/images/6.png");
-        addMenuItem("오징어", "너 닮음", "5000", "1억", new String[]{"과자"}, "/images/7.jpeg");
-        addMenuItem("피자", "존맛탱", "15000", "20000", new String[]{"인기상품", "추천상품"}, "/images/3.jpeg");
-        addMenuItem("붉닭 볶음면", "죤내죤내매움", "1500", "2000", new String[]{"추가메뉴", "할인상품", "인기상품"}, "/images/8.jpeg");
-        addMenuItem("소불고기 덥밥", "존맛 그자체", "5000", "7000", new String[]{"추가메뉴", "추천상품", "인기상품"}, "/images/9.jpeg");
-        addMenuItem("와플", "와플와플와플", "2000", "2500", new String[]{"과자", "추가메뉴"}, "/images/1.jpeg");
-        addMenuItem("미트볼 치즈 스파게티", "존맛탱", "8400", "10000", new String[]{"할인상품"}, "/images/4.jpeg");
-        addMenuItem("네넴띤", "맛있다", "3000", "4000", new String[]{"인기상품"}, "/images/5.png");
-        addMenuItem("이썩는 아이스크림", "달다", "1500", "2000", new String[]{"아이스크림"}, "/images/6.png");
-        addMenuItem("오징어", "너 닮음", "5000", "1억", new String[]{"과자"}, "/images/7.jpeg");
-        addMenuItem("피자", "존맛탱", "15000", "20000", new String[]{"인기상품", "추천상품"}, "/images/3.jpeg");
-        addMenuItem("소불고기 덥밥", "존맛 그자체", "5000", "7000", new String[]{"추가메뉴", "추천상품", "인기상품"}, "/images/9.jpeg");
-        addMenuItem("붉닭 볶음면", "죤내죤내매움", "1500", "2000", new String[]{"추가메뉴", "할인상품", "인기상품"}, "/images/8.jpeg");
-        addMenuItem("와플", "와플와플와플", "2000", "2500", new String[]{"과자", "추가메뉴"}, "/images/1.jpeg");
-        addMenuItem("미트볼 치즈 스파게티", "존맛탱", "8400", "10000", new String[]{"할인상품"}, "/images/4.jpeg");
-        addMenuItem("네넴띤", "맛있다", "3000", "4000", new String[]{"인기상품"}, "/images/5.png");
-        addMenuItem("이썩는 아이스크림", "달다", "1500", "2000", new String[]{"아이스크림"}, "/images/6.png");
-        addMenuItem("오징어", "너 닮음", "5000", "1억", new String[]{"과자"}, "/images/7.jpeg");
-        addMenuItem("소불고기 덥밥", "존맛 그자체", "5000", "7000", new String[]{"추가메뉴", "추천상품", "인기상품"}, "/images/9.jpeg");
-        addMenuItem("붉닭 볶음면", "죤내죤내매움", "1500", "2000", new String[]{"추가메뉴", "할인상품", "인기상품"}, "/images/8.jpeg");
-        addMenuItem("와플", "와플와플와플", "2000", "2500", new String[]{"과자", "추가메뉴"}, "/images/1.jpeg");
-        addMenuItem("피자", "존맛탱", "15000", "20000", new String[]{"인기상품", "추천상품"}, "/images/3.jpeg");
-        */
-        FoodSearch.setOnAction(event -> searchFood(event));
-
         // 데이터베이스에서 메뉴 아이템 로드
         loadMenuItemsFromDatabase();
 
@@ -85,13 +54,6 @@ public class MenuPageController {
             int newPrefColumns = Math.max(1, (int) (newVal.doubleValue() / 200));
             menuItemsPane.setPrefWrapLength(newVal.doubleValue());
         });
-    }
-    @FXML// 카테고리 바 검색 기능
-    private void searchFood(ActionEvent event) {
-        if (event.getSource() instanceof TextField) {
-            String keyword = ((TextField) event.getSource()).getText();
-            filterItemsByKeyword(keyword);
-        }
     }
     // 오픈시 데이터 바로 가져와서 뿌리기
     private void loadMenuItemsFromDatabase() {
@@ -166,33 +128,6 @@ public class MenuPageController {
             });
 
             // FlowPane을 비우고 필터링된 상품들을 추가하며 보이게 설정
-            menuItemsPane.getChildren().clear();
-            menuItemsPane.getChildren().addAll(filteredItems);
-        }
-    }
-    private void filterItemsByKeyword(String keyword) {
-        // 검색어가 비어 있는 경우 모든 상품을 보여줍니다.
-        if (keyword.isEmpty()) {
-            menuItemsPane.getChildren().clear(); // FlowPane을 비웁니다.
-            menuItemsPane.getChildren().addAll(allItems); // 모든 상품을 추가합니다.
-        } else {
-            // 검색어가 포함된 상품들을 찾아서 filteredItems 리스트에 추가합니다.
-            filteredItems.clear();
-            allItems.forEach(node -> {
-                if (node instanceof BorderPane) {
-                    BorderPane itemBox = (BorderPane) node;
-                    // 상품명과 설명을 가져옵니다.
-                    Label titleLabel = (Label) ((VBox) itemBox.getCenter()).getChildren().get(1);
-                    Label descriptionLabel = (Label) ((VBox) itemBox.getCenter()).getChildren().get(2);
-                    String title = titleLabel.getText();
-                    String description = descriptionLabel.getText();
-                    // 상품명 또는 설명에 검색어가 포함되어 있는지 확인합니다.
-                    if (title.toLowerCase().contains(keyword.toLowerCase()) || description.toLowerCase().contains(keyword.toLowerCase())) {
-                        filteredItems.add(node);
-                    }
-                }
-            });
-            // FlowPane을 비우고 검색된 상품들을 추가하여 보여줍니다.
             menuItemsPane.getChildren().clear();
             menuItemsPane.getChildren().addAll(filteredItems);
         }
@@ -320,17 +255,11 @@ public class MenuPageController {
                     itemBox.setStyle("-fx-background-color: rgba(255, 255, 255, 0.5); -fx-background-radius: 10px; -fx-alignment: center-left;");
                     imageContainer.setOpacity(0.5);
                     infoBox.setOpacity(0.5);
-
-
                     // priceBox와 lblDescription을 숨기고 addButton을 보이도록 설정합니다.
                     priceBox.setVisible(false);
                     lblDescription.setVisible(false);
                     addButton.setVisible(true); // addButton을 보이도록 설정
-
-                    // addButton을 infoBox에 추가합니다.
-//                    infoBox.getChildren().add(buttonContainer);
                     buttonContainer.setOpacity(1);
-//                    addButton.setOpacity(1);
                     itemBox.setBottom(buttonContainer);
                     infoBox.getChildren().remove(priceBox);
                     infoBox.getChildren().remove(lblDescription);
@@ -352,7 +281,6 @@ public class MenuPageController {
                         // addButton을 infoBox에서 제거합니다.
                         infoBox.getChildren().add(priceBox);
                         infoBox.getChildren().add(lblDescription);
-                        //infoBox.getChildren().remove(buttonContainer);
                         itemBox.setBottom(null);
 
                     }
@@ -376,5 +304,49 @@ public class MenuPageController {
     @FXML
     public void clearTextField(ActionEvent actionEvent) {
         FoodSearch.clear();
+    }
+    @FXML // 음식 찾기
+    public void searchFood(ActionEvent event) {
+        String keyword = FoodSearch.getText().trim();
+        filterItemsByKeyword(keyword);
+    }
+    private void filterItemsByKeyword(String keyword) {
+        // 검색어가 비어 있는 경우 모든 상품을 보여줍니다.
+        if (keyword.isEmpty()) {
+            showAllItems();
+        } else {
+            // 검색어가 포함된 상품들을 찾아서 filteredItems 리스트에 추가합니다.
+            filteredItems.clear();
+            allItems.forEach(node -> {
+                if (node instanceof BorderPane) {
+                    BorderPane itemBox = (BorderPane) node;
+                    VBox infoBox = (VBox) itemBox.getCenter();
+                    Label titleLabel = (Label) infoBox.getChildren().get(1); // 상품명을 포함하는 Label은 두 번째 위치에 있다고 가정합니다.
+                    String title = titleLabel.getText();
+                    // 상품명에 검색어가 포함되어 있는지 확인합니다.
+                    if (containsKeyword(title, keyword)) {
+                        filteredItems.add(node);
+                    }
+                }
+            });
+            // FlowPane을 비우고 검색된 상품들을 추가하여 보여줍니다.
+            showFilteredItems();
+        }
+    }
+    // 모든 상품을 보여주는 메서드
+    private void showAllItems() {
+        menuItemsPane.getChildren().clear();
+        menuItemsPane.getChildren().addAll(allItems);
+    }
+
+    // 검색된 상품들을 보여주는 메서드
+    private void showFilteredItems() {
+        menuItemsPane.getChildren().clear();
+        menuItemsPane.getChildren().addAll(filteredItems);
+    }
+
+    // 문자열에 특정 키워드가 포함되어 있는지 확인하는 메서드
+    private boolean containsKeyword(String text, String keyword) {
+        return text.toLowerCase().contains(keyword.toLowerCase());
     }
 }
