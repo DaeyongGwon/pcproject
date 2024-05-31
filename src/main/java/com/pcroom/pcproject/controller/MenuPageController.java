@@ -1,52 +1,58 @@
 package com.pcroom.pcproject.controller;
 
+import com.pcroom.pcproject.model.Food;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.control.Label;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MenuPageController {
     public TextField FoodSearch;
-    private List<Node> allItems = new ArrayList<>(); // 모든 상품을 저장할 리스트
     private List<Node> filteredItems = new ArrayList<>(); // 필터링된 상품들을 저장할 리스트
+    private Food food;
+
     @FXML
     private ScrollPane categoryScrollPane;
     @FXML
     private FlowPane menuItemsPane;
     @FXML
     private ScrollPane scrollPane;
+
+    public MenuPageController() {
+        this.food = new Food(this); // FoodModel에 현재 컨트롤러 인스턴스를 전달
+    }
+
     @FXML
     private void slideRight(ActionEvent event) {
         categoryScrollPane.setHvalue(categoryScrollPane.getHvalue() + 0.2);
     }
+
     @FXML
     private void slideLeft(ActionEvent event) {
         categoryScrollPane.setHvalue(categoryScrollPane.getHvalue() - 0.2);
     }
+
     @FXML
     public void initialize() {
         scrollPane.setFitToHeight(true);
 
         // 데이터베이스에서 메뉴 아이템 로드
-        loadMenuItemsFromDatabase();
+        List<Node> items = food.getFoodData();
+        menuItemsPane.getChildren().addAll(items);
 
         scrollPane.setFitToWidth(true);
         // 화면 크기에 따라 항목 수 조정
@@ -55,49 +61,15 @@ public class MenuPageController {
             menuItemsPane.setPrefWrapLength(newVal.doubleValue());
         });
     }
-    // 오픈시 데이터 바로 가져와서 뿌리기
-    private void loadMenuItemsFromDatabase() {
-        String url = "jdbc:oracle:thin:@localhost:1521:xe";
-        String user = "hr";
-        String password = "hr";
 
-        try {
-            Class.forName("oracle.jdbc.OracleDriver"); // 드라이버 명시적 로드
-            Connection conn = DriverManager.getConnection(url, user, password);
-            Statement stmt = conn.createStatement();
-
-            String query = "SELECT title, description, price, oldprice, labels, IMAGEPATH FROM FOOD ORDER BY FOODID ASC";
-
-            ResultSet rs = stmt.executeQuery(query);
-
-            while (rs.next()) {
-                String title = rs.getString("title");
-                String description = rs.getString("description");
-                String price = rs.getString("price");
-                String oldPrice = rs.getString("oldprice");
-                String labelsString = rs.getString("labels");
-                String[] labels = labelsString.split(","); // Assuming labels are stored as comma-separated values
-                String imagePath = rs.getString("IMAGEPATH");
-
-                addMenuItem(title, description, price, oldPrice, labels, imagePath);
-            }
-
-            // 모든 항목을 allItems 리스트에 추가
-            menuItemsPane.getChildren().forEach(node -> allItems.add(node));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     @FXML
     // 필터링 By 카테고리 버튼
     private void filterByCategory(ActionEvent event) {
         if (event.getSource() instanceof Button) {
             String category = ((Button) event.getSource()).getText();
-
-            // 필터링된 상품들을 찾아서 filteredItems 리스트에 추가
             filteredItems.clear();
-            allItems.forEach(node -> {
+
+            food.getAllItems().forEach(node -> {
                 if (node instanceof BorderPane) {
                     BorderPane itemBox = (BorderPane) node;
                     VBox infoBox = (VBox) itemBox.getCenter();
@@ -127,14 +99,58 @@ public class MenuPageController {
                 }
             });
 
-            // FlowPane을 비우고 필터링된 상품들을 추가하며 보이게 설정
             menuItemsPane.getChildren().clear();
             menuItemsPane.getChildren().addAll(filteredItems);
         }
     }
-    // 메뉴 추가
-    private void addMenuItem(String title, String description, String price, String oldPrice, String[] labels, String imagePath) {
 
+    // 검색옆에 X 버튼 클릭시 검색창 초기화
+    @FXML
+    public void clearTextField(ActionEvent actionEvent) {
+        FoodSearch.clear();
+    }
+
+    @FXML // 음식 찾기
+    public void searchFood(ActionEvent event) {
+        String keyword = FoodSearch.getText().trim();
+        filterItemsByKeyword(keyword);
+    }
+    // 문자열에 특정 키워드가 포함되어 있는지 확인하는 메서드
+    public boolean containsKeyword(String text, String keyword) {
+        return text.toLowerCase().contains(keyword.toLowerCase());
+    }
+    private void filterItemsByKeyword(String keyword) {
+        if (keyword.isEmpty()) {
+            showAllItems();
+        } else {
+            filteredItems.clear();
+            food.getAllItems().forEach(node -> {
+                if (node instanceof BorderPane) {
+                    BorderPane itemBox = (BorderPane) node;
+                    VBox infoBox = (VBox) itemBox.getCenter();
+                    Label titleLabel = (Label) infoBox.getChildren().get(1);
+                    String title = titleLabel.getText();
+                    if (containsKeyword(title, keyword)) {
+                        filteredItems.add(node);
+                    }
+                }
+            });
+            showFilteredItems();
+        }
+    }
+
+    private void showAllItems() {
+        menuItemsPane.getChildren().clear();
+        menuItemsPane.getChildren().addAll(food.getAllItems());
+    }
+
+    private void showFilteredItems() {
+        menuItemsPane.getChildren().clear();
+        menuItemsPane.getChildren().addAll(filteredItems);
+    }
+
+    // 메뉴 아이템 노드 생성
+    public Node createMenuItemNode(String title, String description, String price, String oldPrice, String[] labels, String imagePath) {
         //박스 생성
         BorderPane itemBox = new BorderPane();
         itemBox.setPrefSize(180, 260); // Set the preferred size of the item box
@@ -244,8 +260,7 @@ public class MenuPageController {
                 buttonContainer.setAlignment(Pos.TOP_CENTER); // 버튼을 왼쪽 정렬로 설정
                 // 패딩 탑 10
                 buttonContainer.setStyle("-fx-padding: 0px 6px 8px 6px;");
-                buttonContainer.getChildren().add(addButton); // 버튼을 컨테이너에 추가
-                // imageBox의 하부로
+                buttonContainer.getChildren().add(addButton);
                 itemBox.setBottom(null);
 
 
@@ -282,71 +297,17 @@ public class MenuPageController {
                         infoBox.getChildren().add(priceBox);
                         infoBox.getChildren().add(lblDescription);
                         itemBox.setBottom(null);
-
                     }
                 });
 
-
-            } else {
-                System.err.println("이미지를 로드하는데 실패했습니다. 이미지 경로: " + imagePath);
             }
         } catch (Exception e) {
-            System.err.println("이미지를 로드하는 도중 오류가 발생했습니다: " + e.getMessage());
             e.printStackTrace();
         }
 
-        // 아이템 박스 간의 간격 설정
-        menuItemsPane.setHgap(20); // 수평 간격 설정
-        menuItemsPane.setVgap(20); // 수직 간격 설정
-        menuItemsPane.getChildren().add(itemBox);
-    }
-    // 검색옆에 X 버튼 클릭시 검색창 초기화
-    @FXML
-    public void clearTextField(ActionEvent actionEvent) {
-        FoodSearch.clear();
-    }
-    @FXML // 음식 찾기
-    public void searchFood(ActionEvent event) {
-        String keyword = FoodSearch.getText().trim();
-        filterItemsByKeyword(keyword);
-    }
-    private void filterItemsByKeyword(String keyword) {
-        // 검색어가 비어 있는 경우 모든 상품을 보여줍니다.
-        if (keyword.isEmpty()) {
-            showAllItems();
-        } else {
-            // 검색어가 포함된 상품들을 찾아서 filteredItems 리스트에 추가합니다.
-            filteredItems.clear();
-            allItems.forEach(node -> {
-                if (node instanceof BorderPane) {
-                    BorderPane itemBox = (BorderPane) node;
-                    VBox infoBox = (VBox) itemBox.getCenter();
-                    Label titleLabel = (Label) infoBox.getChildren().get(1); // 상품명을 포함하는 Label은 두 번째 위치에 있다고 가정합니다.
-                    String title = titleLabel.getText();
-                    // 상품명에 검색어가 포함되어 있는지 확인합니다.
-                    if (containsKeyword(title, keyword)) {
-                        filteredItems.add(node);
-                    }
-                }
-            });
-            // FlowPane을 비우고 검색된 상품들을 추가하여 보여줍니다.
-            showFilteredItems();
-        }
-    }
-    // 모든 상품을 보여주는 메서드
-    private void showAllItems() {
-        menuItemsPane.getChildren().clear();
-        menuItemsPane.getChildren().addAll(allItems);
+        return itemBox;
     }
 
-    // 검색된 상품들을 보여주는 메서드
-    private void showFilteredItems() {
-        menuItemsPane.getChildren().clear();
-        menuItemsPane.getChildren().addAll(filteredItems);
-    }
-
-    // 문자열에 특정 키워드가 포함되어 있는지 확인하는 메서드
-    private boolean containsKeyword(String text, String keyword) {
-        return text.toLowerCase().contains(keyword.toLowerCase());
-    }
 }
+
+
