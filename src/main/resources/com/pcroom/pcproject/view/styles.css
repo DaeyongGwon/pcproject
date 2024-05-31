@@ -6,6 +6,10 @@
     -fx-font-size: 15px;
 }
 
+#clear_button:hover {
+    -fx-text-fill: red;
+}
+
 .button:hover {
     -fx-text-fill: rgba(94, 147, 203); /* R:94 G:147 B:203 색상 */
     -fx-font-size: 16px;

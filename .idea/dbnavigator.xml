@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+
   <component name="DBNavigator.Project.DatabaseBrowserManager">
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
     <loaded-nodes />
   </component>
+
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="b992e5a4-e971-4cc7-ad2c-c81a3beccb40">
       <console name="Connection" type="STANDARD" schema="" session="Main" />
@@ -509,5 +511,9 @@
         </visibility-settings>
       </environment>
     </general-settings>
+  </component>
+  <component name="DBNavigator.Project.StatementExecutionManager">
+    <execution-variables />
+    <execution-variable-types />
   </component>
 </project>

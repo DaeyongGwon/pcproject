@@ -22,13 +22,17 @@
         </Label>
         <HBox alignment="CENTER" prefHeight="90.0" prefWidth="951.0" spacing="0" style="-fx-background-color: #292930; -fx-padding: 0 0 30 0;" VBox.vgrow="SOMETIMES">
             <children>
-                <HBox alignment="CENTER" prefHeight="75.0" prefWidth="719.0" style="-fx-background-color: #f4f4f4; -fx-background-radius: 20 0 0 20;" HBox.hgrow="ALWAYS">
+                <HBox alignment="CENTER" prefHeight="75.0" prefWidth="719.0" style="-fx-background-color: #f4f4f4; -fx-background-radius: 30 0 0 30;" HBox.hgrow="ALWAYS">
                     <children>
-                        <Button alignment="CENTER" contentDisplay="TOP" onAction="#slideLeft" prefHeight="42.0" prefWidth="47.0" style="-fx-font-size: 30;" text="←" textFill="#f4f411">
-                            <font>
-                                <Font name="D2Coding Bold" size="24.0" />
-                            </font>
-                        </Button>
+                  <VBox alignment="CENTER" maxHeight="30.0" style="-fx-padding: 0 0 0 10;">
+                     <children>
+                              <Button alignment="CENTER" contentDisplay="TOP" onAction="#slideLeft" style="-fx-font-size: 22; -fx-border-radius: 22; -fx-border-color: #29292f; -fx-text-fill: white; -fx-background-color: #29292f; -fx-background-radius: 22;" text="&lt;" textFill="#29292f">
+                                  <font>
+                                      <Font name="D2Coding Bold" size="24.0" />
+                                  </font>
+                              </Button>
+                     </children>
+                  </VBox>
                         <ScrollPane fx:id="categoryScrollPane" hbarPolicy="NEVER" prefHeight="75.0" style="-fx-background-color: #f4f4f4;" vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
                             <content>
                                 <HBox fx:id="categoryBox" alignment="CENTER" minHeight="75.0" prefHeight="75.0" prefWidth="667.0" spacing="5" style="-fx-background-color: #f4f4f4;">
@@ -78,12 +82,21 @@
                         </ScrollPane>
                     </children>
                 </HBox>
-                <HBox alignment="CENTER_RIGHT" minHeight="75.0" prefHeight="75.0" prefWidth="236.0" style="-fx-background-color: #f4f4f4;" HBox.hgrow="ALWAYS">
+                <HBox alignment="CENTER" minHeight="75.0" prefHeight="75.0" prefWidth="254.0" style="-fx-background-color: #f4f4f4;" HBox.hgrow="ALWAYS">
                     <children>
-                        <TextField minWidth="100.0" prefHeight="26.0" prefWidth="182.0" promptText="상품명 검색" style="-fx-border-color: #f4f4f4; -fx-border-radius: 15; -fx-background-radius: 15; -fx-border-color: black;" />
-                        <Button onAction="#slideRight" prefHeight="51.0" prefWidth="39.0" style="-fx-font-size: 30; -fx-background-radius: 0 20 20 0; -fx-background-color: #f4f4f4;" text="→" />
+                  <HBox alignment="CENTER_RIGHT" maxHeight="32.0" minHeight="10.0" prefHeight="32.0" prefWidth="204.0" style="-fx-border-radius: 20; -fx-border-color: black; -fx-background-color: white; -fx-background-radius: 20;">
+                     <children>
+                              <TextField fx:id="FoodSearch" minWidth="100.0" onAction="#searchFood" prefHeight="26.0" prefWidth="155.0" promptText="상품명 검색" style="-fx-border-color: white; -fx-background-color: white; -fx-background-radius: 20 0 0 20; -fx-border-radius: 20 0 0 20;" />
+                        <Button id="clear_btn" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="26.0" mnemonicParsing="false" onAction="#clearTextField" prefHeight="26.0" prefWidth="17.0" style="-fx-font-size: 17;" text="X" />
+                     </children>
+                  </HBox>
                     </children>
                 </HBox>
+            <VBox alignment="CENTER" style="-fx-background-color: #f4f4f4; -fx-padding: 0 10 0 10;">
+               <children>
+                        <Button alignment="CENTER" contentDisplay="CENTER" onAction="#slideRight" style="-fx-font-size: 22; -fx-background-radius: 22; -fx-background-color: #29292f; -fx-background-radius: 22; -fx-text-fill: white;" text="&gt;" />
+               </children>
+            </VBox>
             </children>
         </HBox>
         <ScrollPane fx:id="scrollPane" fitToWidth="true" style="-fx-background-color: #292930;" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
@@ -95,4 +108,3 @@
         </ScrollPane>
     </children>
 </VBox>
-

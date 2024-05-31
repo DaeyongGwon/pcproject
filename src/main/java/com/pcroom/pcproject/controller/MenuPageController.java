@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -15,35 +16,36 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MenuPageController {
+    public TextField FoodSearch;
     private List<Node> allItems = new ArrayList<>(); // 모든 상품을 저장할 리스트
     private List<Node> filteredItems = new ArrayList<>(); // 필터링된 상품들을 저장할 리스트
-
     @FXML
     private ScrollPane categoryScrollPane;
-
     @FXML
     private FlowPane menuItemsPane;
-
     @FXML
     private ScrollPane scrollPane;
-
     @FXML
     private void slideRight(ActionEvent event) {
         categoryScrollPane.setHvalue(categoryScrollPane.getHvalue() + 0.2);
     }
-
     @FXML
     private void slideLeft(ActionEvent event) {
         categoryScrollPane.setHvalue(categoryScrollPane.getHvalue() - 0.2);
     }
-
     @FXML
     public void initialize() {
         scrollPane.setFitToHeight(true);
+
+        /*
         // 예제 메뉴 아이템 추가
         addMenuItem("붉닭 볶음면", "죤내죤내매움", "1500", "2000", new String[]{"추가메뉴", "할인상품", "인기상품"}, "/images/8.jpeg");
         addMenuItem("소불고기 덥밥", "존맛 그자체", "5000", "7000", new String[]{"추가메뉴", "추천상품", "인기상품"}, "/images/9.jpeg");
@@ -71,7 +73,11 @@ public class MenuPageController {
         addMenuItem("붉닭 볶음면", "죤내죤내매움", "1500", "2000", new String[]{"추가메뉴", "할인상품", "인기상품"}, "/images/8.jpeg");
         addMenuItem("와플", "와플와플와플", "2000", "2500", new String[]{"과자", "추가메뉴"}, "/images/1.jpeg");
         addMenuItem("피자", "존맛탱", "15000", "20000", new String[]{"인기상품", "추천상품"}, "/images/3.jpeg");
-        menuItemsPane.getChildren().forEach(node -> allItems.add(node));
+        */
+        FoodSearch.setOnAction(event -> searchFood(event));
+
+        // 데이터베이스에서 메뉴 아이템 로드
+        loadMenuItemsFromDatabase();
 
         scrollPane.setFitToWidth(true);
         // 화면 크기에 따라 항목 수 조정
@@ -80,8 +86,49 @@ public class MenuPageController {
             menuItemsPane.setPrefWrapLength(newVal.doubleValue());
         });
     }
+    @FXML// 카테고리 바 검색 기능
+    private void searchFood(ActionEvent event) {
+        if (event.getSource() instanceof TextField) {
+            String keyword = ((TextField) event.getSource()).getText();
+            filterItemsByKeyword(keyword);
+        }
+    }
+    // 오픈시 데이터 바로 가져와서 뿌리기
+    private void loadMenuItemsFromDatabase() {
+        String url = "jdbc:oracle:thin:@localhost:1521:xe";
+        String user = "hr";
+        String password = "hr";
 
+        try {
+            Class.forName("oracle.jdbc.OracleDriver"); // 드라이버 명시적 로드
+            Connection conn = DriverManager.getConnection(url, user, password);
+            Statement stmt = conn.createStatement();
+
+            String query = "SELECT title, description, price, oldprice, labels, IMAGEPATH FROM FOOD ORDER BY FOODID ASC";
+
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String title = rs.getString("title");
+                String description = rs.getString("description");
+                String price = rs.getString("price");
+                String oldPrice = rs.getString("oldprice");
+                String labelsString = rs.getString("labels");
+                String[] labels = labelsString.split(","); // Assuming labels are stored as comma-separated values
+                String imagePath = rs.getString("IMAGEPATH");
+
+                addMenuItem(title, description, price, oldPrice, labels, imagePath);
+            }
+
+            // 모든 항목을 allItems 리스트에 추가
+            menuItemsPane.getChildren().forEach(node -> allItems.add(node));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     @FXML
+    // 필터링 By 카테고리 버튼
     private void filterByCategory(ActionEvent event) {
         if (event.getSource() instanceof Button) {
             String category = ((Button) event.getSource()).getText();
@@ -123,7 +170,34 @@ public class MenuPageController {
             menuItemsPane.getChildren().addAll(filteredItems);
         }
     }
-
+    private void filterItemsByKeyword(String keyword) {
+        // 검색어가 비어 있는 경우 모든 상품을 보여줍니다.
+        if (keyword.isEmpty()) {
+            menuItemsPane.getChildren().clear(); // FlowPane을 비웁니다.
+            menuItemsPane.getChildren().addAll(allItems); // 모든 상품을 추가합니다.
+        } else {
+            // 검색어가 포함된 상품들을 찾아서 filteredItems 리스트에 추가합니다.
+            filteredItems.clear();
+            allItems.forEach(node -> {
+                if (node instanceof BorderPane) {
+                    BorderPane itemBox = (BorderPane) node;
+                    // 상품명과 설명을 가져옵니다.
+                    Label titleLabel = (Label) ((VBox) itemBox.getCenter()).getChildren().get(1);
+                    Label descriptionLabel = (Label) ((VBox) itemBox.getCenter()).getChildren().get(2);
+                    String title = titleLabel.getText();
+                    String description = descriptionLabel.getText();
+                    // 상품명 또는 설명에 검색어가 포함되어 있는지 확인합니다.
+                    if (title.toLowerCase().contains(keyword.toLowerCase()) || description.toLowerCase().contains(keyword.toLowerCase())) {
+                        filteredItems.add(node);
+                    }
+                }
+            });
+            // FlowPane을 비우고 검색된 상품들을 추가하여 보여줍니다.
+            menuItemsPane.getChildren().clear();
+            menuItemsPane.getChildren().addAll(filteredItems);
+        }
+    }
+    // 메뉴 추가
     private void addMenuItem(String title, String description, String price, String oldPrice, String[] labels, String imagePath) {
 
         //박스 생성
@@ -297,5 +371,10 @@ public class MenuPageController {
         menuItemsPane.setHgap(20); // 수평 간격 설정
         menuItemsPane.setVgap(20); // 수직 간격 설정
         menuItemsPane.getChildren().add(itemBox);
+    }
+    // 검색옆에 X 버튼 클릭시 검색창 초기화
+    @FXML
+    public void clearTextField(ActionEvent actionEvent) {
+        FoodSearch.clear();
     }
 }

@@ -35,7 +35,9 @@ javafx {
 }
 
 dependencies {
-
+    implementation 'com.oracle.database.jdbc:ojdbc11:21.5.0.0'
+    implementation 'org.openjfx:javafx-controls:20'
+    implementation 'org.openjfx:javafx-fxml:20'
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
