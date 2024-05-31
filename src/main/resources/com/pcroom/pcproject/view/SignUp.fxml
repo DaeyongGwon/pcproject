@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.SignUpController">
+    <children>
+        <Label text="회원가입" style="-fx-font-size: 20;" />
+        <TextField fx:id="usernameField" promptText="아이디를 입력하세요" />
+        <PasswordField fx:id="passwordField" promptText="비밀번호를 입력하세요" />
+        <TextField fx:id="nameField" promptText="이름을 입력하세요" />
+        <TextField fx:id="ageField" promptText="나이를 입력하세요" />
+        <TextField fx:id="addressField" promptText="주소를 입력하세요" />
+        <TextField fx:id="phoneNumberField" promptText="전화번호를 입력하세요" />
+        <TextField fx:id="emailField" promptText="이메일을 입력하세요" />
+        <!-- 등록 날짜는 자동으로 현재 날짜를 사용하도록 설정할 수 있습니다 -->
+        <!-- 등록 날짜 필드는 사용자로부터 입력받지 않고, 컨트롤러에서 처리할 수 있습니다 -->
+        <Button text="회원가입" onAction="#handleSignUpButtonAction" />
+    </children>
+</VBox>
