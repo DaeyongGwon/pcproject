@@ -1,5 +1,6 @@
 package com.pcroom.pcproject.view;
 
+import com.pcroom.pcproject.controller.SignInController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,10 +11,15 @@ import javafx.stage.Stage;
 
 public class SignIn extends Application {
 
+    public static String token; // 토큰을 저장할 변수
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("SignIn.fxml"));
         Parent root = loader.load();
+
+        SignInController controller = loader.getController();
+        controller.setPrimaryStage(primaryStage); // Set the primaryStage
 
         HBox hbox = (HBox) root;
         VBox leftVBox = (VBox) hbox.lookup("#leftVBox");
@@ -33,3 +39,4 @@ public class SignIn extends Application {
         launch(args);
     }
 }
+
