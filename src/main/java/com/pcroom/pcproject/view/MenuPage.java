@@ -1,6 +1,5 @@
 package com.pcroom.pcproject.view;
 
-import com.pcroom.pcproject.controller.MenuPageController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,11 +17,6 @@ public class MenuPage extends Application {
             primaryStage.setTitle("메뉴 페이지");
             primaryStage.setScene(scene);
             primaryStage.show();
-
-            // Get the controller instance from the FXMLLoader
-            MenuPageController controller = fxmlLoader.getController();
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }

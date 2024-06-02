@@ -1,5 +1,6 @@
 package com.pcroom.pcproject.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,6 +10,9 @@ public class MainPageController {
 
     @FXML
     private GridPane seatGrid;
+
+    @FXML
+    private Label loggedInUserLabel; // 로그인 중인 유저 아이디를 표시할 레이블
 
     @FXML
     public void initialize() {
@@ -35,5 +39,20 @@ public class MainPageController {
                 seatGrid.add(seat, j, i);
             }
         }
+
+        // 토큰을 사용하여 로그인 중인 유저 아이디를 표시
+        String loggedInUser = SignInController.getToken(); // 토큰을 사용하여 로그인 중인 유저 아이디를 가져옴
+        if (loggedInUser != null && !loggedInUser.isEmpty()) {
+            loggedInUserLabel.setText("현재 로그인 중인 유저: " + loggedInUser);
+        } else {
+            loggedInUserLabel.setText("로그인 중인 유저 없음");
+        }
+    }
+
+    public void loginPage(ActionEvent actionEvent) {
+        // 로그인 페이지로 이동하기
+        SignInController.moveToSignInPage();
+        // 현재 창 닫기
+        seatGrid.getScene().getWindow().hide();
     }
 }

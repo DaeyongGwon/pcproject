@@ -3,6 +3,7 @@ module com.pcroom.pcproject {
     requires javafx.fxml;
     requires java.sql;
     requires com.oracle.database.jdbc;
+    requires jdk.compiler;
 
     opens com.pcroom.pcproject.controller to javafx.fxml;
     opens com.pcroom.pcproject.view to javafx.fxml;
