@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.MainPageController">
+    <!-- 좌석판 (GridPane) -->
+    <center>
+        <VBox alignment="CENTER" spacing="10" style="-fx-padding: 20;">
+            <Label style="-fx-font-size: 24px;" text="미디어웹 PC방" />
+            <GridPane fx:id="seatGrid" hgap="10" style="-fx-background-color: #EEEEEE;" vgap="10">
+                <!-- 좌석 번호를 GridPane에 추가하는 코드 -->
+            </GridPane>
+        </VBox>
+    </center>
 
-    <Label fx:id="welcomeText"/>
-</VBox>
+    <!-- 하단 버튼들 (HBox) -->
+    <bottom>
+        <HBox alignment="CENTER" spacing="20" style="-fx-padding: 10; -fx-background-color: white;">
+            <Button style="-fx-font-size: 18px; -fx-border-radius: 60; -fx-background-radius: 60; -fx-border-color: black; -fx-background-color: white;" text="회원" />
+            <Button style="-fx-font-size: 18px; -fx-background-radius: 60; -fx-border-radius: 60; -fx-background-color: white; -fx-border-color: black;" text="회원가입" />
+        </HBox>
+    </bottom>
+</BorderPane>
