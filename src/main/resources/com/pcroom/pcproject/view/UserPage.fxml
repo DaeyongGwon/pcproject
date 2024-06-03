@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+    <children>
+        <Label prefHeight="233.0" prefWidth="526.0" text="새 창" />
+      <Pane prefHeight="200.0" prefWidth="200.0" />
+        <!-- 시작 시간, 남은 시간, 이름, PC 번호, -->
+    </children>
+</VBox>

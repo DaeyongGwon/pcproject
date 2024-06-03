@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.SeatDetailsController">
+    <children>
+        <Label fx:id="seatLabel" text="좌석 정보" />
+        <Label fx:id="statusLabel" text="상태: 알 수 없음" />
+        <!-- 새로운 버튼 추가 -->
+        <Button fx:id="moveToNewWindowButton" text="이 좌석을 이용합니다." onAction="#moveToNewWindow"/>
+        <Button text="닫기" onAction="#handleClose"/>
+    </children>
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+</VBox>
