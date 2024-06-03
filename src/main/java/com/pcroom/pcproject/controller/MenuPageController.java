@@ -217,7 +217,7 @@ public class MenuPageController {
             }
         }
 
-        totalPriceLabel.setText("총 주문금액: " + totalPrice);
+        totalPriceLabel.setText(totalPrice + "원");
     }
 
     private Node createMenuItemNode(FoodItem item) {

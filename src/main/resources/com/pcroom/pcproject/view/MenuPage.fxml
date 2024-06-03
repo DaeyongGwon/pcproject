@@ -143,9 +143,14 @@
                                </ScrollPane>
                            </children>
                         </VBox>
-                         <VBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="280.0" style="-fx-padding: 5px;">
-                             <Label fx:id="totalPriceLabel" style="-fx-font-weight: bold;" text="총 주문금액: " />
-                         </VBox>
+                        <HBox alignment="CENTER" style="-fx-background-color: #eee; -fx-background-radius: 0 0 5 5;">
+                           <children>
+                              <Label prefHeight="17.0" prefWidth="172.0" style="-fx-font-weight: bold;" text="총 주문금액" textFill="#979797" />
+                               <VBox alignment="CENTER_RIGHT" prefHeight="33.0" prefWidth="87.0" style="-fx-padding: 5px;">
+                                   <Label fx:id="totalPriceLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" prefWidth="63.0" style="-fx-font-weight: bold;" textFill="#404040" />
+                               </VBox>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                  </children>
