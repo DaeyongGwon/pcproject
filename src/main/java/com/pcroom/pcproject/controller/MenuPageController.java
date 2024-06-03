@@ -21,11 +21,17 @@ import java.util.List;
 public class MenuPageController {
     public TextField FoodSearch;
     @FXML
+    public VBox cartItems;
+    @FXML
     private ScrollPane categoryScrollPane;
     @FXML
     private FlowPane menuItemsPane;
     @FXML
     private ScrollPane scrollPane;
+    @FXML
+    private ScrollPane cartScrollPane;
+    @FXML
+    private Label totalPriceLabel;
 
     private List<Node> filteredItems = new ArrayList<>(); // 필터링된 상품들을 저장할 리스트
     private FoodModel foodModel;
@@ -48,7 +54,6 @@ public class MenuPageController {
     public void initialize() {
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
-
         // 데이터베이스에서 메뉴 아이템 로드
         List<FoodItem> items = foodModel.getFoodData();
         items.forEach(item -> menuItemsPane.getChildren().add(createMenuItemNode(item)));
@@ -110,6 +115,109 @@ public class MenuPageController {
     private void showFilteredItems() {
         menuItemsPane.getChildren().clear();
         menuItemsPane.getChildren().addAll(filteredItems);
+    }
+
+    // 장바구니
+    // 장바구니에 표시할 상품 정보 클래스
+    private static class CartItem {
+        private String itemName;
+        private int quantity;
+        private int price;
+
+        public CartItem(String itemName, int quantity, int price) {
+            this.itemName = itemName;
+            this.quantity = quantity;
+            this.price = price;
+        }
+
+        public String getItemName() {
+            return itemName;
+        }
+
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public int getPrice() {
+            return price;
+        }
+    }
+
+    private void addCartItemToView(CartItem cartItem) {
+        // 동일한 상품이 이미 장바구니에 있는지 확인
+        boolean isAlreadyAdded = false;
+        for (Node node : cartItems.getChildren()) {
+            if (node instanceof BorderPane) {
+                BorderPane existingCartItemBox = (BorderPane) node;
+                HBox topBox = (HBox) existingCartItemBox.getTop(); // HBox로 캐스팅
+                Label itemNameLabel = (Label) topBox.getChildren().get(0); // HBox의 첫 번째 자식이 Label임을 가정
+                if (itemNameLabel.getText().equals(cartItem.getItemName())) {
+                    // 동일한 상품이 이미 장바구니에 있는 경우 수량 증가 및 가격 업데이트
+                    isAlreadyAdded = true;
+                    HBox itemInfoBox = (HBox) existingCartItemBox.getBottom();
+                    Label quantityLabel = (Label) itemInfoBox.getChildren().get(0);
+                    int currentQuantity = Integer.parseInt(quantityLabel.getText().substring(4)); // "수량: " 제외한 문자열을 정수로 변환
+                    quantityLabel.setText("수량: " + (currentQuantity + 1)); // 수량 증가
+
+                    // 가격 업데이트
+                    Label priceLabel = (Label) itemInfoBox.getChildren().get(2);
+                    int currentPrice = Integer.parseInt(priceLabel.getText().substring(4)); // "가격: " 제외한 문자열을 정수로 변환
+                    int updatedPrice = currentPrice + cartItem.getPrice(); // 현재 가격에 새로운 아이템의 가격을 더함
+                    priceLabel.setText("가격: " + updatedPrice); // 가격 업데이트
+                    break;
+                }
+            }
+        }
+
+        if (!isAlreadyAdded) {
+            // 동일한 상품이 장바구니에 없는 경우 새로운 아이템 추가
+            BorderPane cartItemBox = new BorderPane();
+            cartItemBox.setPrefSize(270, 60);
+            cartItemBox.setStyle("-fx-background-color: white; -fx-background-radius: 8px; -fx-alignment: center-left; -fx-padding: 5px;");
+
+            Label itemNameLabel = new Label(cartItem.getItemName());
+            itemNameLabel.setStyle("-fx-font-weight: bold;"); // 폰트 굵게 설정
+
+            Label quantityLabel = new Label("수량: 1");
+            Label priceLabel = new Label("가격: " + cartItem.getPrice());
+
+            HBox itemInfoBox = new HBox(quantityLabel, new Region(), priceLabel); // 수량과 가격을 담는 HBox 생성, 각각 왼쪽과 오른쪽에 위치하도록 설정
+            HBox.setHgrow(itemInfoBox.getChildren().get(1), Priority.ALWAYS); // Region을 사용하여 수량과 가격 사이의 공간을 확보하여 오른쪽 정렬
+
+            Button removeButton = new Button("X");
+            removeButton.setStyle("-fx-background-color: transparent; -fx-font-weight: bold; -fx-text-fill: #ff0000;"); // 배경색 투명, 폰트 굵게 설정
+            removeButton.setOnAction(event -> {
+                cartItems.getChildren().remove(cartItemBox); // 해당 항목 제거
+                updateTotalPrice(); // 삭제 버튼을 눌렀을 때 토탈 가격 업데이트
+            });
+
+            HBox topBox = new HBox(itemNameLabel, new Region(), removeButton); // itemNameLabel과 removeButton을 담는 HBox
+            topBox.setAlignment(Pos.CENTER_LEFT); // 왼쪽 정렬
+            HBox.setHgrow(itemNameLabel, Priority.ALWAYS); // itemNameLabel이 좌측으로 확장되도록 설정
+
+            cartItemBox.setTop(topBox); // 상단에 상품명과 삭제 버튼을 배치
+            cartItemBox.setBottom(itemInfoBox); // 아이템 정보 HBox를 하단에 배치하여 가운데 정렬
+
+            cartItems.getChildren().add(cartItemBox);
+        }
+
+        // 토탈 라벨 업데이트
+        updateTotalPrice();
+    }
+
+    private void updateTotalPrice() {
+        int totalPrice = 0;
+        for (Node node : cartItems.getChildren()) {
+            if (node instanceof BorderPane) {
+                BorderPane existingCartItemBox = (BorderPane) node;
+                HBox itemInfoBox = (HBox) existingCartItemBox.getBottom();
+                Label priceLabel = (Label) itemInfoBox.getChildren().get(2);
+                int currentPrice = Integer.parseInt(priceLabel.getText().substring(4)); // "가격: " 제외한 문자열을 정수로 변환
+                totalPrice += currentPrice; // 총 가격에 현재 아이템의 가격을 더함
+            }
+        }
+
+        totalPriceLabel.setText("총 주문금액: " + totalPrice);
     }
 
     private Node createMenuItemNode(FoodItem item) {
@@ -207,6 +315,11 @@ public class MenuPageController {
                 buttonContainer.setAlignment(Pos.TOP_CENTER);
                 buttonContainer.setStyle("-fx-padding: 0px 6px 8px 6px;");
                 buttonContainer.getChildren().add(addButton);
+                // add 버튼 클릭 시 addCartItemToView 메소드 호출
+                addButton.setOnAction(event -> {
+                    CartItem cartItem = new CartItem(item.getTitle(), 1, item.getPrice());
+                    addCartItemToView(cartItem);
+                });
                 itemBox.setBottom(null);
 
                 HBox finalPriceBox = priceBox;
