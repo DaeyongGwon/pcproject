@@ -39,11 +39,11 @@ public class UserDao {
         return userList;
     }
 
-    public boolean authenticateUser(String nickname, String password) {
-        String query = "SELECT * FROM users WHERE nickname = ? AND password = ?";
+    public boolean authenticateUser(String USER_ID, String password) {
+        String query = "SELECT * FROM users WHERE USER_ID = ? AND password = ?";
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, nickname);
+            preparedStatement.setString(1, USER_ID);
             preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next(); // 결과가 존재하면 true 반환
