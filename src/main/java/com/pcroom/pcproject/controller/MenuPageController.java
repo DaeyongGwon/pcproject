@@ -23,6 +23,8 @@ public class MenuPageController {
     @FXML
     public VBox cartItems;
     @FXML
+    public VBox cartVBox;
+    @FXML
     private ScrollPane categoryScrollPane;
     @FXML
     private FlowPane menuItemsPane;
@@ -115,6 +117,13 @@ public class MenuPageController {
     private void showFilteredItems() {
         menuItemsPane.getChildren().clear();
         menuItemsPane.getChildren().addAll(filteredItems);
+    }
+
+    public void closeCart(ActionEvent actionEvent) {
+        cartVBox.setVisible(false);
+        cartVBox.setManaged(false);
+        // 장바구니 비우기
+        cartItems.getChildren().clear();
     }
 
     // 장바구니
@@ -307,6 +316,8 @@ public class MenuPageController {
                 addButton.setStyle("-fx-font-family: 'D2Coding'; -fx-padding: 8px 5px; -fx-background-color: #fbe54d; -fx-text-fill: black; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 7px; -fx-alignment: center;");
                 addButton.setPrefHeight(30);
                 addButton.setMaxWidth(Double.MAX_VALUE);
+                //addButton 클릭 시 cartVBox의 visible을 true로 변경, manage를 false로 변경
+
                 HBox.setHgrow(addButton, Priority.ALWAYS);
                 addButton.setCursor(Cursor.HAND);
                 addButton.setVisible(false);
@@ -319,6 +330,9 @@ public class MenuPageController {
                 addButton.setOnAction(event -> {
                     CartItem cartItem = new CartItem(item.getTitle(), 1, item.getPrice());
                     addCartItemToView(cartItem);
+                    cartVBox.setVisible(true);
+                    cartVBox.setManaged(true);
+                    System.out.println("장바구니에 추가됨");
                 });
                 itemBox.setBottom(null);
 
