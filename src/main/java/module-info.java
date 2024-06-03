@@ -8,9 +8,11 @@ module com.pcroom.pcproject {
     opens com.pcroom.pcproject.controller to javafx.fxml;
     opens com.pcroom.pcproject.view to javafx.fxml;
     opens com.pcroom.pcproject.model to javafx.fxml;
+    opens com.pcroom.pcproject.model.dao to javafx.fxml;
 
     exports com.pcroom.pcproject.view;
     exports com.pcroom.pcproject.controller;
     exports com.pcroom.pcproject.model;
+    exports com.pcroom.pcproject.model.dao;
 
 }

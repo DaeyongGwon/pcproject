@@ -1,5 +1,7 @@
 package com.pcroom.pcproject.model;
 
+import com.pcroom.pcproject.model.dao.FoodDao;
+
 import java.util.ArrayList;
 import java.util.List;
 
