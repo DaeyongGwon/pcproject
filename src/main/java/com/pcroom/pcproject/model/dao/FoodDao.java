@@ -1,4 +1,6 @@
-package com.pcroom.pcproject.model;
+package com.pcroom.pcproject.model.dao;
+
+import com.pcroom.pcproject.model.FoodItem;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,8 +12,8 @@ import java.util.List;
 
 public class FoodDao {
     private static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
-    private static final String USER = "hr";
-    private static final String PASSWORD = "hr";
+    private static final String USER = "pcroom";
+    private static final String PASSWORD = "pcroom";
 
     // 데이터베이스에서 메뉴 아이템 로드
     public List<FoodItem> loadMenuItemsFromDatabase() {
