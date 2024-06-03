@@ -1,15 +1,18 @@
 package com.pcroom.pcproject.controller;
 
+import com.pcroom.pcproject.model.dao.UserDao;
 import com.pcroom.pcproject.view.SignIn;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import com.pcroom.pcproject.view.MainPage;
 
 public class SignInController {
+    private final UserDao userDAO = new UserDao();
 
     public Button signUpButton;
     public Button SignInButton;
@@ -40,15 +43,15 @@ public class SignInController {
 
     @FXML
     private void handleSignInButtonAction() {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
+        String input_id = usernameField.getText();
+        String inpput_password = passwordField.getText();
 
         // 여기서 유저 정보 확인 후 로그인 처리
-        if (authenticate(username, password)) {
+        if (userDAO.authenticateUser(input_id, inpput_password)) {
             // 로그인 성공
             showAlert("로그인 성공", "환영합니다!");
             // 토큰 발급
-            String token = generateToken(username); // 예시: 간단하게 사용자 이름을 토큰으로 사용
+            String token = generateToken(input_id); // 예시: 간단하게 사용자 이름을 토큰으로 사용
             // 토큰 저장
             saveToken(token);
             // 메인 페이지로 이동
@@ -59,10 +62,6 @@ public class SignInController {
         }
     }
 
-    private boolean authenticate(String username, String password) {
-        // 하드코딩된 유저 정보와 비교하여 인증 처리
-        return username.equals("user") && password.equals("password");
-    }
 
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -73,17 +72,19 @@ public class SignInController {
     }
 
     private void moveToMainPage() {
-        // MainPage를 띄우는 코드
-        MainPage mainPage = new MainPage();
-        Stage mainStage = new Stage();
         try {
-            mainPage.start(mainStage);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/MainPage.fxml"));
+            //화면 크기 400, 500으로 변경
+            Scene scene = new Scene(loader.load(), 400, 500);
+            Stage mainStage = new Stage();
+            mainStage.setTitle("메인 페이지");
+            mainStage.setScene(scene);
+            mainStage.show();
             primaryStage.close(); // 현재 로그인 창 닫기
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     private String generateToken(String username) {
         // 간단히 사용자 이름을 토큰으로 사용
@@ -99,5 +100,10 @@ public class SignInController {
         // 여기서는 단순히 클래스 변수에 저장하는 예시를 사용
         // 실제 애플리케이션에서는 안전한 저장 방식을 사용해야 함
         SignInController.token = token;
+    }
+
+    public static void logout() {
+        // 토큰을 null로 설정하여 로그아웃 처리
+        token = null;
     }
 }
