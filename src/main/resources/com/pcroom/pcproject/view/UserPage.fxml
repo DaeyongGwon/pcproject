@@ -1,15 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.event.ActionEvent?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<VBox prefHeight="394.0" prefWidth="440.0" style="-fx-background-color: rgb(78, 108, 139);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.UserPageController">
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20" />
+    </padding>
     <children>
-        <Label prefHeight="233.0" prefWidth="526.0" text="새 창" />
-      <Pane prefHeight="200.0" prefWidth="200.0" />
-        <!-- 시작 시간, 남은 시간, 이름, PC 번호, -->
+        <HBox alignment="TOP_RIGHT" prefHeight="142.0" prefWidth="400.0">
+            <children>
+                <Button alignment="CENTER" contentDisplay="CENTER" focusTraversable="false" onAction="#orderMenu" prefHeight="50.0" prefWidth="120.0" style="-fx-background-radius: 15; -fx-background-color: rgb(75, 85, 95); -fx-text-fill: white;" text="상품 주문" textAlignment="CENTER">
+                    <font>
+                        <Font name="D2Coding" size="18.0" />
+                    </font>
+                </Button>
+                <HBox prefHeight="106.0" prefWidth="24.0" />
+                <Button alignment="CENTER" contentDisplay="CENTER" onAction="#handleClose" prefHeight="50.0" prefWidth="120.0" style="-fx-background-radius: 15; -fx-background-color: rgb(75, 85, 95); -fx-text-fill: white;" text="사용 종료" textAlignment="CENTER">
+                    <font>
+                        <Font name="D2Coding" size="18.0" />
+                    </font>
+                </Button>
+            </children>
+        </HBox>
+        <HBox prefHeight="333.0" prefWidth="379.0">
+            <children>
+                <ImageView fitHeight="257.0" fitWidth="167.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/PCRoom.jpg" />
+                    </image>
+                </ImageView>
+                <Pane prefHeight="259.0" prefWidth="21.0" />
+                <GridPane hgap="10" maxHeight="-Infinity" prefHeight="169.0" prefWidth="233.0" style="-fx-background-color: rgb(101, 122, 142); -fx-text-fill: white; -fx-background-radius: 15;" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="179.0" minWidth="10.0" prefWidth="107.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="213.0" minWidth="10.0" prefWidth="106.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label fx:id="seatNumberLabel" style="-fx-font-size: 16px; -fx-text-fill: white; -fx-font-family: 'D2Coding';" />
+                        <Label style="-fx-font-size: 16px; -fx-text-fill: white; -fx-font-family: 'D2Coding';" text=" 사용자 이름:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <Label fx:id="usernameLabel" style="-fx-font-size: 16px; -fx-text-fill: white; -fx-font-family: 'D2Coding';" text="N/A" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label style="-fx-font-size: 16px; -fx-text-fill: white; -fx-font-family: 'D2Coding';" text=" 시작 시간:" GridPane.rowIndex="2" />
+                        <Label fx:id="startTimeLabel" style="-fx-font-size: 16px; -fx-text-fill: white; -fx-font-family: 'D2Coding';" text="N/A" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label style="-fx-font-size: 16px; -fx-text-fill: white; -fx-font-family: 'D2Coding';" text=" 남은 시간:" GridPane.rowIndex="3" />
+                        <Label fx:id="remainingTimeLabel" style="-fx-font-size: 16px; -fx-text-fill: white; -fx-font-family: 'D2Coding';" text="N/A" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    </children>
+                </GridPane>
+            </children>
+        </HBox>
+        <HBox prefHeight="63.0" prefWidth="445.0">
+            <children>
+                <HBox>
+                    <children>
+                        <Button alignment="CENTER" focusTraversable="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-radius: 15; -fx-background-color: rgb(105, 124, 140); -fx-text-fill: white;" text="자리 이동" textAlignment="CENTER">
+                            <font>
+                                <Font name="D2Coding" size="14.0" />
+                            </font>
+                        </Button>
+                        <Pane prefHeight="28.0" prefWidth="20.0" />
+                        <Button alignment="CENTER" focusTraversable="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-radius: 15; -fx-background-color: rgb(105, 124, 140); -fx-text-fill: white;" text="결제" textAlignment="CENTER">
+                            <font>
+                                <Font name="D2Coding" size="14.0" />
+                            </font>
+                        </Button>
+                        <Pane prefHeight="28.0" prefWidth="20.0" />
+                        <Button alignment="CENTER" focusTraversable="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-radius: 15; -fx-background-color: rgb(105, 124, 140); -fx-text-fill: white;" text="내 정보" textAlignment="CENTER">
+                            <font>
+                                <Font name="D2Coding" size="14.0" />
+                            </font>
+                        </Button>
+                        <Pane prefHeight="28.0" prefWidth="20.0" />
+                        <Button alignment="CENTER" focusTraversable="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-radius: 15; -fx-background-color: rgb(105, 124, 140); -fx-text-fill: white;" text="결제 내역" textAlignment="CENTER">
+                            <font>
+                                <Font name="D2Coding" size="14.0" />
+                            </font>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+        </HBox>
     </children>
 </VBox>
