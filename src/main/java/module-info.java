@@ -14,5 +14,9 @@ module com.pcroom.pcproject {
     exports com.pcroom.pcproject.controller;
     exports com.pcroom.pcproject.model;
     exports com.pcroom.pcproject.model.dao;
+    exports com.pcroom.pcproject.model.dto;
+    opens com.pcroom.pcproject.model.dto to javafx.fxml;
+    exports com.pcroom.pcproject.service;
+    opens com.pcroom.pcproject.service to javafx.fxml;
 
 }

@@ -1,6 +1,6 @@
 package com.pcroom.pcproject.model.dao;
 
-import com.pcroom.pcproject.model.UserItem;
+import com.pcroom.pcproject.model.dto.UserDto;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,8 +15,8 @@ public class UserDao {
     private static final String USER = "pcroom";
     private static final String PASSWORD = "pcroom";
 
-    public List<UserItem> loadUsersFromDatabase() {
-        List<UserItem> userList = new ArrayList<>();
+    public List<UserDto> loadUsersFromDatabase() {
+        List<UserDto> userList = new ArrayList<>();
         String query = "SELECT * FROM users";
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -30,8 +30,8 @@ public class UserDao {
                 String phoneNumber = resultSet.getString("PHONENUMBER");
                 String email = resultSet.getString("EMAIL");
                 String password = resultSet.getString("PASSWORD");
-                UserItem userItem = new UserItem(id, nickname, name, age, address, phoneNumber, email, password);
-                userList.add(userItem);
+                UserDto userDto = new UserDto(id, nickname, name, age, address, phoneNumber, email, password);
+                userList.add(userDto);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -50,6 +50,52 @@ public class UserDao {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public void addUserToDatabase(UserDto user) {
+        String query = "INSERT INTO users (USER_ID, NAME, AGE, ADDRESS, PHONENUMBER, EMAIL, PASSWORD) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, user.getNickname());
+            preparedStatement.setString(2, user.getName());
+            preparedStatement.setInt(3, user.getAge());
+            preparedStatement.setString(4, user.getAddress());
+            preparedStatement.setString(5, user.getPhonenumber());
+            preparedStatement.setString(6, user.getEmail());
+            preparedStatement.setString(7, user.getPassword());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeUserFromDatabase(UserDto user) {
+        String query = "DELETE FROM users WHERE ID = ?";
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateUserInDatabase(UserDto user) {
+        String query = "UPDATE users SET USER_ID = ?, NAME = ?, AGE = ?, ADDRESS = ?, PHONENUMBER = ?, EMAIL = ?, PASSWORD = ? WHERE ID = ?";
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, user.getNickname());
+            preparedStatement.setString(2, user.getName());
+            preparedStatement.setInt(3, user.getAge());
+            preparedStatement.setString(4, user.getAddress());
+            preparedStatement.setString(5, user.getPhonenumber());
+            preparedStatement.setString(6, user.getEmail());
+            preparedStatement.setString(7, user.getPassword());
+            preparedStatement.setInt(8, user.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

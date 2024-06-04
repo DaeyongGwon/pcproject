@@ -1,7 +1,7 @@
 package com.pcroom.pcproject.controller;
 
-import com.pcroom.pcproject.model.FoodModel;
-import com.pcroom.pcproject.model.FoodItem;
+import com.pcroom.pcproject.service.FoodService;
+import com.pcroom.pcproject.model.dto.FoodDto;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -25,6 +25,8 @@ public class MenuPageController {
     @FXML
     public VBox cartVBox;
     @FXML
+    public Label cartList;
+    @FXML
     private ScrollPane categoryScrollPane;
     @FXML
     private FlowPane menuItemsPane;
@@ -36,10 +38,10 @@ public class MenuPageController {
     private Label totalPriceLabel;
 
     private List<Node> filteredItems = new ArrayList<>(); // 필터링된 상품들을 저장할 리스트
-    private FoodModel foodModel;
+    private FoodService foodService;
 
     public MenuPageController() {
-        this.foodModel = new FoodModel();
+        this.foodService = new FoodService();
     }
 
     @FXML
@@ -57,12 +59,12 @@ public class MenuPageController {
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
         // 데이터베이스에서 메뉴 아이템 로드
-        List<FoodItem> items = foodModel.getFoodData();
+        List<FoodDto> items = foodService.getFoodData();
         items.forEach(item -> menuItemsPane.getChildren().add(createMenuItemNode(item)));
 
         // 화면 크기에 따라 항목 수 조정
         scrollPane.widthProperty().addListener((obs, oldVal, newVal) -> {
-            int newPrefColumns = Math.max(1, (int) (newVal.doubleValue() / 200));
+//            int newPrefColumns = Math.max(1, (int) (newVal.doubleValue() / 200));
             menuItemsPane.setPrefWrapLength(newVal.doubleValue());
         });
     }
@@ -73,7 +75,7 @@ public class MenuPageController {
             String category = ((Button) event.getSource()).getText();
             filteredItems.clear();
 
-            foodModel.getAllItems().forEach(item -> {
+            foodService.getAllItems().forEach(item -> {
                 if (item.getLabels().contains(category) || category.equals("전체")) {
                     filteredItems.add(createMenuItemNode(item));
                 }
@@ -100,7 +102,7 @@ public class MenuPageController {
             showAllItems();
         } else {
             filteredItems.clear();
-            foodModel.getAllItems().forEach(item -> {
+            foodService.getAllItems().forEach(item -> {
                 if (item.getTitle().toLowerCase().contains(keyword.toLowerCase())) {
                     filteredItems.add(createMenuItemNode(item));
                 }
@@ -111,7 +113,7 @@ public class MenuPageController {
 
     private void showAllItems() {
         menuItemsPane.getChildren().clear();
-        foodModel.getAllItems().forEach(item -> menuItemsPane.getChildren().add(createMenuItemNode(item)));
+        foodService.getAllItems().forEach(item -> menuItemsPane.getChildren().add(createMenuItemNode(item)));
     }
 
     private void showFilteredItems() {
@@ -122,8 +124,8 @@ public class MenuPageController {
     public void closeCart(ActionEvent actionEvent) {
         cartVBox.setVisible(false);
         cartVBox.setManaged(false);
-        // 장바구니 비우기
-        cartItems.getChildren().clear();
+        // 장바구니 비우기 cartList을 제외한 모든 노드를 삭제
+        cartItems.getChildren().removeIf(node -> !node.equals(cartList));
     }
 
     // 장바구니
@@ -229,7 +231,7 @@ public class MenuPageController {
         totalPriceLabel.setText(totalPrice + "원");
     }
 
-    private Node createMenuItemNode(FoodItem item) {
+    private Node createMenuItemNode(FoodDto item) {
         BorderPane itemBox = new BorderPane();
         itemBox.setPrefSize(180, 260);
         itemBox.setStyle("-fx-font-family: 'D2Coding'; -fx-background-color: white; -fx-background-radius: 10px; -fx-alignment: center-left; -fx-opacity: 1; -fx-transition: opacity 0.3s;");
