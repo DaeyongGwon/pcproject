@@ -84,11 +84,11 @@
                                 </ScrollPane>
                             </children>
                         </HBox>
-                        <HBox alignment="CENTER" minHeight="50.0" prefHeight="50.0" prefWidth="239.0" style="-fx-background-color: #f4f4f4;" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_RIGHT" minHeight="50.0" prefHeight="50.0" prefWidth="212.0" style="-fx-background-color: #f4f4f4;" HBox.hgrow="ALWAYS">
                             <children>
-                                <HBox alignment="CENTER_RIGHT" maxHeight="32.0" minHeight="10.0" prefHeight="32.0" prefWidth="204.0" style="-fx-border-radius: 20; -fx-border-color: black; -fx-background-color: white; -fx-background-radius: 20;">
+                                <HBox alignment="CENTER_RIGHT" maxHeight="32.0" minHeight="10.0" prefHeight="32.0" prefWidth="326.0" style="-fx-border-radius: 20; -fx-border-color: black; -fx-background-color: white; -fx-background-radius: 20;">
                                     <children>
-                                        <TextField fx:id="FoodSearch" minWidth="100.0" onAction="#searchFood" prefHeight="26.0" prefWidth="155.0" promptText="상품명 검색" style="-fx-border-color: white; -fx-background-color: white; -fx-background-radius: 20 0 0 20; -fx-border-radius: 20 0 0 20;" />
+                                        <TextField fx:id="FoodSearch" minWidth="100.0" onAction="#searchFood" prefHeight="26.0" prefWidth="284.0" promptText="상품명 검색" style="-fx-border-color: white; -fx-background-color: white; -fx-background-radius: 20 0 0 20; -fx-border-radius: 20 0 0 20;" />
                                         <Button id="clear_btn" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="26.0" mnemonicParsing="false" onAction="#clearTextField" prefHeight="26.0" prefWidth="17.0" style="-fx-font-size: 17;" text="X" />
                                     </children>
                                 </HBox>
@@ -121,7 +121,7 @@
                                       <Font size="11.0" />
                                   </font>
                               </Label>
-                        <Button onAction="#closeCart" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="21.0" prefWidth="28.0" style="-fx-font-weight: bold; -fx-background-color: #863ba8; -fx-text-fill: white; -fx-font-size: 20;" text="X" />
+                        <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#closeCart" prefHeight="21.0" prefWidth="28.0" style="-fx-font-weight: bold; -fx-background-color: #863ba8; -fx-text-fill: white; -fx-font-size: 20;" text="X" />
                      </children>
                   </HBox>
                     </children>
@@ -141,7 +141,7 @@
                                             <content>
                                                 <VBox fx:id="cartItems" alignment="TOP_CENTER" fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: white;">
                                                     <children>
-                                                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="270.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-background-color: white;" text="장바구니에 담은 상품 목록" VBox.vgrow="ALWAYS" />
+                                                        <Label fx:id="cartList" alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="270.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-background-color: white;" text="장바구니에 담은 상품 목록" VBox.vgrow="ALWAYS" />
                                                     </children>
                                                 </VBox>
                                             </content>
