@@ -1,6 +1,6 @@
-package com.pcroom.pcproject.model;
+package com.pcroom.pcproject.model.dto;
 
-public class UserItem {
+public class UserDto {
     private int id;
     private String nickname;
     private String name;
@@ -10,7 +10,7 @@ public class UserItem {
     private String email;
     private String password;
 
-    public UserItem(int id, String nickname, String name, int age, String address, String phonenumber, String email, String password) {
+    public UserDto(int id, String nickname, String name, int age, String address, String phonenumber, String email, String password) {
         this.id = id;
         this.nickname = nickname;
         this.name = name;
@@ -36,6 +36,7 @@ public class UserItem {
     public void setId(int id) {
         this.id = id;
     }
+    
     public String getName() {
         return name;
     }
@@ -84,4 +85,3 @@ public class UserItem {
         this.password = password;
     }
 }
-
