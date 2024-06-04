@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -7,15 +9,48 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.SeatDetailsController">
+<VBox prefHeight="270.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.SeatDetailsController">
     <children>
-        <Label fx:id="seatLabel" text="좌석 정보" />
-        <Label fx:id="statusLabel" text="상태: 알 수 없음" />
-        <!-- 새로운 버튼 추가 -->
-        <Button fx:id="moveToNewWindowButton" text="이 좌석을 이용합니다." onAction="#moveToNewWindow"/>
-        <Button text="닫기" onAction="#handleClose"/>
+      <Pane prefHeight="174.0" prefWidth="460.0" />
+      <VBox prefHeight="296.0" prefWidth="460.0">
+         <children>
+              <Label fx:id="seatLabel" text="좌석 정보">
+               <font>
+                  <Font name="D2Coding Bold" size="30.0" />
+               </font>
+            </Label>
+            <Pane prefHeight="14.0" prefWidth="460.0" />
+              <Label fx:id="statusLabel" text="상태: 알 수 없음">
+               <font>
+                  <Font name="D2Coding" size="30.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <VBox prefHeight="199.0" prefWidth="460.0">
+         <children>
+              <Label fx:id="startTimeLabel" managed="false" text="시작 시간: 알 수 없음" visible="false" /> <!-- 시작 시간 레이블 숨기기 -->
+              <Label fx:id="usernameLabel" managed="false" text="사용자 이름: 알 수 없음" visible="false" />
+         </children>
+      </VBox>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Pane prefHeight="55.0" prefWidth="25.0" /> <!-- 사용자 이름 레이블 숨기기 -->
+              <!-- 새로운 버튼 추가 -->
+              <Button fx:id="moveToNewWindowButton" onAction="#moveToNewWindow" prefHeight="33.0" prefWidth="215.0" style="-fx-background-radius: 15;" text="이 좌석을 이용합니다.">
+               <font>
+                  <Font name="D2Coding" size="18.0" />
+               </font></Button>
+            <Pane prefHeight="57.0" prefWidth="107.0" />
+              <Button onAction="#handleClose" prefHeight="33.0" prefWidth="89.0" style="-fx-background-radius: 15;" text="닫기">
+               <font>
+                  <Font name="D2Coding" size="18.0" />
+               </font></Button>
+            <Pane prefHeight="55.0" prefWidth="25.0" />
+         </children>
+      </HBox>
     </children>
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
 </VBox>
