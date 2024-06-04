@@ -25,15 +25,23 @@ public class UserService {
     }
 
     // 사용자 추가
-    public void addUser(UserDto user) {
-        allUsers.add(user);
-        userDao.addUserToDatabase(user);
+    public boolean addUser(UserDto user) {
+        try {
+            // 사용자를 데이터베이스에 추가하는 코드
+            userDao.addUserToDatabase(user);
+            // 사용자 추가가 성공하면 true 반환
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 사용자 추가가 실패하면 false 반환
+            return false;
+        }
     }
 
     // 사용자 삭제
     public void removeUser(UserDto user) {
         allUsers.remove(user);
-        userDao.removeUserFromDatabase(user);
+//        userDao.removeUserFromDatabase(user);
     }
 
     // 사용자 업데이트

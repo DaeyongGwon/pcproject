@@ -11,6 +11,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class SignInController {
     private final UserService userService = new UserService();
 
@@ -71,15 +73,20 @@ public class SignInController {
 
     private void moveToMainPage() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/MainPage.fxml"));
-            //화면 크기 400, 500으로 변경
-            Scene scene = new Scene(loader.load(), 400, 500);
-            Stage mainStage = new Stage();
-            mainStage.setTitle("메인 페이지");
-            mainStage.setScene(scene);
-            mainStage.show();
-            primaryStage.close(); // 현재 로그인 창 닫기
-        } catch (Exception e) {
+            if (primaryStage != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/MainPage.fxml"));
+                //화면 크기 400, 500으로 변경
+                Scene scene = new Scene(loader.load(), 400, 500);
+                Stage mainStage = new Stage();
+                mainStage.setTitle("메인 페이지");
+                mainStage.setScene(scene);
+                mainStage.show();
+                // 로그인 페이지 닫기
+                primaryStage.close();
+            } else {
+                System.out.println("Primary stage is null.");
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
