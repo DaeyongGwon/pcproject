@@ -1,20 +1,21 @@
-package com.pcroom.pcproject.model;
+package com.pcroom.pcproject.model.dto;
 
-public class UserItem {
+import java.sql.Date;
+
+public class UserDto {
     private int id;
     private String nickname;
     private String name;
-    private int age;
+    private Date birthday;
     private String address;
     private String phonenumber;
     private String email;
     private String password;
 
-    public UserItem(int id, String nickname, String name, int age, String address, String phonenumber, String email, String password) {
-        this.id = id;
+    public UserDto(String nickname, String name, Date birthday, String address, String phonenumber, String email, String password) {
         this.nickname = nickname;
         this.name = name;
-        this.age = age;
+        this.birthday = birthday;
         this.address = address;
         this.phonenumber = phonenumber;
         this.email = email;
@@ -44,12 +45,12 @@ public class UserItem {
         this.name = name;
     }
 
-    public int getAge() {
-        return age;
+    public Date getBirthday() {
+        return birthday;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 
     public String getAddress() {
@@ -84,4 +85,3 @@ public class UserItem {
         this.password = password;
     }
 }
-

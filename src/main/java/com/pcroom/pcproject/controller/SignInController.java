@@ -1,6 +1,6 @@
 package com.pcroom.pcproject.controller;
 
-import com.pcroom.pcproject.model.dao.UserDao;
+import com.pcroom.pcproject.service.UserService;
 import com.pcroom.pcproject.view.SignIn;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,8 +11,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class SignInController {
-    private final UserDao userDAO = new UserDao();
+    private final UserService userService = new UserService();
 
     public Button signUpButton;
     public Button SignInButton;
@@ -31,7 +33,6 @@ public class SignInController {
         Stage signInStage = new Stage();
         try {
             signIn.start(signInStage);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,15 +44,15 @@ public class SignInController {
 
     @FXML
     private void handleSignInButtonAction() {
-        String input_id = usernameField.getText();
-        String inpput_password = passwordField.getText();
+        String inputId = usernameField.getText();
+        String inputPassword = passwordField.getText();
 
         // 여기서 유저 정보 확인 후 로그인 처리
-        if (userDAO.authenticateUser(input_id, inpput_password)) {
+        if (userService.authenticateUser(inputId, inputPassword)) {
             // 로그인 성공
             showAlert("로그인 성공", "환영합니다!");
             // 토큰 발급
-            String token = generateToken(input_id); // 예시: 간단하게 사용자 이름을 토큰으로 사용
+            String token = generateToken(inputId); // 예시: 간단하게 사용자 이름을 토큰으로 사용
             // 토큰 저장
             saveToken(token);
             // 메인 페이지로 이동
@@ -61,7 +62,6 @@ public class SignInController {
             showAlert("로그인 실패", "아이디 또는 패스워드가 잘못되었습니다.");
         }
     }
-
 
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -73,15 +73,20 @@ public class SignInController {
 
     private void moveToMainPage() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/MainPage.fxml"));
-            //화면 크기 400, 500으로 변경
-            Scene scene = new Scene(loader.load(), 400, 500);
-            Stage mainStage = new Stage();
-            mainStage.setTitle("메인 페이지");
-            mainStage.setScene(scene);
-            mainStage.show();
-            primaryStage.close(); // 현재 로그인 창 닫기
-        } catch (Exception e) {
+            if (primaryStage != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/MainPage.fxml"));
+                //화면 크기 400, 500으로 변경
+                Scene scene = new Scene(loader.load(), 400, 500);
+                Stage mainStage = new Stage();
+                mainStage.setTitle("메인 페이지");
+                mainStage.setScene(scene);
+                mainStage.show();
+                // 로그인 페이지 닫기
+                primaryStage.close();
+            } else {
+                System.out.println("Primary stage is null.");
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
