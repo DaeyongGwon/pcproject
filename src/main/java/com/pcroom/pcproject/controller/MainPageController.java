@@ -10,12 +10,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class MainPageController {
 
@@ -52,6 +55,9 @@ public class MainPageController {
                 loggedOut.setManaged(true);  // 레이아웃에 포함
                 loggedIn.setVisible(false);
                 loggedIn.setManaged(false);  // 레이아웃에서 제외
+
+                // 좌석 버튼 비활성화
+                disableSeatButtons();
             }
         });
     }
@@ -83,24 +89,28 @@ public class MainPageController {
     @FXML
     private void handleSeatButtonClick(int seatNumber) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/SeatDetails.fxml"));
-            Parent root = loader.load();
+            // SeatDetails.fxml을 로드하여 SeatDetailsController 인스턴스를 얻음
+            FXMLLoader seatDetailsLoader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/SeatDetails.fxml"));
+            Parent seatDetailsRoot = seatDetailsLoader.load();
+            SeatDetailsController seatDetailsController = seatDetailsLoader.getController();
 
-            SeatDetailsController controller = loader.getController();
             boolean isReserved = seatStatus[seatNumber - 1]; // 좌석 상태를 가져오는 로직 추가
-            String status = isReserved ? "좌석 사용 가능" : "사용 중";
+            String status = isReserved ? "좌석 사용 가능" : "사용 중인 좌석 입니다.";
+            String startTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            String loggedInUser = SignInController.getToken(); // 로그인 중인 유저 이름 가져오기
 
-            controller.setSeatDetails(String.valueOf(seatNumber), status);
+            seatDetailsController.setSeatDetails(String.valueOf(seatNumber), status, startTime, loggedInUser);
 
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("좌석 상세 정보");
-            stage.setScene(new Scene(root));
+            stage.setScene(new Scene(seatDetailsRoot));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     @FXML
     public void loginPage(ActionEvent actionEvent) {
@@ -133,5 +143,10 @@ public class MainPageController {
                 seatButton.setDisable(true);
             }
         }
+    }
+    // 좌석 번호를 GridPane에 추가하는 메서드
+    public void addSeatLabel(int row, int col, String seatNumber) {
+        Label label = new Label(seatNumber);
+        seatGrid.add(label, col, row);
     }
 }
