@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.UserInfoController">
+<children>
+        <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" minWidth="10" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <Label text="ID:" />
+            <Label text="Name:" GridPane.rowIndex="1" />
+            <Label text="Birthday:" GridPane.rowIndex="2" />
+            <Label text="Address:" GridPane.rowIndex="3" />
+            <Label text="Phone Number:" GridPane.rowIndex="4" />
+            <Label text="Email:" GridPane.rowIndex="5" />
+            <Label fx:id="nicknameLabel" GridPane.columnIndex="1" />
+            <Label fx:id="nameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="birthdayLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="addressLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="phoneNumberLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        </GridPane>
+    </children>
+</VBox>

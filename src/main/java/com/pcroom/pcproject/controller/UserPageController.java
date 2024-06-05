@@ -78,4 +78,26 @@ public class UserPageController {
             }
         });
     }
+
+    @FXML
+    private void showUserInfo(ActionEvent event) {
+        try {
+            // 새 창을 열기 위한 FXMLLoader 생성
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/UserInfo.fxml"));
+            Parent root = loader.load();
+
+            // 새 창의 컨트롤러를 가져와서 사용자 정보를 설정
+            UserInfoController controller = loader.getController();
+            // 여기에서 사용자 정보를 설정할 수 있습니다.
+            // 예: controller.setUserInfo(userData);
+
+            // 새로운 스테이지 생성 및 설정
+            Stage stage = new Stage();
+            stage.setTitle("사용자 정보");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

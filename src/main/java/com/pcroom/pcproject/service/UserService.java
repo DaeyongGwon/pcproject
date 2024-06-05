@@ -54,4 +54,13 @@ public class UserService {
         boolean result = userDao.authenticateUser(userId, password);
         return result;
     }
+
+    public UserDto getUserByNickname(String nickname) {
+        for (UserDto user : allUsers) {
+            if (user.getNickname().equals(nickname)) {
+                return user;
+            }
+        }
+        return null; // 해당 닉네임을 가진 사용자가 없을 경우 null 반환
+    }
 }
