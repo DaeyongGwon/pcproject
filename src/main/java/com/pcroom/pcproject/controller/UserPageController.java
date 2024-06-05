@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -25,6 +26,22 @@ public class UserPageController {
     private Label remainingTimeLabel;
 
     @FXML
+    private void charge(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/Charge.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("요금제 구매");
+            stage.initModality(Modality.APPLICATION_MODAL); // Make the popup modal
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private void orderMenu(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/MenuPage.fxml"));
@@ -34,10 +51,6 @@ public class UserPageController {
             stage.setTitle("Menu Page");
             stage.setScene(new Scene(root));
             stage.show();
-
-            // 현재 창 닫기
-            // Stage currentStage = (Stage) seatNumberLabel.getScene().getWindow();
-            // currentStage.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
