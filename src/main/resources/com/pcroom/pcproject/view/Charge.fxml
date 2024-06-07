@@ -98,141 +98,99 @@
                </VBox>
             </VBox>
             <VBox prefHeight="113.0" prefWidth="217.0" style="-fx-padding: 10;">
-               <children>
-                  <VBox prefHeight="70.0" prefWidth="240.0"
-                        style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5;">
-                     <children>
-                        <VBox alignment="BOTTOM_LEFT" prefHeight="33.0" prefWidth="187.0"
-                              style="-fx-padding: 0 0 0 10;">
-                           <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="74.0"
-                                     style="-fx-padding: 0; -fx-font-size: 10; -fx-background-radius: 10; -fx-border-color: gray; -fx-border-radius: 10;"
-                                     text="5천원(저장O)" textFill="#686666"/>
-                           </children>
-                        </VBox>
-                        <HBox alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="187.0">
-                           <children>
-                              <Label alignment="BOTTOM_LEFT" contentDisplay="BOTTOM" prefHeight="30.0"
-                                     prefWidth="104.0"
-                                     style="-fx-font-size: 18; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-padding: 0 0 10 10;"
-                                     text="05:00"/>
-                              <Label alignment="BOTTOM_RIGHT" contentDisplay="BOTTOM" prefHeight="44.0"
-                                     prefWidth="89.0"
-                                     style="-fx-font-size: 18; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-padding: 0 10 10 0;"
-                                     text="5000원"/>
-                           </children>
-                        </HBox>
-                     </children>
+               <VBox prefHeight="70.0" prefWidth="240.0"
+                     style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5;">
+                  <VBox alignment="BOTTOM_LEFT" prefHeight="33.0" prefWidth="187.0"
+                        style="-fx-padding: 0 0 0 10;">
+                     <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="74.0"
+                            style="-fx-padding: 0; -fx-font-size: 10; -fx-background-radius: 10; -fx-border-color: gray; -fx-border-radius: 10;"
+                            text="5천원(저장O)" textFill="#686666"/>
                   </VBox>
-               </children>
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="187.0">
+                     <Label alignment="BOTTOM_LEFT" contentDisplay="BOTTOM" prefHeight="30.0"
+                            prefWidth="104.0"
+                            style="-fx-font-size: 18; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-padding: 0 0 10 10;"
+                            text="05:00"/>
+                     <Label alignment="BOTTOM_RIGHT" contentDisplay="BOTTOM" prefHeight="44.0"
+                            prefWidth="89.0"
+                            style="-fx-font-size: 18; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-padding: 0 10 10 0;"
+                            text="5000원"/>
+                  </HBox>
+               </VBox>
             </VBox>
             <VBox prefHeight="113.0" prefWidth="217.0" style="-fx-padding: 10;">
-               <children>
-                  <VBox prefHeight="70.0" prefWidth="240.0"
-                        style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5;">
-                     <children>
-                        <VBox alignment="BOTTOM_LEFT" prefHeight="33.0" prefWidth="187.0"
-                              style="-fx-padding: 0 0 0 10;">
-                           <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="74.0"
-                                     style="-fx-padding: 0; -fx-font-size: 10; -fx-background-radius: 10; -fx-border-color: gray; -fx-border-radius: 10;"
-                                     text="1만원(저장O)" textFill="#686666"/>
-                           </children>
-                        </VBox>
-                        <HBox alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="187.0">
-                           <children>
-                              <Label alignment="BOTTOM_LEFT" contentDisplay="BOTTOM" prefHeight="30.0"
-                                     prefWidth="104.0"
-                                     style="-fx-font-size: 18; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-padding: 0 0 10 10;"
-                                     text="12:00"/>
-                              <Label alignment="BOTTOM_RIGHT" contentDisplay="BOTTOM" prefHeight="44.0"
-                                     prefWidth="89.0"
-                                     style="-fx-font-size: 18; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-padding: 0 10 10 0;"
-                                     text="10000원"/>
-                           </children>
-                        </HBox>
-                     </children>
+               <VBox prefHeight="70.0" prefWidth="240.0"
+                     style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5;">
+                  <VBox alignment="BOTTOM_LEFT" prefHeight="33.0" prefWidth="187.0"
+                        style="-fx-padding: 0 0 0 10;">
+                     <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="74.0"
+                            style="-fx-padding: 0; -fx-font-size: 10; -fx-background-radius: 10; -fx-border-color: gray; -fx-border-radius: 10;"
+                            text="1만원(저장O)" textFill="#686666"/>
                   </VBox>
-               </children>
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="187.0">
+                     <Label alignment="BOTTOM_LEFT" contentDisplay="BOTTOM" prefHeight="30.0"
+                            prefWidth="104.0"
+                            style="-fx-font-size: 18; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-padding: 0 0 10 10;"
+                            text="12:00"/>
+                     <Label alignment="BOTTOM_RIGHT" contentDisplay="BOTTOM" prefHeight="44.0"
+                            prefWidth="89.0"
+                            style="-fx-font-size: 18; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-padding: 0 10 10 0;"
+                            text="10000원"/>
+                  </HBox>
+               </VBox>
             </VBox>
             <VBox prefHeight="113.0" prefWidth="217.0" style="-fx-padding: 10;">
-               <children>
-                  <VBox prefHeight="70.0" prefWidth="240.0"
-                        style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5;">
-                     <children>
-                        <VBox alignment="BOTTOM_LEFT" prefHeight="33.0" prefWidth="187.0"
-                              style="-fx-padding: 0 0 0 10;">
-                           <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="74.0"
-                                     style="-fx-padding: 0; -fx-font-size: 10; -fx-background-radius: 10; -fx-border-color: gray; -fx-border-radius: 10;"
-                                     text="2만원(저장O)" textFill="#686666"/>
-                           </children>
-                        </VBox>
-                        <HBox alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="187.0">
-                           <children>
-                              <Label alignment="BOTTOM_LEFT" contentDisplay="BOTTOM" prefHeight="30.0"
-                                     prefWidth="104.0"
-                                     style="-fx-font-size: 18; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-padding: 0 0 10 10;"
-                                     text="24:00"/>
-                              <Label alignment="BOTTOM_RIGHT" contentDisplay="BOTTOM" prefHeight="44.0"
-                                     prefWidth="89.0"
-                                     style="-fx-font-size: 18; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-padding: 0 10 10 0;"
-                                     text="20000원"/>
-                           </children>
-                        </HBox>
-                     </children>
+               <VBox prefHeight="70.0" prefWidth="240.0"
+                     style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5;">
+                  <VBox alignment="BOTTOM_LEFT" prefHeight="33.0" prefWidth="187.0"
+                        style="-fx-padding: 0 0 0 10;">
+                     <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="74.0"
+                            style="-fx-padding: 0; -fx-font-size: 10; -fx-background-radius: 10; -fx-border-color: gray; -fx-border-radius: 10;"
+                            text="2만원(저장O)" textFill="#686666"/>
                   </VBox>
-               </children>
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="187.0">
+                     <Label alignment="BOTTOM_LEFT" contentDisplay="BOTTOM" prefHeight="30.0"
+                            prefWidth="104.0"
+                            style="-fx-font-size: 18; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-padding: 0 0 10 10;"
+                            text="24:00"/>
+                     <Label alignment="BOTTOM_RIGHT" contentDisplay="BOTTOM" prefHeight="44.0"
+                            prefWidth="89.0"
+                            style="-fx-font-size: 18; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-padding: 0 10 10 0;"
+                            text="20000원"/>
+                  </HBox>
+               </VBox>
             </VBox>
          </FlowPane>
       </HBox>
       <HBox alignment="BOTTOM_LEFT" prefHeight="40.0" prefWidth="681.0">
-         <children>
-            <Label prefHeight="12.0" prefWidth="601.0" style="-fx-font-size: 16;"
-                   text="* 로그인 이후 종료시에는 계정의 남은 시간이 30분 이상일 때 저장이 가능합니다." textFill="#727272"/>
-         </children>
+         <Label prefHeight="12.0" prefWidth="601.0" style="-fx-font-size: 16;"
+                text="* 로그인 이후 종료시에는 계정의 남은 시간이 30분 이상일 때 저장이 가능합니다." textFill="#727272"/>
       </HBox>
    </VBox>
    <VBox alignment="BOTTOM_CENTER" prefHeight="406.0" prefWidth="254.0" HBox.hgrow="ALWAYS">
-      <children>
-         <VBox alignment="BOTTOM_CENTER" prefHeight="416.0" prefWidth="403.0">
-            <children>
-               <HBox alignment="BOTTOM_CENTER" prefHeight="103.0" prefWidth="403.0" style="-fx-padding: 15;">
-                  <children>
-                     <Label text="___ 님의"/>
-                  </children>
-               </HBox>
-               <HBox alignment="CENTER" prefHeight="182.0" prefWidth="239.0">
-                  <children>
-                     <HBox alignment="CENTER" maxHeight="150.0" prefHeight="150.0" prefWidth="330.0"
-                           style="-fx-background-color: #d2d2d2;">
-                        <children>
-                           <Label style="-fx-font-weight: bold;" text="요금제를 선택하세요"/>
-                        </children>
-                     </HBox>
-                  </children>
-               </HBox>
-               <HBox alignment="CENTER" prefHeight="103.0" prefWidth="403.0" style="-fx-padding: 0 0 15 0;">
-                  <children>
-                     <VBox alignment="CENTER_LEFT" maxHeight="50.0" prefHeight="18.0" prefWidth="130.0"
-                           style="-fx-padding: 0 8 0 0;">
-                        <children>
-                           <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="236.0"
-                                   style="-fx-background-color: #1e1e1e; -fx-text-fill: white; -fx-background-radius: 8;"
-                                   text="창 닫기" textFill="#1e1e1e"/>
-                        </children>
-                     </VBox>
-                     <VBox alignment="CENTER_RIGHT" prefHeight="92.0" prefWidth="200.0" style="-fx-padding: 0 0 0 8;">
-                        <children>
-                           <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="273.0"
-                                   style="-fx-background-color: #d2d2d2; -fx-text-fill: white; -fx-background-radius: 8;"
-                                   text="요금제 선택" textFill="#d2d2d2"/>
-                        </children>
-                     </VBox>
-                  </children>
-               </HBox>
-            </children>
-         </VBox>
-      </children>
+      <VBox alignment="BOTTOM_CENTER" prefHeight="416.0" prefWidth="403.0">
+         <HBox alignment="BOTTOM_CENTER" prefHeight="103.0" prefWidth="403.0" style="-fx-padding: 15;">
+            <Label text="___ 님의"/>
+         </HBox>
+         <HBox alignment="CENTER" prefHeight="182.0" prefWidth="239.0">
+            <HBox alignment="CENTER" maxHeight="150.0" prefHeight="150.0" prefWidth="330.0"
+                  style="-fx-background-color: #d2d2d2;">
+               <Label style="-fx-font-weight: bold;" text="요금제를 선택하세요"/>
+            </HBox>
+         </HBox>
+         <HBox alignment="CENTER" prefHeight="103.0" prefWidth="403.0" style="-fx-padding: 0 0 15s 0;">
+            <VBox alignment="CENTER_LEFT" maxHeight="50.0" prefHeight="18.0" prefWidth="130.0"
+                  style="-fx-padding: 0 8 0 0;">s
+               <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="236.0"
+                       style="-fx-background-color: #1e1e1e; -fx-text-fill: white; -fx-background-radius: 8;"
+                       text="창 닫기" textFill="#1e1e1e"/>
+            </VBox>
+            <VBox alignment="CENTER_RIGHT" prefHeight="92.0" prefWidth="200.0" style="-fx-padding: 0 0 0 8;">
+               <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="273.0"
+                       style="-fx-background-color: #d2d2d2; -fx-text-fill: white; -fx-background-radius: 8;"
+                       text="요금제 선택" textFill="#d2d2d2"/>
+            </VBox>
+         </HBox>
+      </VBox>
    </VBox>
 </HBox>
