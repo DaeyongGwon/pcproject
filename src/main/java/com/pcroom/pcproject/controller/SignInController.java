@@ -54,6 +54,7 @@ public class SignInController {
             // 토큰 발급
             String token = generateToken(inputId); // 예시: 간단하게 사용자 이름을 토큰으로 사용
             // 토큰 저장
+            userService.saveTokenToUser(inputId, token); // 수정된 부분
             saveToken(token);
             // 메인 페이지로 이동
             moveToMainPage();
@@ -107,8 +108,15 @@ public class SignInController {
         SignInController.token = token;
     }
 
+    // DB에 토큰 저장하는 메서드 추가
+    private void saveTokenToDB(String username, String token) {
+        // 사용자 이름과 토큰을 DB에 저장하는 코드를 여기에 추가
+        userService.saveTokenToUser(username, token);
+    }
+
     public static void logout() {
         // 토큰을 null로 설정하여 로그아웃 처리
         token = null;
     }
+
 }
