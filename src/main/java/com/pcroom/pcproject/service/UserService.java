@@ -54,4 +54,12 @@ public class UserService {
         boolean result = userDao.authenticateUser(userId, password);
         return result;
     }
+
+    public void saveTokenToUser(String username, String token) {
+        userDao.saveTokenToUser(username, token);
+    }
+
+    public UserDto getUserByToken(String token) {
+        return userDao.getUserByToken(token);
+    }
 }
