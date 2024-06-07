@@ -33,9 +33,9 @@ public class UserPageController {
 
             Stage stage = new Stage();
             stage.setTitle("요금제 구매");
-            stage.initModality(Modality.APPLICATION_MODAL); // Make the popup modal
+//            stage.initModality(Modality.APPLICATION_MODAL); // Make the popup modal
             stage.setScene(new Scene(root));
-            stage.showAndWait();
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
