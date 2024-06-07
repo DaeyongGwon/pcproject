@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.pcroom.pcproject.controller.UserInfo"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="User Information" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+        <HBox alignment="CENTER" spacing="10">
+            <Label text="Nickname:"/>
+            <Label fx:id="nicknameLabel"/>
+        </HBox>
+
+        <HBox alignment="CENTER" spacing="10">
+            <Label text="Name:"/>
+            <Label fx:id="nameLabel"/>
+        </HBox>
+
+        <HBox alignment="CENTER" spacing="10">
+            <Label text="Email:"/>
+            <Label fx:id="emailLabel"/>
+        </HBox>
+
+        <HBox alignment="CENTER" spacing="10">
+            <Label text="Birthday:"/>
+            <Label fx:id="birthdayLabel"/>
+        </HBox>
+
+        <HBox alignment="CENTER" spacing="10">
+            <Label text="Address:"/>
+            <Label fx:id="addressLabel"/>
+        </HBox>
+
+        <HBox alignment="CENTER" spacing="10">
+            <Label text="Phone Number:"/>
+            <Label fx:id="phonenumberLabel"/>
+        </HBox>
+    </VBox>
+
+</AnchorPane>
