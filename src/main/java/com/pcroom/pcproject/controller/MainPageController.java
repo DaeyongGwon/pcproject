@@ -10,18 +10,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class MainPageController {
-
     // 좌석 상태 배열
     private boolean[] seatStatus;
 
@@ -30,8 +27,10 @@ public class MainPageController {
 
     @FXML
     private Label loggedInUserLabel; // 로그인 중인 유저 아이디를 표시할 레이블
+
     @FXML
     private HBox loggedOut; // 로그아웃 상태의 버튼들
+
     @FXML
     private HBox loggedIn; // 로그인 상태의 버튼들
 
@@ -39,10 +38,8 @@ public class MainPageController {
     public void initialize() {
         Platform.runLater(() -> {
             createSeats(8, 8);
-
-            // 토큰을 사용하여 로그인 중인 유저 아이디를 표시
-            String loggedInUser = SignInController.getToken(); // 토큰을 사용하여 로그인 중인 유저 아이디를 가져옴
-            System.out.println("Initialize called. Logged in user: " + loggedInUser);
+            // 현재 로그인 중인 유저의 토큰을 이용하여 사용자 이름 가져오기
+            String loggedInUser = SignInController.getToken(); // 예시 메서드 이름입니다. 실제로는 UserService에 해당 메서드를 작성해야 합니다.
             if (loggedInUser != null && !loggedInUser.isEmpty()) {
                 loggedInUserLabel.setText("현재 로그인 중인 유저: " + loggedInUser);
                 loggedOut.setVisible(false);
