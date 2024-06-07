@@ -1,12 +1,11 @@
 package com.pcroom.pcproject.controller;
 
-import com.pcroom.pcproject.model.dao.UserDao;
 import com.pcroom.pcproject.model.dto.UserDto;
 import com.pcroom.pcproject.service.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class UserInfo {
+public class UserInfoController {
 
     @FXML
     private Label nicknameLabel;
