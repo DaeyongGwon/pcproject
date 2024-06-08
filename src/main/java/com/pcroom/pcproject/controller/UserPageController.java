@@ -1,5 +1,6 @@
 package com.pcroom.pcproject.controller;
 
+import com.pcroom.pcproject.model.dao.UserDao;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,12 +19,18 @@ import java.time.format.DateTimeFormatter;
 public class UserPageController {
     @FXML
     private Label seatNumberLabel;
+
     @FXML
     private Label usernameLabel;
+
     @FXML
     private Label startTimeLabel;
+
     @FXML
     private Label remainingTimeLabel;
+
+    // UserDao 인스턴스 주입
+    private final UserDao userDao = new UserDao();
 
     @FXML
     private void charge(ActionEvent event) {
@@ -61,6 +68,9 @@ public class UserPageController {
         usernameLabel.setText(status);
         startTimeLabel.setText(startTime);
         // 남은 시간은 별도로 계산하여 설정
+        // 시작 시간을 DB에 저장
+        remainingTimeLabel.setText("계산필요");
+        userDao.updateStartTime(status, startTime);
     }
 
     private String formatTime(String startTime) {
@@ -74,6 +84,7 @@ public class UserPageController {
         seatNumberLabel.setText(seatNumber.replace("좌석번호:", ""));
     }
 
+
     @FXML
     private void handleClose(ActionEvent event) {
         // 사용 종료 확인 창 표시
@@ -86,8 +97,20 @@ public class UserPageController {
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 // 사용자가 확인을 선택한 경우 현재 창 닫기
-                Stage stage = (Stage) seatNumberLabel.getScene().getWindow();
-                stage.close();
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/MainPage.fxml"));
+                    Parent root = loader.load();
+
+                    Stage stage = new Stage();
+                    stage.setTitle("메인 페이지");
+                    stage.setScene(new Scene(root));
+                    stage.show();
+
+                    Stage currentStage = (Stage) remainingTimeLabel.getScene().getWindow();
+                    currentStage.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -99,6 +122,21 @@ public class UserPageController {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("User Information");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void handleSeatChange(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/SeatChange.fxml"));
+            Parent root = loader.load();
+
+            // 새 창을 띄우기 위해 Stage 생성
+            Stage stage = new Stage();
+            stage.setTitle("자리 이동");
+            stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
