@@ -3,6 +3,9 @@ package com.pcroom.pcproject.model.dao;
 import com.pcroom.pcproject.model.dto.UserDto;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +30,8 @@ public class UserDao {
                 String phoneNumber = resultSet.getString("PHONENUMBER");
                 String email = resultSet.getString("EMAIL");
                 String password = resultSet.getString("PASSWORD");
-                UserDto userDto = new UserDto(nickname, name, birthday, address, phoneNumber, email, password);
+                String startTime = resultSet.getString("STARTTIME");
+                UserDto userDto = new UserDto(nickname, name, birthday, address, phoneNumber, email, password, startTime);
                 userList.add(userDto);
             }
         } catch (SQLException e) {
@@ -51,18 +55,18 @@ public class UserDao {
     }
 
     public void addUserToDatabase(UserDto user) {
-        String query = "INSERT INTO users (NICKNAME, NAME, BIRTHDAY, ADDRESS, PHONENUMBER, EMAIL, PASSWORD) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO users (NICKNAME, NAME, BIRTHDAY, ADDRESS, PHONENUMBER, EMAIL, PASSWORD, STARTTIME) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = getConnection(URL, USER, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, user.getNickname());
             preparedStatement.setString(2, user.getName());
-            System.out.println(user.getBirthday().toString());
-            preparedStatement.setString(3, user.getBirthday().toString());
+            preparedStatement.setDate(3, user.getBirthday());
             preparedStatement.setString(4, user.getAddress());
             preparedStatement.setString(5, user.getPhonenumber());
             preparedStatement.setString(6, user.getEmail());
             preparedStatement.setString(7, user.getPassword());
+            preparedStatement.setString(8, user.getStartTime());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -71,7 +75,7 @@ public class UserDao {
 
 
     public void updateUserInDatabase(UserDto user) {
-        String query = "UPDATE users SET NICKNAME = ?, NAME = ?, BIRTHDAY = ?, ADDRESS = ?, PHONENUMBER = ?, EMAIL = ?, PASSWORD = ? WHERE ID = ?";
+        String query = "UPDATE users SET NICKNAME = ?, NAME = ?, BIRTHDAY = ?, ADDRESS = ?, PHONENUMBER = ?, EMAIL = ?, PASSWORD = ?, STARTTIME = ? WHERE ID = ?";
         try (Connection connection = getConnection(URL, USER, PASSWORD);
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, user.getNickname());
@@ -81,7 +85,8 @@ public class UserDao {
             preparedStatement.setString(5, user.getPhonenumber());
             preparedStatement.setString(6, user.getEmail());
             preparedStatement.setString(7, user.getPassword());
-            preparedStatement.setInt(8, user.getId());
+            preparedStatement.setString(8, user.getStartTime());
+            preparedStatement.setInt(9, user.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -114,9 +119,10 @@ public class UserDao {
                 String address = rs.getString("ADDRESS");
                 String phoneNumber = rs.getString("PHONENUMBER");
                 String email = rs.getString("EMAIL");
+                String starttime = rs.getString("starttime");
 
                 // UserDto 객체 생성
-                user = new UserDto(nickname, name, birthday, address, phoneNumber, email, ""); // 여기에 빈 문자열 추가
+                user = new UserDto(nickname, name, birthday, address, phoneNumber, email, starttime,""); // 여기에 빈 문자열 추가
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -214,5 +220,21 @@ public class UserDao {
         }
     }
 
+    public void updateStartTime(String nickname, String startTime) {
+        String query = "UPDATE USERS SET STARTTIME = ? WHERE NICKNAME = ?";
+        try (Connection connection = getConnection(URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            // 현재 날짜와 시작 시간을 합쳐서 전체적인 날짜/시간 형식으로 변환
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            LocalDateTime combinedDateTime = LocalDateTime.of(currentDateTime.toLocalDate(), LocalTime.parse(startTime));
+            Timestamp startTimestamp = Timestamp.valueOf(combinedDateTime);
+
+            preparedStatement.setTimestamp(1, startTimestamp);
+            preparedStatement.setString(2, nickname);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

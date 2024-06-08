@@ -11,8 +11,13 @@ public class UserDto {
     private String phonenumber;
     private String email;
     private String password;
+    private String startTime;
 
     public UserDto(String nickname, String name, Date birthday, String address, String phonenumber, String email, String password) {
+        this(nickname, name, birthday, address, phonenumber, email, password, null);
+    }
+
+    public UserDto(String nickname, String name, Date birthday, String address, String phonenumber, String email, String password, String startTime) {
         this.nickname = nickname;
         this.name = name;
         this.birthday = birthday;
@@ -20,6 +25,7 @@ public class UserDto {
         this.phonenumber = phonenumber;
         this.email = email;
         this.password = password;
+        this.startTime = startTime;
     }
 
     public String getNickname() {
@@ -37,6 +43,7 @@ public class UserDto {
     public void setId(int id) {
         this.id = id;
     }
+
     public String getName() {
         return name;
     }
@@ -83,5 +90,13 @@ public class UserDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 }
