@@ -1,5 +1,6 @@
 package com.pcroom.pcproject.controller;
 
+import com.pcroom.pcproject.model.dao.SeatDao;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +17,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class UserPageController {
+    private final SeatDao seatDao = new SeatDao();
+
     @FXML
     private Label seatNumberLabel;
     @FXML
@@ -85,12 +88,19 @@ public class UserPageController {
         // 사용자가 확인 또는 취소를 선택할 때까지 대기
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                // 사용자가 확인을 선택한 경우 현재 창 닫기
+                // 사용자가 확인을 선택한 경우 DB에서 좌석 상태를 업데이트하고 현재 창 닫기
+                String seatNumberText = seatNumberLabel.getText();
+                int startIndex = seatNumberText.indexOf(":") + 2; // "좌석 번호:" 뒤의 숫자 인덱스
+                String seatNumber = seatNumberText.substring(startIndex); // 숫자만 추출
+                int parsedSeatNumber = Integer.parseInt(seatNumber);
+                seatDao.updateSeatStatus(parsedSeatNumber, 1); // active를 1로 변경
                 Stage stage = (Stage) seatNumberLabel.getScene().getWindow();
                 stage.close();
             }
         });
     }
+
+
     @FXML
     private void onUserInfoButtonClick(ActionEvent event) {
         try {
