@@ -86,6 +86,12 @@ public class MainPageController {
     @FXML
     private void handleSeatButtonClick(int seatNumber) {
         try {
+            // 메인 페이지의 Stage 가져오기
+            Stage mainStage = (Stage) seatGrid.getScene().getWindow();
+
+            // 메인 페이지의 Stage를 숨기기
+            mainStage.hide();
+
             // SeatDetails.fxml을 로드하여 SeatDetailsController 인스턴스를 얻음
             FXMLLoader seatDetailsLoader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/SeatDetails.fxml"));
             Parent seatDetailsRoot = seatDetailsLoader.load();
