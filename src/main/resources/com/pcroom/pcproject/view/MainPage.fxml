@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
@@ -7,30 +10,38 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.MainPageController">
+<BorderPane prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.MainPageController">
     <!-- 좌석판 (GridPane) -->
     <center>
 <!--        가운데 정렬 -->
         <VBox alignment="CENTER" spacing="10" style="-fx-padding: 20;">
-            <Label alignment="TOP_CENTER" style="-fx-font-size: 24px;" text="미디어웹 PC방" />
-            <Label alignment="TOP_LEFT" fx:id="loggedInUserLabel" style="-fx-font-size: 18px;" /> <!-- 로그인 중인 유저 아이디를 표시할 레이블 -->
-            <GridPane alignment="CENTER" fx:id="seatGrid" hgap="10" style="-fx-background-color: #EEEEEE;" vgap="10">
+   <children>
+               <Label alignment="TOP_CENTER" style="-fx-font-size: 24px;" text="미디어웹 PC방" />
+               <Label fx:id="loggedInUserLabel" alignment="TOP_LEFT" style="-fx-font-size: 18px;" /> <!-- 로그인 중인 유저 아이디를 표시할 레이블 -->
+               <GridPane fx:id="seatGrid" alignment="CENTER" hgap="10" style="-fx-background-color: #EEEEEE;" vgap="10">
                 <!-- 좌석 번호를 GridPane에 추가하는 코드 -->
             </GridPane>
+   </children>
         </VBox>
     </center>
 
     <!-- 하단 버튼들 (HBox) -->
     <bottom>
         <VBox alignment="CENTER" spacing="20" style="-fx-padding: 10; -fx-background-color: white;">
-            <HBox fx:id="loggedOut" alignment="CENTER" spacing="20" style="-fx-padding: 10; -fx-background-color: white;">
-                <Button onAction="#loginPage" style="-fx-font-size: 18px; -fx-border-radius: 60; -fx-background-radius: 60; -fx-border-color: black; -fx-background-color: white;" text="회원" />
-                <Button style="-fx-font-size: 18px; -fx-background-radius: 60; -fx-border-radius: 60; -fx-background-color: white; -fx-border-color: black;" text="회원가입" />
-            </HBox>
-            <HBox fx:id="loggedIn" alignment="CENTER" spacing="20" style="-fx-padding: 10; -fx-background-color: white;" visible="false" managed="false">
-                <Button onAction="#logout" style="-fx-font-size: 18px; -fx-border-radius: 60; -fx-background-radius: 60; -fx-border-color: black; -fx-background-color: white;" text="로그아웃" />
-                <Button style="-fx-font-size: 18px; -fx-background-radius: 60; -fx-border-radius: 60; -fx-background-color: white; -fx-border-color: black;" text="종료" />
-            </HBox>
+           <children>
+               <HBox fx:id="loggedOut" alignment="CENTER" spacing="20" style="-fx-padding: 10; -fx-background-color: white;">
+                  <children>
+                      <Button onAction="#loginPage" style="-fx-font-size: 18px; -fx-border-radius: 60; -fx-background-radius: 60; -fx-border-color: black; -fx-background-color: white;" text="회원" />
+                      <Button style="-fx-font-size: 18px; -fx-background-radius: 60; -fx-border-radius: 60; -fx-background-color: white; -fx-border-color: black;" text="회원가입" />
+                  </children>
+               </HBox>
+               <HBox fx:id="loggedIn" alignment="CENTER" managed="false" spacing="20" style="-fx-padding: 10; -fx-background-color: white;" visible="false">
+                  <children>
+                      <Button onAction="#logout" style="-fx-font-size: 18px; -fx-border-radius: 60; -fx-background-radius: 60; -fx-border-color: black; -fx-background-color: white;" text="로그아웃" />
+                      <Button style="-fx-font-size: 18px; -fx-background-radius: 60; -fx-border-radius: 60; -fx-background-color: white; -fx-border-color: black;" text="종료" />
+                  </children>
+               </HBox>
+           </children>
         </VBox>
     </bottom>
 </BorderPane>
