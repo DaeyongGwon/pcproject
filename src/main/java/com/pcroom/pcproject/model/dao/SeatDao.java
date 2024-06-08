@@ -54,7 +54,7 @@ public class SeatDao {
         }
         return seatList;
     }
-
+    // DB에서 좌석 번호로 좌석 정보를 가져오는 메서드
     public SeatDto getSeatByNumber(int seatNumber) throws SQLException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -86,5 +86,22 @@ public class SeatDao {
         return seat;
     }
 
+    // 좌석 상태를 업데이트하는 메서드
+    public void updateSeatStatus(int seatNumber, int activeStatus) {
+        connect(); // DB 연결
+        String query = "UPDATE SEATS SET ACTIVE = ? WHERE SEAT_NUMBER = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, activeStatus);
+            stmt.setInt(2, seatNumber);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disconnect(); // DB 연결 해제
+        }
+    }
 
+    public void updateSeatStatus() {
+
+    }
 }
