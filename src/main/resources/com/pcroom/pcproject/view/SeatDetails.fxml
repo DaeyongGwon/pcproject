@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox prefHeight="270.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.SeatDetailsController">
+<VBox prefHeight="270.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.SeatDetailsController">
     <children>
       <Pane prefHeight="174.0" prefWidth="460.0" />
       <VBox prefHeight="296.0" prefWidth="460.0">
          <children>
-              <Label fx:id="seatLabel" text="좌석 정보">
-               <font>
-                  <Font name="D2Coding Bold" size="30.0" />
-               </font>
-            </Label>
+            <HBox prefHeight="42.0" prefWidth="460.0">
+               <children>
+                    <Label text="좌석 정보: ">
+                     <font>
+                        <Font name="D2Coding Bold" size="30.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="seatLabel" text="좌석 정보">
+                     <font>
+                        <Font name="D2Coding Bold" size="30.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
             <Pane prefHeight="14.0" prefWidth="460.0" />
               <Label fx:id="statusLabel" text="상태: 알 수 없음">
                <font>
