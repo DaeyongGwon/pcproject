@@ -1,5 +1,8 @@
 package com.pcroom.pcproject.controller;
 
+import com.pcroom.pcproject.model.dao.OrderDao;
+import com.pcroom.pcproject.model.dao.UserDao;
+import com.pcroom.pcproject.model.dto.OrderDto;
 import com.pcroom.pcproject.service.FoodService;
 import com.pcroom.pcproject.model.dto.FoodDto;
 import javafx.event.ActionEvent;
@@ -15,8 +18,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.io.InputStream;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MenuPageController {
     public TextField FoodSearch;
@@ -26,6 +32,8 @@ public class MenuPageController {
     public VBox cartVBox;
     @FXML
     public Label cartList;
+    @FXML
+    public Button placeOrderButton;
     @FXML
     private ScrollPane categoryScrollPane;
     @FXML
@@ -126,6 +134,65 @@ public class MenuPageController {
         cartVBox.setManaged(false);
         // 장바구니 비우기 cartList을 제외한 모든 노드를 삭제
         cartItems.getChildren().removeIf(node -> !node.equals(cartList));
+    }
+
+
+    // 주문 서비스를 사용하여 주문 추가
+    @FXML
+    public void placeOrder(ActionEvent event) {
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("주문 확인");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("주문을 완료하시겠습니까?");
+
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // 장바구니에 있는 상품들을 가져와서 주문 테이블에 추가
+            try {
+                // 주문 시간 설정
+                Date orderDate = new Date(System.currentTimeMillis());
+
+                // 장바구니에 있는 상품들을 주문 테이블에 추가
+                for (Node node : cartItems.getChildren()) {
+                    if (node instanceof BorderPane) {
+                        int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+                        BorderPane cartItemBox = (BorderPane) node;
+                        HBox topBox = (HBox) cartItemBox.getTop();
+                        Label itemNameLabel = (Label) topBox.getChildren().get(0);
+                        String itemName = itemNameLabel.getText();
+
+                        HBox itemInfoBox = (HBox) cartItemBox.getBottom();
+                        Label quantityLabel = (Label) itemInfoBox.getChildren().get(0);
+                        int quantity = Integer.parseInt(quantityLabel.getText().substring(4));
+
+                        Label priceLabel = (Label) itemInfoBox.getChildren().get(2);
+                        int price = Integer.parseInt(priceLabel.getText().substring(4));
+
+                        // 주문 테이블에 상품 정보 추가
+                        OrderDto order = new OrderDto(userId, orderDate, price);
+                        OrderDao.addOrder(order);
+                    }
+                }
+
+                // 주문 완료 후 장바구니 비우기
+                cartItems.getChildren().clear();
+                cartVBox.setVisible(false);
+                cartVBox.setManaged(false);
+                totalPriceLabel.setText("0원");
+                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                successAlert.setTitle("주문 완료");
+                successAlert.setHeaderText(null);
+                successAlert.setContentText("주문이 완료되었습니다.");
+                successAlert.showAndWait();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("오류 발생");
+                errorAlert.setHeaderText(null);
+                errorAlert.setContentText("주문을 처리하는 중에 오류가 발생했습니다.");
+                errorAlert.showAndWait();
+            }
+        }
     }
 
     // 장바구니
