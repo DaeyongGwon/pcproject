@@ -1,5 +1,6 @@
 package com.pcroom.pcproject.controller;
 
+import com.pcroom.pcproject.model.dao.SeatAssignmentDAO;
 import com.pcroom.pcproject.model.dao.SeatDao;
 import com.pcroom.pcproject.model.dao.TimeDao;
 import com.pcroom.pcproject.model.dao.UserDao;
@@ -16,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -52,12 +54,14 @@ public class UserPageController {
             public void handle(long now) {
                 if (now - lastUpdate >= 1_000_000_000) { // 1초마다 실행
                     updateRemainingTime();
+                    updateRemainingTimeLabel(previousTimeDto.getRemainingTime()); // UI 업데이트
                     lastUpdate = now;
                 }
             }
         };
         timer.start();
     }
+
 
     private void updateRemainingTime() {
         // 사용자의 ID를 가져와서 시간을 조회
@@ -180,6 +184,12 @@ public class UserPageController {
                 System.out.println("id 값 : " + id);
                 // endTime 업데이트
                 TimeDao.updateEndTime(timeDto.getId(), Timestamp.valueOf(endTime));
+                // sign_assignment에서 seat_id를 삭제
+                try {
+                    SeatAssignmentDAO.unassignSeat(id);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 System.out.println("endTime: " + endTime);
                 if (timeDto != null && timeDto.getStartTime() != null) {
                     LocalDateTime startTime = timeDto.getStartTime().toLocalDateTime();
