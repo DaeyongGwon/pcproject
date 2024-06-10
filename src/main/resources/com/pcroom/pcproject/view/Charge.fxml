@@ -147,14 +147,14 @@
                      </Button>
                   </VBox>
                   <!-- 추가된 레이블 -->
-                  <VBox fx:id="infoBox" alignment="CENTER" managed="false" prefHeight="88.0" prefWidth="197.0" style="-fx-padding: 0 0 0 8;" visible="false">
+                  <VBox fx:id="infoBox" onMouseClicked="#onInfoBoxClick" alignment="CENTER" managed="false" prefHeight="88.0" prefWidth="197.0" style="-fx-padding: 0 0 0 8;" visible="false">
                      <HBox alignment="CENTER">
                         <Label fx:id="chargePriceLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="40.0" prefWidth="137.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-border-radius: 8 0 0 8; -fx-border-color: #d2d2d2; -fx-border-width: 1 0 1 1; -fx-text-fill: #1e1e1e;" />
                         <Label fx:id="chargeTimeLabel" prefHeight="40.0" prefWidth="137.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-border-radius: 0 8 8 0; -fx-border-color: #d2d2d2; -fx-border-width: 1 1 1 0; -fx-text-fill: #1e1e1e;" />
                      </HBox>
                   </VBox>
                   <VBox fx:id="chooseBox" alignment="CENTER_RIGHT" prefHeight="92.0" prefWidth="200.0" style="-fx-padding: 0 0 0 8;">
-                     <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="274.0" style="-fx-background-color: #d2d2d2; -fx-text-fill: white; -fx-background-radius: 8;" text="요금제 선택" textFill="#d2d2d2" />
+                     <Button fx:id="chooseBoxButton" onMouseClicked="#onChooseBoxClick" mnemonicParsing="false" prefHeight="40.0" prefWidth="274.0" style="-fx-background-color: #d2d2d2; -fx-text-fill: white; -fx-background-radius: 8;" text="요금제 선택" textFill="#d2d2d2" />
                   </VBox>
                </HBox>
 

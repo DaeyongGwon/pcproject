@@ -146,7 +146,57 @@ public class UserDao {
         }
         return user;
     }
+    // 사용자의 닉네임으로 ID 값을 가져오는 메서드
+    public static int getUserIdByNickname(String nickname) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        int userId = -1; // 기본값으로 -1을 설정하여 오류 발생 시 인식할 수 있도록 함
 
+        try {
+            conn = getConnection(URL, USER, PASSWORD); // DB 연결 가져오기
+            // SQL 문장 작성
+            String sql = "SELECT ID FROM USERS WHERE NICKNAME = ?";
+            stmt = conn.prepareStatement(sql);
+
+            // SQL 문장의 매개변수 설정
+            stmt.setString(1, nickname);
+
+            // SQL 문장 실행
+            rs = stmt.executeQuery();
+
+            // 결과 처리
+            if (rs.next()) {
+                userId = rs.getInt("ID");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // 리소스 해제
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return userId;
+    }
 
     // DB에 있는 토큰을 가져오는 메서드
     public String getTokenFromUser(String username) {
