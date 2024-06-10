@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.ManagerController">
+   <children>
+      <VBox prefHeight="69.0" prefWidth="800.0">
+         <children>
+         
+             <Label prefHeight="58.0" prefWidth="163.0" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Manager Page">
+               <font>
+                  <Font name="D2Coding" size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+
+       <HBox spacing="10">
+           <children>
+               <Pane prefHeight="33.0" prefWidth="37.0" />
+               <Label text="Seat Number:" />
+               <Label fx:id="seatNumberLabel" />
+               <Pane prefHeight="33.0" prefWidth="37.0" />
+               <Label text="User ID:" />
+               <Label fx:id="userIdLabel" />
+               <Button onAction="#refreshSeatStatus" text="Refresh" />
+           </children>
+       </HBox>
+
+   
+       <GridPane fx:id="seatGrid" hgap="10" vgap="10" />
+   </children>
+
+</VBox>

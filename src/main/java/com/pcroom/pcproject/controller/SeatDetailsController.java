@@ -64,58 +64,68 @@ public class SeatDetailsController {
                 String seatNumberText = seatLabel.getText().replaceAll("[^\\d]", "");
                 int seatNumber = Integer.parseInt(seatNumberText);
 
-                // 좌석 상태 업데이트
-                seatDao.updateSeatStatus(seatNumber, 0);
-
-                // START_TIME 업데이트
+                // 사용자 ID 가져오기
                 int userId = UserDao.getUserIdByNickname(SignInController.getToken());
-                LocalDateTime startTime = LocalDateTime.now();
-                TimeDao.updateStartTime(userId, Timestamp.valueOf(startTime));
-                System.out.println("startTime: " + startTime);
 
-                // 좌석 상태 업데이트 후에 좌석 목록 다시 로드
-                updateSeatStatus();
+                // 좌석 할당
+                SeatDto seat = seatDao.getSeatByNumber(seatNumber);
+                if (seat != null) {
+                    // 좌석 상태 업데이트
+                    seatDao.updateSeatStatus(seatNumber, 0);
 
-                // 새 창 열기
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/UserPage.fxml"));
-                Parent root = loader.load();
+                    // 좌석 할당
+                    seatDao.assignSeatToUser(seat.getSeatId(), userId);
 
-                UserPageController controller = loader.getController();
-                controller.setUserPageDetails(seatLabel.getText(), usernameLabel.getText(), startTimeLabel.getText());
+                    // START_TIME 업데이트
+                    LocalDateTime startTime = LocalDateTime.now();
+                    TimeDao.updateStartTime(userId, Timestamp.valueOf(startTime));
+                    System.out.println("startTime: " + startTime);
 
-                // 좌석 버튼 찾기
-                Button seatButton = SeatUtils.getSeatButton(seatNumber, seatGrid);
-                if (seatButton != null) {
-                    // 버튼 스타일 변경
-                    seatButton.setStyle("-fx-background-color: #CCCCCC; -fx-border-color: #000000; -fx-border-radius: 5px; -fx-background-radius: 5px;");
-                    seatButton.setDisable(true);
+                    // 좌석 상태 업데이트 후에 좌석 목록 다시 로드
+                    updateSeatStatus();
+
+                    // 새 창 열기
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/UserPage.fxml"));
+                    Parent root = loader.load();
+
+                    UserPageController controller = loader.getController();
+                    controller.setUserPageDetails(seatLabel.getText(), usernameLabel.getText(), startTimeLabel.getText());
+
+                    // 좌석 버튼 찾기
+                    Button seatButton = SeatUtils.getSeatButton(seatNumber, seatGrid);
+                    if (seatButton != null) {
+                        // 버튼 스타일 변경
+                        seatButton.setStyle("-fx-background-color: #CCCCCC; -fx-border-color: #000000; -fx-border-radius: 5px; -fx-background-radius: 5px;");
+                        seatButton.setDisable(true);
+                    }
+
+                    Stage stage = new Stage();
+                    stage.setTitle("컴퓨터 사용 중");
+                    stage.setScene(new Scene(root));
+
+                    // 창 크기 조정 불가능으로 설정
+                    stage.setResizable(false);
+
+                    // 창을 먼저 표시
+                    stage.show();
+
+                    // 화면 크기 가져오기
+                    Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
+                    // 창 크기 계산 후 위치 설정
+                    stage.setX(screenBounds.getWidth() - stage.getWidth());
+                    stage.setY(0);
+
+                    // 현재 창 닫기
+                    Stage currentStage = (Stage) statusLabel.getScene().getWindow();
+                    currentStage.close();
                 }
-
-                Stage stage = new Stage();
-                stage.setTitle("컴퓨터 사용 중");
-                stage.setScene(new Scene(root));
-
-                // 창 크기 조정 불가능으로 설정
-                stage.setResizable(false);
-
-                // 창을 먼저 표시
-                stage.show();
-
-                // 화면 크기 가져오기
-                Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-
-                // 창 크기 계산 후 위치 설정
-                stage.setX(screenBounds.getWidth() - stage.getWidth());
-                stage.setY(0);
-
-                // 현재 창 닫기
-                Stage currentStage = (Stage) statusLabel.getScene().getWindow();
-                currentStage.close();
             } catch (IOException | SQLException e) {
                 e.printStackTrace();
             }
         }
     }
+
 
 
 
