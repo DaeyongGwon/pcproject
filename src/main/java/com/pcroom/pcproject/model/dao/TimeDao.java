@@ -81,7 +81,7 @@ public class TimeDao {
         }
     }
     // 시간을 업데이트하는 메서드
-    public void updateTime(TimeDto time) {
+    public static void updateTime(TimeDto time) {
         String query = "UPDATE TIMES SET REMAINING_TIME = ? WHERE ID = ?";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
