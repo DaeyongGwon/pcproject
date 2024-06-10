@@ -21,6 +21,8 @@ public class ChargePageController {
     @FXML
     public Button chooseBoxButton;
     @FXML
+    public Label chargeNameLabel;
+    @FXML
     private Label chargeTimeLabel;
     @FXML
     private Label chargePriceLabel;
@@ -28,7 +30,8 @@ public class ChargePageController {
     private String selectedTime;
     @FXML
     public void initialize() {
-        // 초기화 작업
+        // 로그인한 유저의 이름
+        chargeNameLabel.setText((SignInController.getToken()) + " 님 환영합니다.");
     }
     // 이벤트 핸들러
     public void onChargeBoxClick(MouseEvent event) {

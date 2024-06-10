@@ -132,7 +132,7 @@
             <children>
                <HBox alignment="BOTTOM_CENTER" prefHeight="103.0" prefWidth="403.0" style="-fx-padding: 15;">
                   <children>
-                     <Label text="___ 님의" />
+                     <Label fx:id="chargeNameLabel" text="___ 님의" />
                   </children>
                </HBox>
                <HBox alignment="CENTER" prefHeight="182.0" prefWidth="239.0">

@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import static com.pcroom.pcproject.controller.SignInController.logout;
@@ -39,6 +40,8 @@ public class UserPageController {
     private Label startTimeLabel;
     @FXML
     private Label remainingTimeLabel;
+    @FXML
+    private LocalDateTime endTime = LocalDateTime.now();
 
     // 이전에 가져온 시간 정보를 저장하는 변수
     @FXML
@@ -142,7 +145,11 @@ public class UserPageController {
     public void setUserPageDetails(String seatNumber, String status, String startTime) {
         seatNumberLabel.setText(seatNumber);
         usernameLabel.setText(status);
-        startTimeLabel.setText(startTime);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalTime startDateTime = LocalTime.parse(startTime, formatter);
+        String startTimeString = startDateTime.format(DateTimeFormatter.ofPattern("HH시mm분"));
+
+        startTimeLabel.setText(startTimeString);
 
         // 사용자의 ID를 가져와서 시간을 조회
         int userId = UserDao.getUserIdByNickname(SignInController.getToken());
@@ -153,7 +160,7 @@ public class UserPageController {
             int remainingMinutes = timeDto.getRemainingTime();
             long hours = remainingMinutes / 60;
             long minutes = remainingMinutes % 60;
-            String remainingTime = String.format("%02d:%02d", hours, minutes);
+            String remainingTime = String.format("%02d시%02d분", hours, minutes);
             remainingTimeLabel.setText(remainingTime);
         } else {
             remainingTimeLabel.setText("00:00");
@@ -178,30 +185,24 @@ public class UserPageController {
                 int parsedSeatNumber = Integer.parseInt(seatNumber);
                 seatDao.updateSeatStatus(parsedSeatNumber, 1); // active를 1로 변경
                 // 타임 테이블 관련 코드 처리
-                int id = UserDao.getUserIdByNickname(SignInController.getToken());
-                LocalDateTime endTime = LocalDateTime.now();
-                // time 정보 가져오기
-                TimeDto timeDto = timeDao.getTimeByUserId(id);
-                System.out.println("id 값 : " + id);
-                // endTime 업데이트
-                TimeDao.updateEndTime(timeDto.getId(), Timestamp.valueOf(endTime));
-                // sign_assignment에서 seat_id를 삭제
-                try {
-                    SeatAssignmentDAO.unassignSeat(id);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-                System.out.println("endTime: " + endTime);
-                if (timeDto != null && timeDto.getStartTime() != null) {
+                int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+                TimeDto timeDto = timeDao.getTimeByUserId(userId);
+                if (timeDto != null) {
+                    // 이전 시간을 가져와서 현재 시간과의 차이 계산
                     LocalDateTime startTime = timeDto.getStartTime().toLocalDateTime();
+                    LocalDateTime endTime = LocalDateTime.now();
                     Duration duration = Duration.between(startTime, endTime);
                     int elapsedMinutes = (int) duration.toMinutes();
+                    // 남은 시간 갱신
                     int remainingMinutes = timeDto.getRemainingTime() - elapsedMinutes;
+                    if (remainingMinutes < 0) {
+                        remainingMinutes = 0;
+                    }
+                    System.out.println("사용 종료: " + elapsedMinutes + "분 사용, 남은 시간: " + remainingMinutes + "분");
+                    // DB에 시간 업데이트
                     timeDto.setRemainingTime(remainingMinutes);
                     timeDao.updateTime(timeDto);
-                    System.out.println("사용 종료: " + elapsedMinutes + "분 사용, 남은 시간: " + remainingMinutes + "분");
                 }
-
                 Stage stage = (Stage) seatNumberLabel.getScene().getWindow();
                 stage.close();
                 logout();
@@ -252,7 +253,21 @@ public class UserPageController {
                 try {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/MainPage.fxml"));
                     Parent root = loader.load();
-
+                    // 타임 테이블 관련 코드 처리
+                    int id = UserDao.getUserIdByNickname(SignInController.getToken());
+                    //좌석 정보
+                    String seatNumberText = seatNumberLabel.getText();
+                    int startIndex = seatNumberText.indexOf(":") + 2; // "좌석 번호:" 뒤의 숫자 인덱스
+                    String seatNumber = seatNumberText.substring(startIndex); // 숫자만 추출
+                    int parsedSeatNumber = Integer.parseInt(seatNumber);
+                    seatDao.updateSeatStatus(parsedSeatNumber, 1); // active를 1로 변경
+                    System.out.println("id 값 : " + id);
+                    // seat_assignment에서 seat_id를 삭제
+                    try {
+                        SeatAssignmentDAO.unassignSeat(id);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                     Stage mainPageStage = new Stage();
                     mainPageStage.setTitle("메인 페이지");
                     mainPageStage.setScene(new Scene(root));
