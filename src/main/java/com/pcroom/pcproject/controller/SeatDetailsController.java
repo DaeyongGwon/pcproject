@@ -8,11 +8,13 @@ import com.pcroom.pcproject.util.SeatUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -92,8 +94,21 @@ public class SeatDetailsController {
                 Stage stage = new Stage();
                 stage.setTitle("컴퓨터 사용 중");
                 stage.setScene(new Scene(root));
+
+                // 창 크기 조정 불가능으로 설정
+                stage.setResizable(false);
+
+                // 창을 먼저 표시
                 stage.show();
 
+                // 화면 크기 가져오기
+                Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
+                // 창 크기 계산 후 위치 설정
+                stage.setX(screenBounds.getWidth() - stage.getWidth());
+                stage.setY(0);
+
+                // 현재 창 닫기
                 Stage currentStage = (Stage) statusLabel.getScene().getWindow();
                 currentStage.close();
             } catch (IOException | SQLException e) {
