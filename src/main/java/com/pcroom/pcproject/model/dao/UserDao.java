@@ -263,6 +263,57 @@ public class UserDao {
             }
         }
     }
+    // 사용자의 시작 시간을 가져오는 메서드
+    public String getUserStartTime(String username) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String startTime = null;
+
+        try {
+            conn = getConnection(URL, USER, PASSWORD); // DB 연결 가져오기
+            // SQL 문장 작성
+            String sql = "SELECT START_TIME FROM TIMES WHERE ID = (SELECT ID FROM USERS WHERE NICKNAME = ?)";
+            stmt = conn.prepareStatement(sql);
+
+            // SQL 문장의 매개변수 설정
+            stmt.setString(1, username);
+
+            // SQL 문장 실행
+            rs = stmt.executeQuery();
+
+            // 결과 처리
+            if (rs.next()) {
+                startTime = rs.getString("START_TIME");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // 리소스 해제
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return startTime;
+    }
 
 
 }
