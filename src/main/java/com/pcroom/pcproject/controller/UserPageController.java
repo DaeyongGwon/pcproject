@@ -4,6 +4,7 @@ import com.pcroom.pcproject.model.dao.SeatDao;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -28,6 +29,8 @@ public class UserPageController {
     private Label startTimeLabel;
     @FXML
     private Label remainingTimeLabel;
+    @FXML
+    private UserInfoController userInfoController; // FXML에서 정의된 UserInfoController를 사용
 
     @FXML
     private void charge(ActionEvent event) {
@@ -95,6 +98,10 @@ public class UserPageController {
                 int parsedSeatNumber = Integer.parseInt(seatNumber);
                 seatDao.updateSeatStatus(parsedSeatNumber, 1); // active를 1로 변경
 
+                // 시작 시간을 저장
+                seatDao.saveStartTime(parsedSeatNumber);
+                seatDao.updateSeatStatus(parsedSeatNumber, 1); // active를 1로 변경
+
                 // 현재 창 닫기
                 Stage stage = (Stage) seatNumberLabel.getScene().getWindow();
                 stage.close();
@@ -123,6 +130,9 @@ public class UserPageController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/UserInfo.fxml"));
             Parent root = loader.load();
+            userInfoController = loader.getController(); // FXML에서 정의된 UserInfoController를 가져와서
+            userInfoController.initialize(); // initialize 메서드 호출하여 사용자 정보 설정
+            userInfoController.setStartTime(startTimeLabel.getText()); // 시작 시간 설정 추가
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("User Information");
@@ -131,4 +141,37 @@ public class UserPageController {
             e.printStackTrace();
         }
     }
+
+
+    @FXML
+    private void moveSeat(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("자리 이동 확인");
+        alert.setHeaderText(null);
+        alert.setContentText("정말로 자리 이동을 하시겠습니까?");
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                // MainPage.fxml 다시 로드 및 표시
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/MainPage.fxml"));
+                    Parent root = loader.load();
+
+                    Stage mainPageStage = new Stage();
+                    mainPageStage.setTitle("메인 페이지");
+                    mainPageStage.setScene(new Scene(root));
+                    mainPageStage.setWidth(400); // 가로 400 설정
+                    mainPageStage.setHeight(500); // 세로 500 설정
+                    mainPageStage.show();
+
+                    // 현재 창 닫기
+                    Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    currentStage.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 }
+
