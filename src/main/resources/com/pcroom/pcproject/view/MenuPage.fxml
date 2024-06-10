@@ -130,7 +130,7 @@
                     <children>
                         <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0px 0px 8px 0px;">
                             <children>
-                                <Button alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" prefWidth="100.0" style="-fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 5px; -fx-border-width: 0.5; -fx-background-radius: 5px; -fx-background-color: #5f6579;" text="≡ 주문내역 보기" />
+                                <Button onAction="#getOrders" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" prefWidth="100.0" style="-fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 5px; -fx-border-width: 0.5; -fx-background-radius: 5px; -fx-background-color: #5f6579;" text="≡ 주문내역 보기" />
                             </children>
                         </HBox>
                         <VBox style="-fx-background-color: white; -fx-background-radius: 8px; radi: 8px;" VBox.vgrow="ALWAYS">
