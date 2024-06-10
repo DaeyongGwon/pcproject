@@ -1,22 +1,35 @@
 package com.pcroom.pcproject.controller;
 
+import com.pcroom.pcproject.model.dao.OrderDao;
+import com.pcroom.pcproject.model.dao.TimeDao;
+import com.pcroom.pcproject.model.dao.UserDao;
+import com.pcroom.pcproject.model.dto.OrderDto;
+import com.pcroom.pcproject.model.dto.TimeDto;
 import com.pcroom.pcproject.service.FoodService;
 import com.pcroom.pcproject.model.dto.FoodDto;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MenuPageController {
     public TextField FoodSearch;
@@ -26,6 +39,8 @@ public class MenuPageController {
     public VBox cartVBox;
     @FXML
     public Label cartList;
+    @FXML
+    public Button placeOrderButton;
     @FXML
     private ScrollPane categoryScrollPane;
     @FXML
@@ -128,6 +143,135 @@ public class MenuPageController {
         cartItems.getChildren().removeIf(node -> !node.equals(cartList));
     }
 
+
+    @FXML
+    public void placeOrder(ActionEvent event) {
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("주문 확인");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("주문을 완료하시겠습니까?");
+
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // 장바구니에 있는 상품들을 가져와서 주문 테이블에 추가
+            try {
+                // 주문 시간 설정
+                Date orderDate = new Date(System.currentTimeMillis());
+
+                // 장바구니에 있는 상품들을 주문 테이블에 추가
+                for (Node node : cartItems.getChildren()) {
+                    if (node instanceof BorderPane) {
+                        int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+                        BorderPane cartItemBox = (BorderPane) node;
+                        HBox topBox = (HBox) cartItemBox.getTop();
+                        Label itemNameLabel = (Label) topBox.getChildren().get(0);
+                        String itemName = itemNameLabel.getText();
+
+                        HBox itemInfoBox = (HBox) cartItemBox.getBottom();
+                        Label quantityLabel = (Label) itemInfoBox.getChildren().get(0);
+                        int quantity = Integer.parseInt(quantityLabel.getText().substring(4));
+
+                        Label priceLabel = (Label) itemInfoBox.getChildren().get(2);
+                        int price = Integer.parseInt(priceLabel.getText().substring(4));
+
+                        // 주문 테이블에 상품 정보 추가
+                        OrderDto order = new OrderDto(itemName ,userId, orderDate, price);
+                        OrderDao.addOrder(order);
+                    }
+                }
+                // 결제가 가능한지 확인하고 가능하면 결제 진행
+                if (isPaymentPossible()) {
+                    processPayment();
+
+                    // 주문 완료 후 장바구니 비우기
+                    cartItems.getChildren().clear();
+                    cartVBox.setVisible(false);
+                    cartVBox.setManaged(false);
+                    totalPriceLabel.setText("0원");
+
+                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                    successAlert.setTitle("주문 완료");
+                    successAlert.setHeaderText(null);
+                    successAlert.setContentText("주문이 완료되었습니다.");
+                    successAlert.showAndWait();
+                } else {
+                    Alert warningAlert = new Alert(Alert.AlertType.WARNING);
+                    warningAlert.setTitle("결제 실패");
+                    warningAlert.setHeaderText(null);
+                    warningAlert.setContentText("잔여 시간이 부족하여 주문을 완료할 수 없습니다. 잔여 시간을 충전해주세요.");
+                    warningAlert.showAndWait();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("오류 발생");
+                errorAlert.setHeaderText(null);
+                errorAlert.setContentText("주문을 처리하는 중에 오류가 발생했습니다.");
+                errorAlert.showAndWait();
+            }
+        }
+    }
+    private boolean isPaymentPossible() {
+        int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+        TimeDao timeDao = new TimeDao();
+        int remainingTime = timeDao.getTimeByUserId(userId).getRemainingTime(); // 사용자의 잔여 시간을 조회합니다.
+        int totalPrice = calculateTotalPrice(); // 결제할 총 가격을 계산하는 메소드, 이 부분은 별도의 메소드로 구현되어 있다고 가정합니다.
+        int requiredTime = (totalPrice / 1000) * 60; // 1000원당 60분으로 계산하여 필요한 시간을 계산합니다.
+        return remainingTime >= requiredTime;
+    }
+
+    private int calculateTotalPrice() {
+        // 저장된 totalPrice 값을 반환합니다.
+        int totalPrice = Integer.parseInt(totalPriceLabel.getText().replaceAll("[^0-9]", ""));
+        System.out.println("총 가격: " + totalPrice);
+        return totalPrice;
+    }
+
+    // 잔여 시간을 조회하여 결제를 처리하는 메소드
+    private void processPayment() {
+        int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+        TimeDao timeDao = new TimeDao();
+        int remainingTime = timeDao.getTimeByUserId(userId).getRemainingTime(); // 사용자의 잔여 시간을 조회합니다.
+        int totalPrice = calculateTotalPrice(); // 결제할 총 가격을 계산하는 메소드, 이 부분은 별도의 메소드로 구현되어 있다고 가정합니다.
+        int requiredTime = (int) Math.ceil((double) totalPrice / 1000 * 60);
+        if (remainingTime >= requiredTime) {
+            // 잔여 시간이 충분한 경우 결제를 진행합니다.
+            TimeDto newTimeDto = new TimeDto();
+            newTimeDto.setId(userId);
+            remainingTime -= requiredTime; // 결제에 필요한 시간만큼 잔여 시간을 차감합니다.
+            newTimeDto.setRemainingTime(remainingTime);
+            TimeDao.updateTime(newTimeDto); // 잔여 시간을 업데이트합니다.
+            // 결제가 완료되면 잔여 시간을 갱신하고 사용자에게 결제 완료 메시지를 보여줍니다.
+            System.out.println("결제가 완료되었습니다. 잔여 시간: " + remainingTime + "분");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information");
+            alert.setHeaderText(null);
+            alert.setContentText("결제가 완료되었습니다. 잔여 시간: " + remainingTime + "분");
+            alert.showAndWait();
+
+        } else {
+            // 잔여 시간이 부족한 경우 요금을 충전하도록 유도하는 메시지를 출력합니다.
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText(null);
+            alert.setContentText("잔여 시간이 부족합니다. 요금을 충전해주세요.");
+            alert.showAndWait();
+        }
+    }
+
+    public void getOrders(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/OrderPage.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("주문 내역");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // 장바구니
     // 장바구니에 표시할 상품 정보 클래스
     private static class CartItem {
@@ -227,7 +371,6 @@ public class MenuPageController {
                 totalPrice += currentPrice; // 총 가격에 현재 아이템의 가격을 더함
             }
         }
-
         totalPriceLabel.setText(totalPrice + "원");
     }
 

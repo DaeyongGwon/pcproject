@@ -1,5 +1,6 @@
 package com.pcroom.pcproject.controller;
 
+import com.pcroom.pcproject.model.dao.SeatAssignmentDAO;
 import com.pcroom.pcproject.model.dao.SeatDao;
 import com.pcroom.pcproject.model.dao.TimeDao;
 import com.pcroom.pcproject.model.dao.UserDao;
@@ -66,9 +67,13 @@ public class SeatDetailsController {
 
                 // 좌석 상태 업데이트
                 seatDao.updateSeatStatus(seatNumber, 0);
+                // seat_assigned 추가
+                int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+                System.out.println("userId: " + userId
+                        + ", seatNumber: " + seatNumber);
+                SeatAssignmentDAO.assignSeat(userId, seatNumber);
 
                 // START_TIME 업데이트
-                int userId = UserDao.getUserIdByNickname(SignInController.getToken());
                 LocalDateTime startTime = LocalDateTime.now();
                 TimeDao.updateStartTime(userId, Timestamp.valueOf(startTime));
                 System.out.println("startTime: " + startTime);
