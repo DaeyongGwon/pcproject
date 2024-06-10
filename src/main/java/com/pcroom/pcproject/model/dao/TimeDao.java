@@ -50,22 +50,50 @@ public class TimeDao {
             e.printStackTrace();
         }
     }
-
-    // 시간을 업데이트하는 메서드
-    public void updateTime(TimeDto time) {
-        String query = "UPDATE TIMES SET REMAINING_TIME = ?, LAST_CHECKED = ?, START_TIME = ? WHERE ID = ?";
+    // 시작 시간을 업데이트하는 메서드
+    public static void updateStartTime(int userId, Timestamp startTime) {
+        String query = "UPDATE TIMES SET START_TIME = ? WHERE ID = ?";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setInt(1, time.getRemainingTime());
-            stmt.setTimestamp(2, time.getLastChecked());
-            stmt.setTimestamp(3, time.getStartTime());
-            stmt.setInt(4, time.getId());
+            stmt.setTimestamp(1, startTime);
+            stmt.setInt(2, userId);
 
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    // 종료 시간을 업데이트하는 메서드
+    public static void updateEndTime(int userId, Timestamp endTime) {
+        String query = "UPDATE TIMES SET LAST_CHECKED = ? WHERE ID = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setTimestamp(1, endTime);
+            stmt.setInt(2, userId);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    // 시간을 업데이트하는 메서드
+    public void updateTime(TimeDto time) {
+        String query = "UPDATE TIMES SET REMAINING_TIME = ? WHERE ID = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, time.getRemainingTime());
+            stmt.setInt(2, time.getId());
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.pcroom.pcproject.controller;
 
 import com.pcroom.pcproject.model.dao.SeatDao;
+import com.pcroom.pcproject.model.dao.TimeDao;
+import com.pcroom.pcproject.model.dao.UserDao;
 import com.pcroom.pcproject.model.dto.SeatDto;
 import com.pcroom.pcproject.util.SeatUtils;
 import javafx.event.ActionEvent;
@@ -15,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -61,6 +64,13 @@ public class SeatDetailsController {
 
                 // 좌석 상태 업데이트
                 seatDao.updateSeatStatus(seatNumber, 0);
+
+                // START_TIME 업데이트
+                int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+                LocalDateTime startTime = LocalDateTime.now();
+                TimeDao.updateStartTime(userId, Timestamp.valueOf(startTime));
+                System.out.println("startTime: " + startTime);
+
                 // 좌석 상태 업데이트 후에 좌석 목록 다시 로드
                 updateSeatStatus();
 
@@ -91,6 +101,7 @@ public class SeatDetailsController {
             }
         }
     }
+
 
 
     public void setSeatDetails(String seatNumber, String status, String startTime, String username) {

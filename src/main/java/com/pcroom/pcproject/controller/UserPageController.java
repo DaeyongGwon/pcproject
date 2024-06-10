@@ -1,6 +1,10 @@
 package com.pcroom.pcproject.controller;
 
 import com.pcroom.pcproject.model.dao.SeatDao;
+import com.pcroom.pcproject.model.dao.TimeDao;
+import com.pcroom.pcproject.model.dao.UserDao;
+import com.pcroom.pcproject.model.dto.TimeDto;
+import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -19,7 +25,9 @@ import static com.pcroom.pcproject.controller.SignInController.logout;
 
 public class UserPageController {
     private final SeatDao seatDao = new SeatDao();
-
+    private final TimeDao timeDao = new TimeDao();
+    private AnimationTimer timer;
+    private TimeDto previousTimeDto;
     @FXML
     private Label seatNumberLabel;
     @FXML
@@ -28,6 +36,73 @@ public class UserPageController {
     private Label startTimeLabel;
     @FXML
     private Label remainingTimeLabel;
+
+    // 이전에 가져온 시간 정보를 저장하는 변수
+    @FXML
+    private void initialize() {
+        // 타이머를 시작
+        startTimer();
+    }
+
+    private void startTimer() {
+        timer = new AnimationTimer() {
+            long lastUpdate = 0;
+
+            @Override
+            public void handle(long now) {
+                if (now - lastUpdate >= 1_000_000_000) { // 1초마다 실행
+                    updateRemainingTime();
+                    lastUpdate = now;
+                }
+            }
+        };
+        timer.start();
+    }
+
+    private void updateRemainingTime() {
+        // 사용자의 ID를 가져와서 시간을 조회
+        int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+        TimeDto timeDto = timeDao.getTimeByUserId(userId);
+
+        if (timeDto != null) {
+            // 이전에 가져온 시간 정보가 있는 경우에만 처리
+            if (previousTimeDto != null) {
+                // 이전 시간과 현재 시간의 차이를 계산하여 남은 시간을 갱신
+                int elapsedSeconds = (int) (timeDto.getLastChecked().getTime()
+                        - previousTimeDto.getLastChecked().getTime()) / 1000;
+                int remainingMinutes = previousTimeDto.getRemainingTime() - elapsedSeconds / 60;
+
+                // 남은 시간이 음수가 되면 0으로 설정
+                remainingMinutes = Math.max(0, remainingMinutes);
+
+                // 시간이 변경되었다면 DB에 업데이트
+                if (remainingMinutes != previousTimeDto.getRemainingTime()) {
+                    timeDto.setRemainingTime(remainingMinutes);
+                    timeDao.updateTime(timeDto);
+                    System.out.println("남은 시간이 변경되었습니다: " + remainingMinutes + "분");
+
+                    // 남은 시간을 UI에 업데이트
+                    updateRemainingTimeLabel(remainingMinutes);
+                }
+            }
+
+            // 이전 시간 정보 업데이트
+            previousTimeDto = timeDto;
+        }
+    }
+
+    private void updateRemainingTimeLabel(int remainingMinutes) {
+        // 남은 시간을 시간과 분으로 분할하여 라벨에 설정
+        long hours = remainingMinutes / 60;
+        long minutes = remainingMinutes % 60;
+        String remainingTime = String.format("%02d:%02d", hours, minutes);
+        remainingTimeLabel.setText(remainingTime);
+
+        // 남은 시간이 0분이 되면 사용 종료 처리
+        if (remainingMinutes <= 0) {
+            handleClose(null);
+        }
+    }
 
     @FXML
     private void charge(ActionEvent event) {
@@ -63,18 +138,21 @@ public class UserPageController {
         seatNumberLabel.setText(seatNumber);
         usernameLabel.setText(status);
         startTimeLabel.setText(startTime);
-        // 남은 시간은 별도로 계산하여 설정
-    }
 
-    private String formatTime(String startTime) {
-        // LocalDateTime.parse를 사용하여 문자열을 LocalDateTime 객체로 변환
-        LocalDateTime dateTime = LocalDateTime.parse(startTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        // DateTimeFormatter를 사용하여 시간 부분만 형식화
-        return dateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-    }
+        // 사용자의 ID를 가져와서 시간을 조회
+        int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+        TimeDto timeDto = timeDao.getTimeByUserId(userId);
 
-    public void setSeatNumber(String seatNumber) {
-        seatNumberLabel.setText(seatNumber.replace("좌석번호:", ""));
+        if (timeDto != null) {
+            // 시간 정보가 있는 경우 분 단위로 변환하여 남은 시간을 계산하여 설정
+            int remainingMinutes = timeDto.getRemainingTime();
+            long hours = remainingMinutes / 60;
+            long minutes = remainingMinutes % 60;
+            String remainingTime = String.format("%02d:%02d", hours, minutes);
+            remainingTimeLabel.setText(remainingTime);
+        } else {
+            remainingTimeLabel.setText("00:00");
+        }
     }
 
     @FXML
@@ -94,15 +172,33 @@ public class UserPageController {
                 String seatNumber = seatNumberText.substring(startIndex); // 숫자만 추출
                 int parsedSeatNumber = Integer.parseInt(seatNumber);
                 seatDao.updateSeatStatus(parsedSeatNumber, 1); // active를 1로 변경
+                // 타임 테이블 관련 코드 처리
+                int id = UserDao.getUserIdByNickname(SignInController.getToken());
+                LocalDateTime endTime = LocalDateTime.now();
+                // time 정보 가져오기
+                TimeDto timeDto = timeDao.getTimeByUserId(id);
+                System.out.println("id 값 : " + id);
+                // endTime 업데이트
+                TimeDao.updateEndTime(timeDto.getId(), Timestamp.valueOf(endTime));
+                System.out.println("endTime: " + endTime);
+                if (timeDto != null && timeDto.getStartTime() != null) {
+                    LocalDateTime startTime = timeDto.getStartTime().toLocalDateTime();
+                    Duration duration = Duration.between(startTime, endTime);
+                    int elapsedMinutes = (int) duration.toMinutes();
+                    int remainingMinutes = timeDto.getRemainingTime() - elapsedMinutes;
+                    timeDto.setRemainingTime(remainingMinutes);
+                    timeDao.updateTime(timeDto);
+                    System.out.println("사용 종료: " + elapsedMinutes + "분 사용, 남은 시간: " + remainingMinutes + "분");
+                }
 
-                // 현재 창 닫기
                 Stage stage = (Stage) seatNumberLabel.getScene().getWindow();
                 stage.close();
                 logout();
 
                 // MainPage.fxml 다시 로드 및 표시
                 try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/MainPage.fxml"));
+                    FXMLLoader loader = new FXMLLoader(
+                            getClass().getResource("/com/pcroom/pcproject/view/MainPage.fxml"));
                     Parent root = loader.load();
 
                     Stage mainPageStage = new Stage();

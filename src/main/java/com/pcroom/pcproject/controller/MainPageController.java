@@ -174,10 +174,6 @@ public class MainPageController {
         }
     }
 
-    public void addSeatLabel(int row, int col, String seatNumber) {
-        Label label = new Label(seatNumber);
-        seatGrid.add(label, col, row);
-    }
 
     // 로그인 중인 유저 메인 페이지 라벨에 추가
     public void setLoggedInUserLabel(String username) {
