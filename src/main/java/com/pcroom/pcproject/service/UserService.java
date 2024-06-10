@@ -62,4 +62,9 @@ public class UserService {
     public UserDto getUserByToken(String token) {
         return userDao.getUserByToken(token);
     }
+
+    public String getUserStartTime(String username) {
+        // UserDao의 메서드를 활용하여 사용자의 Start_Time 값을 가져옵니다.
+        return userDao.getUserStartTime(username);
+    }
 }
