@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -17,6 +18,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -56,6 +58,15 @@ public class MainPageController {
                 }
 
                 String loggedInUser = SignInController.getToken();
+                if (loggedInUser != null && !loggedInUser.isEmpty()) {
+                    setLoggedInUserLabel(loggedInUser);
+                    loggedOut.setVisible(false);
+                    loggedOut.setManaged(false);
+                    loggedIn.setVisible(true);
+                    loggedIn.setManaged(true);
+                } else {
+                    disableSeatButtons();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -101,6 +112,12 @@ public class MainPageController {
 
     @FXML
     private void handleSeatButtonClick(int seatNumber) {
+        String loggedInUser = SignInController.getToken();
+        if (loggedInUser == null || loggedInUser.isEmpty()) {
+            showAlert("로그인 필요", "좌석을 선택하려면 먼저 로그인하세요.");
+            return;
+        }
+
         try {
             SeatDto seat = seatDao.getSeatByNumber(seatNumber);
             if (seat != null && seat.getActive() == 1) {
@@ -111,7 +128,6 @@ public class MainPageController {
                 boolean isReserved = seat.getActive() == 1;
                 String status = isReserved ? "좌석 사용 가능" : "사용 중인 좌석입니다.";
                 String startTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                String loggedInUser = SignInController.getToken();
 
                 seatDetailsController.setSeatDetails(String.valueOf(seatNumber), status, startTime, loggedInUser);
 
@@ -120,6 +136,10 @@ public class MainPageController {
                 stage.setTitle("좌석 상세 정보");
                 stage.setScene(new Scene(seatDetailsRoot));
                 stage.show();
+
+                // 현재 메인 페이지를 닫음
+                Stage currentStage = (Stage) seatGrid.getScene().getWindow();
+                currentStage.close();
             }
         } catch (IOException | SQLException e) {
             e.printStackTrace();
@@ -157,5 +177,18 @@ public class MainPageController {
     public void addSeatLabel(int row, int col, String seatNumber) {
         Label label = new Label(seatNumber);
         seatGrid.add(label, col, row);
+    }
+
+    // 로그인 중인 유저 메인 페이지 라벨에 추가
+    public void setLoggedInUserLabel(String username) {
+        loggedInUserLabel.setText("로그인 중인 유저: " + username);
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
