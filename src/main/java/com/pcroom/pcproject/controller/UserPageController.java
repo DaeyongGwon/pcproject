@@ -98,6 +98,17 @@ public class UserPageController {
                 int parsedSeatNumber = Integer.parseInt(seatNumber);
                 seatDao.updateSeatStatus(parsedSeatNumber, 1); // active를 1로 변경
 
+                // UserInfoController 초기화
+                if (userInfoController == null) {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/UserInfo.fxml"));
+                    try {
+                        Parent root = loader.load();
+                        userInfoController = loader.getController();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 // UserInfoController에 시작 시간 전달
                 userInfoController.setStartTime(startTimeLabel.getText());
 
@@ -129,9 +140,11 @@ public class UserPageController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/UserInfo.fxml"));
             Parent root = loader.load();
-            userInfoController = loader.getController(); // FXML에서 정의된 UserInfoController를 가져와서
-            userInfoController.initialize(); // initialize 메서드 호출하여 사용자 정보 설정
+
+            userInfoController = loader.getController(); // 컨트롤러를 가져와서
+            userInfoController.initialize(); // 초기화 메서드를 호출하여 사용자 정보 설정
             userInfoController.setStartTime(startTimeLabel.getText()); // 시작 시간 설정 추가
+
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("User Information");
