@@ -75,9 +75,6 @@ public class SeatDetailsController {
                     // 좌석 상태 업데이트
                     seatDao.updateSeatStatus(seatNumber, 0);
 
-                    // 좌석 할당
-                    seatDao.assignSeatToUser(seat.getSeatId(), userId);
-
                     System.out.println("userId: " + userId
                             + ", seatNumber: " + seatNumber);
                     SeatAssignmentDAO.assignSeat(userId, seatNumber);

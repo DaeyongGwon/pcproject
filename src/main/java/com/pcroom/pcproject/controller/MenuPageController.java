@@ -352,7 +352,6 @@ public class MenuPageController {
 
             cartItemBox.setTop(topBox); // 상단에 상품명과 삭제 버튼을 배치
             cartItemBox.setBottom(itemInfoBox); // 아이템 정보 HBox를 하단에 배치하여 가운데 정렬
-
             cartItems.getChildren().add(cartItemBox);
         }
 
@@ -432,7 +431,8 @@ public class MenuPageController {
                     lblDescription.setStyle("-fx-description: center-left;");
                     infoBox.getChildren().add(lblDescription);
                 }
-
+                cartVBox.setVisible(false);
+                cartVBox.setManaged(false);
                 HBox priceBox = null;
                 if (item.getOldPrice() > 0) {
                     priceBox = new HBox(5);
@@ -462,7 +462,6 @@ public class MenuPageController {
                 addButton.setPrefHeight(30);
                 addButton.setMaxWidth(Double.MAX_VALUE);
                 //addButton 클릭 시 cartVBox의 visible을 true로 변경, manage를 false로 변경
-
                 HBox.setHgrow(addButton, Priority.ALWAYS);
                 addButton.setCursor(Cursor.HAND);
                 addButton.setVisible(false);
