@@ -9,16 +9,21 @@ import com.pcroom.pcproject.service.FoodService;
 import com.pcroom.pcproject.model.dto.FoodDto;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -228,7 +233,7 @@ public class MenuPageController {
         TimeDao timeDao = new TimeDao();
         int remainingTime = timeDao.getTimeByUserId(userId).getRemainingTime(); // 사용자의 잔여 시간을 조회합니다.
         int totalPrice = calculateTotalPrice(); // 결제할 총 가격을 계산하는 메소드, 이 부분은 별도의 메소드로 구현되어 있다고 가정합니다.
-        int requiredTime = (totalPrice/1000)*60; // 1000원당 60분으로 계산하여 필요한 시간을 계산합니다.
+        int requiredTime = (int) Math.ceil((double) totalPrice / 1000 * 60);
         if (remainingTime >= requiredTime) {
             // 잔여 시간이 충분한 경우 결제를 진행합니다.
             TimeDto newTimeDto = new TimeDto();
@@ -251,6 +256,19 @@ public class MenuPageController {
             alert.setHeaderText(null);
             alert.setContentText("잔여 시간이 부족합니다. 요금을 충전해주세요.");
             alert.showAndWait();
+        }
+    }
+
+    public void getOrders(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/OrderPage.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("주문 내역");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
