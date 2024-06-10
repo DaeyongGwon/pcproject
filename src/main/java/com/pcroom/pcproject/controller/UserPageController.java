@@ -98,9 +98,8 @@ public class UserPageController {
                 int parsedSeatNumber = Integer.parseInt(seatNumber);
                 seatDao.updateSeatStatus(parsedSeatNumber, 1); // active를 1로 변경
 
-                // 시작 시간을 저장
-                seatDao.saveStartTime(parsedSeatNumber);
-                seatDao.updateSeatStatus(parsedSeatNumber, 1); // active를 1로 변경
+                // UserInfoController에 시작 시간 전달
+                userInfoController.setStartTime(startTimeLabel.getText());
 
                 // 현재 창 닫기
                 Stage stage = (Stage) seatNumberLabel.getScene().getWindow();
