@@ -26,7 +26,7 @@ public class OrderDao {
     }
 
     // 주문 조회
-    public List<OrderDto> getAllOrders() throws SQLException {
+    public static List<OrderDto> getOrders() throws SQLException {
         List<OrderDto> orders = new ArrayList<>();
         String query = "SELECT * FROM ORDERS";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -45,7 +45,7 @@ public class OrderDao {
     }
 
     // 특정 사용자의 주문 조회
-    public List<OrderDto> getUserOrders(int userId) throws SQLException {
+    public static List<OrderDto> getUserOrders(int userId) throws SQLException {
         List<OrderDto> userOrders = new ArrayList<>();
         String query = "SELECT * FROM ORDERS WHERE USERID = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -53,11 +53,11 @@ public class OrderDao {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
+                String itemName = rs.getString("ITEM_NAME");
                 int orderId = rs.getInt("ORDERID");
                 Date orderDate = rs.getDate("ORDER_DATE");
                 int totalPrice = rs.getInt("TOTAL_PRICE");
-                String itemName = rs.getString("ITEM_NAME");
-                OrderDto order = new OrderDto(itemName, userId, orderDate, totalPrice);
+                OrderDto order = new OrderDto(itemName, orderId, userId, orderDate, totalPrice);
                 userOrders.add(order);
             }
         }

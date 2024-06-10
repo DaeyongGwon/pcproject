@@ -19,6 +19,14 @@ public class OrderDto {
         this.totalPrice = totalPrice;
     }
 
+    public OrderDto(String itemName, int orderId, int userId, Date orderDate, int totalPrice) {
+        this.itemName = itemName;
+        this.orderId = orderId;
+        this.userId = userId;
+        this.orderDate = orderDate;
+        this.totalPrice = totalPrice;
+    }
+
     // 게터 및 세터
     public String getItemName() {
         return itemName;
