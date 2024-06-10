@@ -9,12 +9,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import static com.pcroom.pcproject.controller.SignInController.logout;
 
 public class UserPageController {
     private final SeatDao seatDao = new SeatDao();
@@ -36,7 +37,6 @@ public class UserPageController {
 
             Stage stage = new Stage();
             stage.setTitle("요금제 구매");
-//            stage.initModality(Modality.APPLICATION_MODAL); // Make the popup modal
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
@@ -94,12 +94,29 @@ public class UserPageController {
                 String seatNumber = seatNumberText.substring(startIndex); // 숫자만 추출
                 int parsedSeatNumber = Integer.parseInt(seatNumber);
                 seatDao.updateSeatStatus(parsedSeatNumber, 1); // active를 1로 변경
+
+                // 현재 창 닫기
                 Stage stage = (Stage) seatNumberLabel.getScene().getWindow();
                 stage.close();
+                logout();
+
+                // MainPage.fxml 다시 로드 및 표시
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/MainPage.fxml"));
+                    Parent root = loader.load();
+
+                    Stage mainPageStage = new Stage();
+                    mainPageStage.setTitle("메인 페이지");
+                    mainPageStage.setScene(new Scene(root));
+                    mainPageStage.setWidth(400); // 가로 400 설정
+                    mainPageStage.setHeight(500); // 세로 500 설정
+                    mainPageStage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
-
 
     @FXML
     private void onUserInfoButtonClick(ActionEvent event) {
@@ -114,5 +131,4 @@ public class UserPageController {
             e.printStackTrace();
         }
     }
-
 }
