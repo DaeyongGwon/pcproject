@@ -196,7 +196,7 @@
                      </children></VBox>
                   <VBox alignment="CENTER" style="-fx-padding: 0 0 5 0;" VBox.vgrow="ALWAYS">
                      <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="37.0" prefWidth="281.0" style="-fx-background-color: #fbe54d; -fx-text-fill: black; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-font-size: 14;" text="주문하기" VBox.vgrow="ALWAYS" />
+                        <Button fx:id="placeOrderButton" onAction="#placeOrder" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="37.0" prefWidth="281.0" style="-fx-background-color: #fbe54d; -fx-text-fill: black; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-font-size: 14;" text="주문하기" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                </children></VBox>
