@@ -50,6 +50,21 @@ public class TimeDao {
             e.printStackTrace();
         }
     }
+    // 시작 시간을 업데이트하는 메서드
+    public static void updateStartTime(int userId, Timestamp startTime) {
+        String query = "UPDATE TIMES SET START_TIME = ? WHERE ID = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setTimestamp(1, startTime);
+            stmt.setInt(2, userId);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     // 시간을 업데이트하는 메서드
     public void updateTime(TimeDto time) {
