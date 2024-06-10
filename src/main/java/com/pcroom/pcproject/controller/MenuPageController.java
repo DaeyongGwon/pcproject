@@ -170,7 +170,7 @@ public class MenuPageController {
                         int price = Integer.parseInt(priceLabel.getText().substring(4));
 
                         // 주문 테이블에 상품 정보 추가
-                        OrderDto order = new OrderDto(userId, orderDate, price);
+                        OrderDto order = new OrderDto(itemName ,userId, orderDate, price);
                         OrderDao.addOrder(order);
                     }
                 }
@@ -229,8 +229,6 @@ public class MenuPageController {
         int remainingTime = timeDao.getTimeByUserId(userId).getRemainingTime(); // 사용자의 잔여 시간을 조회합니다.
         int totalPrice = calculateTotalPrice(); // 결제할 총 가격을 계산하는 메소드, 이 부분은 별도의 메소드로 구현되어 있다고 가정합니다.
         int requiredTime = (totalPrice/1000)*60; // 1000원당 60분으로 계산하여 필요한 시간을 계산합니다.
-        System.out.println("필요한 시간: " + requiredTime + "분");
-        System.out.println("잔여 시간: " + remainingTime + "분");
         if (remainingTime >= requiredTime) {
             // 잔여 시간이 충분한 경우 결제를 진행합니다.
             TimeDto newTimeDto = new TimeDto();

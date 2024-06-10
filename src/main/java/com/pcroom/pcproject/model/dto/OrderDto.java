@@ -5,19 +5,28 @@ import java.util.Date;
 public class OrderDto {
     private int orderId;
     private int userId;
+    private String itemName;
     private Date orderDate;
     private int totalPrice;
 
     // 생성자, 게터 및 세터
     public OrderDto() {}
 
-    public OrderDto(int userId, Date orderDate, int totalPrice) {
+    public OrderDto(String itemName ,int userId, Date orderDate, int totalPrice) {
+        this.itemName = itemName;
         this.userId = userId;
         this.orderDate = orderDate;
         this.totalPrice = totalPrice;
     }
 
     // 게터 및 세터
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
     public int getOrderId() {
         return orderId;
     }

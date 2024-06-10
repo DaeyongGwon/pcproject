@@ -14,12 +14,13 @@ public class OrderDao {
 
     // 주문 추가
     public static void addOrder(OrderDto order) throws SQLException {
-        String query = "INSERT INTO ORDERS (USERID, ORDER_DATE, TOTAL_PRICE) VALUES (?, ?, ?)";
+        String query = "INSERT INTO ORDERS (ITEM_NAME, USERID, ORDER_DATE, TOTAL_PRICE) VALUES (?, ?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement ps = conn.prepareStatement(query)){
-            ps.setInt(1, order.getUserId());
-            ps.setDate(2, new java.sql.Date(order.getOrderDate().getTime()));
-            ps.setInt(3, order.getTotalPrice());
+            ps.setString(1, order.getItemName());
+            ps.setInt(2, order.getUserId());
+            ps.setDate(3, new java.sql.Date(order.getOrderDate().getTime()));
+            ps.setInt(4, order.getTotalPrice());
             ps.executeUpdate();
         }
     }
@@ -32,11 +33,11 @@ public class OrderDao {
          PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int orderId = rs.getInt("ORDERID");
+                String itemName = rs.getString("ITEM_NAME");
                 int userId = rs.getInt("USERID");
                 Date orderDate = rs.getDate("ORDER_DATE");
                 int totalPrice = rs.getInt("TOTAL_PRICE");
-                OrderDto order = new OrderDto(userId, orderDate, totalPrice);
+                OrderDto order = new OrderDto(itemName ,userId, orderDate, totalPrice);
                 orders.add(order);
             }
         }
@@ -55,7 +56,8 @@ public class OrderDao {
                 int orderId = rs.getInt("ORDERID");
                 Date orderDate = rs.getDate("ORDER_DATE");
                 int totalPrice = rs.getInt("TOTAL_PRICE");
-                OrderDto order = new OrderDto(userId, orderDate, totalPrice);
+                String itemName = rs.getString("ITEM_NAME");
+                OrderDto order = new OrderDto(itemName, userId, orderDate, totalPrice);
                 userOrders.add(order);
             }
         }
