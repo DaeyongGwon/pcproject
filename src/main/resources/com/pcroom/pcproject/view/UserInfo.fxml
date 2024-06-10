@@ -157,7 +157,7 @@
                                 <Font name="D2Coding" size="24.0" />
                             </font>
                         </Label>
-                        <Label textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label fx:id="usingTimeLabel" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2">
                             <font>
                                 <Font name="D2Coding" size="24.0" />
                             </font>
