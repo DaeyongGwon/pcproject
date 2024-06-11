@@ -1,4 +1,3 @@
-// DTO 패키지
 package com.pcroom.pcproject.model.dto;
 
 public class OrderItemDTO {
@@ -8,8 +7,7 @@ public class OrderItemDTO {
     private int quantity;
     private double price;
 
-    // 생성자, 게터 및 세터 메서드
-
+    // Constructors
     public OrderItemDTO(int orderItemId, int orderId, int foodId, int quantity, double price) {
         this.orderItemId = orderItemId;
         this.orderId = orderId;
@@ -26,16 +24,9 @@ public class OrderItemDTO {
     }
 
     public OrderItemDTO() {
-
     }
 
-    public OrderItemDTO(int orderId, int foodId, int quantity, int price) {
-        this.orderId = orderId;
-        this.foodId = foodId;
-        this.quantity = quantity;
-        this.price = price;
-    }
-
+    // Getters and Setters
     public int getOrderItemId() {
         return orderItemId;
     }
