@@ -13,7 +13,7 @@ public class ManagerPage extends Application {
     public void start(Stage primaryStage) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ManagerPage.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+            Scene scene = new Scene(fxmlLoader.load(), 1500, 1000);
             primaryStage.setTitle("Manager Page");
             primaryStage.setScene(scene);
             primaryStage.setResizable(false); // 크기 변경 금지
