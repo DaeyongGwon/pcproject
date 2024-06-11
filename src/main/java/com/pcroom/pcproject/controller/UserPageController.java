@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -169,14 +170,19 @@ public class UserPageController {
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
+                UserDao userDao = new UserDao();
                 String seatNumberText = seatNumberLabel.getText();
                 int startIndex = seatNumberText.indexOf(":") + 2;
                 String seatNumber = seatNumberText.substring(startIndex);
                 int parsedSeatNumber = Integer.parseInt(seatNumber);
                 seatDao.updateSeatStatus(parsedSeatNumber, 1);
+                int userId = userDao.getUserIdByNickname(SignInController.getToken());
+                TimeDao timeDao = new TimeDao();
+
+                String loginTime = timeDao.getUserStartTime(SignInController.getToken());
+                Timestamp logoutTime = new Timestamp(System.currentTimeMillis());
                 try {
-                    UserDao userDao = new UserDao();
-                    SeatAssignmentDAO.unassignSeat(userDao.getUserIdByNickname(SignInController.getToken()));
+                    SeatAssignmentDAO.updateLogoutTime(userId, Timestamp.valueOf(loginTime), logoutTime);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
