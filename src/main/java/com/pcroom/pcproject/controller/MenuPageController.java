@@ -155,49 +155,44 @@ public class MenuPageController {
 
         Optional<ButtonType> result = confirmationAlert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // 장바구니에 있는 상품들을 가져와서 주문 테이블에 추가
             try {
-                // 주문 시간 설정
                 Date orderDate = new Date(System.currentTimeMillis());
+                UserDao userDao = new UserDao();
+                OrderItemDAO orderItemDAO = new OrderItemDAO();
 
-                // 장바구니에 있는 상품들을 주문 테이블에 추가
+                int userId = userDao.getUserIdByNickname(SignInController.getToken());
+
                 for (Node node : cartItems.getChildren()) {
-                    if (node instanceof BorderPane) {
-                        UserDao userDao = new UserDao();
-                        OrderItemDAO orderItemDAO = new OrderItemDAO();
-
-                        int userId = userDao.getUserIdByNickname(SignInController.getToken());
-                        BorderPane cartItemBox = (BorderPane) node;
+                    if (node instanceof BorderPane cartItemBox) {
                         HBox topBox = (HBox) cartItemBox.getTop();
                         Label itemNameLabel = (Label) topBox.getChildren().get(0);
                         String itemName = itemNameLabel.getText();
-                        //orderId 가져오기
-                        // 여기서 음식명을 이용하여 음식의 ID를 가져옵니다.
+
                         int foodId = foodService.getFoodIdByName(itemName);
                         System.out.println("음식 ID: " + foodId);
-                        // orderID
-                        int orderId = OrderDao.getUserOrders(userId).get(0).getOrderId();
-                        System.out.println("주문 ID: " + orderId);
 
                         HBox itemInfoBox = (HBox) cartItemBox.getBottom();
                         Label quantityLabel = (Label) itemInfoBox.getChildren().get(0);
                         int quantity = Integer.parseInt(quantityLabel.getText().substring(4));
 
                         Label priceLabel = (Label) itemInfoBox.getChildren().get(2);
-
-                        String priceText = priceLabel.getText().substring(priceLabel.getText().indexOf(":") + 2); // ":" 이후의 숫자 부분만 추출
-                        int totalPrice = Integer.parseInt(priceText.replaceAll("[^\\d]", "")); // 숫자 이외의 문자 제거 후 숫자로 변환
+                        String priceText = priceLabel.getText().substring(priceLabel.getText().indexOf(":") + 2);
+                        int totalPrice = Integer.parseInt(priceText.replaceAll("[^\\d]", ""));
 
                         // 주문 테이블에 상품 정보 추가
                         OrderDto order = new OrderDto(itemName, userId, orderDate, totalPrice);
                         OrderDao.addOrder(order);
+
                         // 위 주문의 orderID 가져옵니다.
-                        // 주문 테이블에 추가된 주문의 ID를 가져옵니다.
-                        int newOrderId = OrderDao.getUserOrders(userId).get(0).getOrderId();
+                        List<OrderDto> userOrders = OrderDao.getUserOrders(userId);
+                        if (userOrders.isEmpty()) {
+                            throw new SQLException("주문을 추가했지만 사용자 주문 목록이 비어 있습니다.");
+                        }
+
+                        int newOrderId = userOrders.get(userOrders.size() - 1).getOrderId();
                         System.out.println("새로운 주문 ID: " + newOrderId);
 
-
-                        OrderItemDTO orderItem = new OrderItemDTO(order.getOrderId(), foodId, quantity, totalPrice);
+                        OrderItemDTO orderItem = new OrderItemDTO(newOrderId, foodId, quantity, totalPrice);
                         orderItemDAO.addOrderItem(orderItem);
                     }
                 }

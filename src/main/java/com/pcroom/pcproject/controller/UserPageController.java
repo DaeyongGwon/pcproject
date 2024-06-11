@@ -102,7 +102,14 @@ public class UserPageController {
         remainingTimeLabel.setText(remainingTime);
 
         if (remainingMinutes <= 0) {
-            Platform.runLater(this::showChargePage);
+            timer.stop();
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("시간 만료");
+                alert.setHeaderText(null);
+                alert.setContentText("사용 시간이 만료되었습니다. 자리를 이동하거나 추가 요금을 지불해주세요.");
+                alert.showAndWait();
+            });
         }
     }
 
