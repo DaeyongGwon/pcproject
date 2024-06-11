@@ -1,6 +1,7 @@
 package com.pcroom.pcproject.controller;
 
 import com.pcroom.pcproject.model.dao.OrderDao;
+import com.pcroom.pcproject.model.dao.TimeDao;
 import com.pcroom.pcproject.model.dao.UserDao;
 import com.pcroom.pcproject.model.dto.OrderDto;
 import javafx.fxml.FXML;
@@ -77,8 +78,8 @@ public class UserDetailsController {
         showOrderHistory(nickname);
 
         // 사용자의 남은 시간을 가져와서 표시
-        UserDao userDao = new UserDao(); // UserDao의 인스턴스 생성
-        int remainingTime = userDao.getUserRemainingTime(nickname); // 인스턴스를 통해 메서드 호출
+        TimeDao timeDao = new TimeDao();
+        int remainingTime = timeDao.getUserRemainingTime(nickname); // 인스턴스를 통해 메서드 호출
 
         // 시와 분으로 변환하여 표시
         int hours = remainingTime / 60;
@@ -91,7 +92,8 @@ public class UserDetailsController {
     private void showOrderHistory(String nickname) {
         try {
             // 현재 로그인한 사용자의 ID를 얻어옴
-            int userId = UserDao.getUserIdByNickname(nickname);
+            UserDao userDao = new UserDao();
+            int userId = userDao.getUserIdByNickname(nickname);
 
             // OrderDao를 사용하여 해당 사용자의 주문 내역을 가져옴
             List<OrderDto> userOrders = OrderDao.getUserOrders(userId);
