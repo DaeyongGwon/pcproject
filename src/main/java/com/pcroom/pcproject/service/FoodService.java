@@ -25,4 +25,10 @@ public class FoodService {
     public List<FoodDto> getAllItems() {
         return new ArrayList<>(allItems);
     }
+    // 음식의 이름을 이용하여 음식의 ID를 가져오는 메소드
+    public int getFoodIdByName(String foodName) {
+        // 데이터베이스에서 음식의 이름을 기준으로 음식의 ID를 조회하는 쿼리를 실행하여 결과를 반환
+        // 여기서는 간단한 예시를 들기 위해 가정적인 코드를 작성합니다.
+        return foodDao.getFoodIdByName(foodName);
+    }
 }

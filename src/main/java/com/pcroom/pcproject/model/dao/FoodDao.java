@@ -2,10 +2,7 @@ package com.pcroom.pcproject.model.dao;
 
 import com.pcroom.pcproject.model.dto.FoodDto;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,5 +37,28 @@ public class FoodDao {
             e.printStackTrace();
         }
         return items;
+    }
+
+
+    // 음식 이름을 이용하여 음식의 ID를 가져오는 메소드
+    public int getFoodIdByName(String foodName) {
+        int foodId = 0;
+        String query = "SELECT FOODID FROM FOOD WHERE TITLE = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, foodName);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    foodId = rs.getInt("FOODID");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return foodId;
     }
 }

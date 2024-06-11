@@ -6,18 +6,38 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.sql.DriverManager.getConnection;
-
 public class UserDao {
     private static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
     private static final String USER = "pcroom";
     private static final String PASSWORD = "pcroom";
+    private Connection connection;
+
+    // DB 연결 메서드
+    private void connect() {
+        try {
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // DB 연결 해제 메서드
+    private void disconnect() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public List<UserDto> loadUsersFromDatabase() {
         List<UserDto> userList = new ArrayList<>();
         String query = "SELECT * FROM users";
-        try (Connection connection = getConnection(URL, USER, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try {
+            connect(); // DB 연결
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 String nickname = resultSet.getString("NICKNAME");
@@ -30,50 +50,67 @@ public class UserDao {
                 UserDto userDto = new UserDto(nickname, name, birthday, address, phoneNumber, email, password);
                 userList.add(userDto);
             }
+
+            resultSet.close();
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            disconnect(); // DB 연결 해제
         }
         return userList;
     }
 
     public boolean authenticateUser(String nickname, String password) {
         String query = "SELECT * FROM users WHERE nickname = ? AND password = ?";
-        try (Connection connection = getConnection(URL, USER, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try {
+            connect(); // DB 연결
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, nickname);
             preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next();
+            boolean result = resultSet.next();
+
+            resultSet.close();
+            preparedStatement.close();
+
+            return result;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            disconnect(); // DB 연결 해제
         }
     }
 
     public void addUserToDatabase(UserDto user) {
         String query = "INSERT INTO users (NICKNAME, NAME, BIRTHDAY, ADDRESS, PHONENUMBER, EMAIL, PASSWORD) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = getConnection(URL, USER, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        try {
+            connect(); // DB 연결
+            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getNickname());
             preparedStatement.setString(2, user.getName());
-            System.out.println(user.getBirthday().toString());
-            preparedStatement.setString(3, user.getBirthday().toString());
+            preparedStatement.setDate(3, user.getBirthday());
             preparedStatement.setString(4, user.getAddress());
             preparedStatement.setString(5, user.getPhonenumber());
             preparedStatement.setString(6, user.getEmail());
             preparedStatement.setString(7, user.getPassword());
             preparedStatement.executeUpdate();
+
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            disconnect(); // DB 연결 해제
         }
     }
 
-
     public void updateUserInDatabase(UserDto user) {
         String query = "UPDATE users SET NICKNAME = ?, NAME = ?, BIRTHDAY = ?, ADDRESS = ?, PHONENUMBER = ?, EMAIL = ?, PASSWORD = ? WHERE ID = ?";
-        try (Connection connection = getConnection(URL, USER, PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try {
+            connect(); // DB 연결
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, user.getNickname());
             preparedStatement.setString(2, user.getName());
             preparedStatement.setDate(3, user.getBirthday());
@@ -83,22 +120,26 @@ public class UserDao {
             preparedStatement.setString(7, user.getPassword());
             preparedStatement.setInt(8, user.getId());
             preparedStatement.executeUpdate();
+
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            disconnect(); // DB 연결 해제
         }
     }
+
     // 토큰을 이용하여 사용자 정보를 가져오는 메서드
     public UserDto getUserByToken(String token) {
-        Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         UserDto user = null;
 
         try {
-            conn = getConnection(URL, USER, PASSWORD); // DB 연결 가져오기
+            connect(); // DB 연결
             // SQL 문장 작성
             String sql = "SELECT * FROM USERS WHERE TOKEN = ?";
-            stmt = conn.prepareStatement(sql);
+            stmt = connection.prepareStatement(sql);
 
             // SQL 문장의 매개변수 설정
             stmt.setString(1, token);
@@ -136,28 +177,22 @@ public class UserDao {
                     e.printStackTrace();
                 }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            disconnect(); // DB 연결 해제
         }
         return user;
     }
+
     // 사용자의 닉네임으로 ID 값을 가져오는 메서드
-    public static int getUserIdByNickname(String nickname) {
-        Connection conn = null;
+    public int getUserIdByNickname(String nickname) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         int userId = -1; // 기본값으로 -1을 설정하여 오류 발생 시 인식할 수 있도록 함
 
         try {
-            conn = getConnection(URL, USER, PASSWORD); // DB 연결 가져오기
+            connect(); // DB 연결
             // SQL 문장 작성
             String sql = "SELECT ID FROM USERS WHERE NICKNAME = ?";
-            stmt = conn.prepareStatement(sql);
+            stmt = connection.prepareStatement(sql);
 
             // SQL 문장의 매개변수 설정
             stmt.setString(1, nickname);
@@ -187,28 +222,21 @@ public class UserDao {
                     e.printStackTrace();
                 }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            disconnect(); // DB 연결 해제
         }
         return userId;
     }
 
     // DB에 있는 토큰을 가져오는 메서드
     public String getTokenFromUser(String username) {
-        Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try {
-            conn = getConnection(URL, USER, PASSWORD); // DB 연결 가져오기
+            connect(); // DB 연결
             // SQL 문장 작성
             String sql = "SELECT TOKEN FROM USERS WHERE NICKNAME = ?";
-            stmt = conn.prepareStatement(sql);
+            stmt = connection.prepareStatement(sql);
 
             // SQL 문장의 매개변수 설정
             stmt.setString(1, username);
@@ -222,20 +250,36 @@ public class UserDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            // 리소스 해제
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            disconnect(); // DB 연결 해제
         }
         return null;
     }
 
     // 토큰을 사용자에게 저장하는 메서드
     public void saveTokenToUser(String username, String token) {
-        Connection conn = null;
         PreparedStatement stmt = null;
 
         try {
-            conn = getConnection(URL, USER, PASSWORD); // DB 연결 가져오기
+            connect(); // DB 연결
             // SQL 문장 작성
             String sql = "UPDATE USERS SET TOKEN = ? WHERE NICKNAME = ?";
-            stmt = conn.prepareStatement(sql);
+            stmt = connection.prepareStatement(sql);
 
             // SQL 문장의 매개변수 설정
             stmt.setString(1, token);
@@ -254,34 +298,24 @@ public class UserDao {
                     e.printStackTrace();
                 }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            disconnect(); // DB 연결 해제
         }
     }
+
     // 사용자의 시작 시간을 가져오는 메서드
     public String getUserStartTime(String username) {
-        Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         String startTime = null;
-
         try {
-            conn = getConnection(URL, USER, PASSWORD); // DB 연결 가져오기
+            connect(); // DB 연결
             // SQL 문장 작성
             String sql = "SELECT START_TIME FROM TIMES WHERE ID = (SELECT ID FROM USERS WHERE NICKNAME = ?)";
-            stmt = conn.prepareStatement(sql);
-
+            stmt = connection.prepareStatement(sql);
             // SQL 문장의 매개변수 설정
             stmt.setString(1, username);
-
             // SQL 문장 실행
             rs = stmt.executeQuery();
-
             // 결과 처리
             if (rs.next()) {
                 startTime = rs.getString("START_TIME");
@@ -304,13 +338,7 @@ public class UserDao {
                     e.printStackTrace();
                 }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            disconnect(); // DB 연결 해제
         }
         return startTime;
     }

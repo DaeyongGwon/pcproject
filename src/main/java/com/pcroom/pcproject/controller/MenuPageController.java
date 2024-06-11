@@ -1,9 +1,11 @@
 package com.pcroom.pcproject.controller;
 
 import com.pcroom.pcproject.model.dao.OrderDao;
+import com.pcroom.pcproject.model.dao.OrderItemDAO;
 import com.pcroom.pcproject.model.dao.TimeDao;
 import com.pcroom.pcproject.model.dao.UserDao;
 import com.pcroom.pcproject.model.dto.OrderDto;
+import com.pcroom.pcproject.model.dto.OrderItemDTO;
 import com.pcroom.pcproject.model.dto.TimeDto;
 import com.pcroom.pcproject.service.FoodService;
 import com.pcroom.pcproject.model.dto.FoodDto;
@@ -161,24 +163,45 @@ public class MenuPageController {
                 // 장바구니에 있는 상품들을 주문 테이블에 추가
                 for (Node node : cartItems.getChildren()) {
                     if (node instanceof BorderPane) {
-                        int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+                        UserDao userDao = new UserDao();
+                        OrderItemDAO orderItemDAO = new OrderItemDAO();
+
+                        int userId = userDao.getUserIdByNickname(SignInController.getToken());
                         BorderPane cartItemBox = (BorderPane) node;
                         HBox topBox = (HBox) cartItemBox.getTop();
                         Label itemNameLabel = (Label) topBox.getChildren().get(0);
                         String itemName = itemNameLabel.getText();
+                        //orderId 가져오기
+                        // 여기서 음식명을 이용하여 음식의 ID를 가져옵니다.
+                        int foodId = foodService.getFoodIdByName(itemName);
+                        System.out.println("음식 ID: " + foodId);
+                        // orderID
+                        int orderId = OrderDao.getUserOrders(userId).get(0).getOrderId();
+                        System.out.println("주문 ID: " + orderId);
 
                         HBox itemInfoBox = (HBox) cartItemBox.getBottom();
                         Label quantityLabel = (Label) itemInfoBox.getChildren().get(0);
                         int quantity = Integer.parseInt(quantityLabel.getText().substring(4));
 
                         Label priceLabel = (Label) itemInfoBox.getChildren().get(2);
-                        int price = Integer.parseInt(priceLabel.getText().substring(4));
+
+                        String priceText = priceLabel.getText().substring(priceLabel.getText().indexOf(":") + 2); // ":" 이후의 숫자 부분만 추출
+                        int totalPrice = Integer.parseInt(priceText.replaceAll("[^\\d]", "")); // 숫자 이외의 문자 제거 후 숫자로 변환
 
                         // 주문 테이블에 상품 정보 추가
-                        OrderDto order = new OrderDto(itemName ,userId, orderDate, price);
+                        OrderDto order = new OrderDto(itemName, userId, orderDate, totalPrice);
                         OrderDao.addOrder(order);
+                        // 위 주문의 orderID 가져옵니다.
+                        // 주문 테이블에 추가된 주문의 ID를 가져옵니다.
+                        int newOrderId = OrderDao.getUserOrders(userId).get(0).getOrderId();
+                        System.out.println("새로운 주문 ID: " + newOrderId);
+
+
+                        OrderItemDTO orderItem = new OrderItemDTO(order.getOrderId(), foodId, quantity, totalPrice);
+                        orderItemDAO.addOrderItem(orderItem);
                     }
                 }
+
                 // 결제가 가능한지 확인하고 가능하면 결제 진행
                 if (isPaymentPossible()) {
                     processPayment();
@@ -212,7 +235,8 @@ public class MenuPageController {
         }
     }
     private boolean isPaymentPossible() {
-        int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+        UserDao userDao = new UserDao();
+        int userId = userDao.getUserIdByNickname(SignInController.getToken());
         TimeDao timeDao = new TimeDao();
         int remainingTime = timeDao.getTimeByUserId(userId).getRemainingTime(); // 사용자의 잔여 시간을 조회합니다.
         int totalPrice = calculateTotalPrice(); // 결제할 총 가격을 계산하는 메소드, 이 부분은 별도의 메소드로 구현되어 있다고 가정합니다.
@@ -229,7 +253,8 @@ public class MenuPageController {
 
     // 잔여 시간을 조회하여 결제를 처리하는 메소드
     private void processPayment() {
-        int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+        UserDao userDao = new UserDao();
+        int userId = userDao.getUserIdByNickname(SignInController.getToken());
         TimeDao timeDao = new TimeDao();
         int remainingTime = timeDao.getTimeByUserId(userId).getRemainingTime(); // 사용자의 잔여 시간을 조회합니다.
         int totalPrice = calculateTotalPrice(); // 결제할 총 가격을 계산하는 메소드, 이 부분은 별도의 메소드로 구현되어 있다고 가정합니다.
@@ -240,7 +265,7 @@ public class MenuPageController {
             newTimeDto.setId(userId);
             remainingTime -= requiredTime; // 결제에 필요한 시간만큼 잔여 시간을 차감합니다.
             newTimeDto.setRemainingTime(remainingTime);
-            TimeDao.updateTime(newTimeDto); // 잔여 시간을 업데이트합니다.
+            timeDao.updateTime(newTimeDto); // 잔여 시간을 업데이트합니다.
             // 결제가 완료되면 잔여 시간을 갱신하고 사용자에게 결제 완료 메시지를 보여줍니다.
             System.out.println("결제가 완료되었습니다. 잔여 시간: " + remainingTime + "분");
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
