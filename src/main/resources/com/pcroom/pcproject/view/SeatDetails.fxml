@@ -46,7 +46,7 @@
                     </font>
                 </Button>
                 <Pane prefHeight="57.0" prefWidth="107.0" />
-                <Button onAction="#handleClose" prefHeight="33.0" prefWidth="89.0" style="-fx-background-radius: 15;" text="닫기">
+                <Button prefHeight="33.0" prefWidth="89.0" style="-fx-background-radius: 15;" text="닫기">
                     <font>
                         <Font name="D2Coding" size="18.0" />
                     </font>
