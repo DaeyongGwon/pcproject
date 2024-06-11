@@ -12,10 +12,6 @@ public class SeatDto{
         this.active = active;
     }
 
-    public SeatDto() {
-
-    }
-
     // Getter 및 Setter
     public int getSeatId() {
         return seat_id;
