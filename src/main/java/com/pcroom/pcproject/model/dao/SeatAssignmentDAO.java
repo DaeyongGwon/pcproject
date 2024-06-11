@@ -1,6 +1,10 @@
 package com.pcroom.pcproject.model.dao;
 
+import com.pcroom.pcproject.model.dto.SeatDto;
+import com.pcroom.pcproject.model.dto.UserDto;
+
 import java.sql.*;
+
 
 
 public class SeatAssignmentDAO {
@@ -28,5 +32,29 @@ public class SeatAssignmentDAO {
             stmt.executeUpdate();
         }
     }
+    // 좌석 번호를 기준으로 사용자 정보를 가져오는 메서드
+    public UserDto getUserBySeatNumber(int seatId) {
+        UserDto user = null;
+        String sql = "SELECT u.* FROM USERS u INNER JOIN SEAT_ASSIGNMENTS sa ON u.ID = sa.USER_ID WHERE sa.SEAT_ID = ?\n";
 
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, seatId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String nickname = rs.getString("NICKNAME");
+                    String name = rs.getString("NAME");
+                    Date birthday = rs.getDate("BIRTHDAY");
+                    String address = rs.getString("ADDRESS");
+                    String phoneNumber = rs.getString("PHONENUMBER");
+                    String email = rs.getString("EMAIL");
+                    String password = rs.getString("PASSWORD");
+                    user = new UserDto(nickname, name, birthday, address, phoneNumber, email, password);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
 }
