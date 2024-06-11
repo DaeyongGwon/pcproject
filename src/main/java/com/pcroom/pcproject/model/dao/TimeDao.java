@@ -110,7 +110,6 @@ public class TimeDao {
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setTimestamp(1, endTime);
             stmt.setInt(2, userId);
-
             stmt.executeUpdate();
 
             stmt.close();
@@ -140,6 +139,7 @@ public class TimeDao {
             disconnect(); // DB 연결 해제
         }
     }
+
     // 사용자의 잔여 시간을 1분씩 감소시키는 메서드
     public static void decrementRemainingTime(int userId) throws SQLException {
         String sql = "UPDATE TIMES SET REMAINING_TIME = REMAINING_TIME - 1 WHERE ID = ?";
@@ -148,5 +148,57 @@ public class TimeDao {
             stmt.setInt(1, userId);
             stmt.executeUpdate();
         }
+    }
+
+    // 사용자의 시작 시간을 가져오는 메서드
+    public String getUserStartTime(String username) {
+        String startTime = null;
+        String sql = "SELECT START_TIME FROM TIMES WHERE ID = (SELECT ID FROM USERS WHERE NICKNAME = ?)";
+
+        try {
+            connect(); // DB 연결
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                startTime = rs.getString("START_TIME");
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disconnect(); // DB 연결 해제
+        }
+
+        return startTime;
+    }
+
+    // 사용자의 남은 시간을 가져오는 메서드
+    public int getUserRemainingTime(String nickname) {
+        int remainingTime = 0;
+        String sql = "SELECT REMAINING_TIME FROM TIMES WHERE ID = (SELECT ID FROM USERS WHERE NICKNAME = ?)";
+
+        try {
+            connect(); // DB 연결
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, nickname);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                remainingTime = rs.getInt("REMAINING_TIME");
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disconnect(); // DB 연결 해제
+        }
+
+        return remainingTime;
     }
 }

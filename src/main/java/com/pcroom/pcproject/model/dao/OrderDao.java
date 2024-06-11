@@ -55,6 +55,26 @@ public class OrderDao {
         }
         return orders;
     }
+    // 모든 주문 조회
+    public static List<OrderDto> getAllOrders() throws SQLException {
+        List<OrderDto> allOrders = new ArrayList<>();
+        String query = "SELECT ORDERS.*, USERS.NICKNAME FROM ORDERS JOIN USERS ON ORDERS.USERID = USERS.ID";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int orderId = rs.getInt("ORDERID");
+                String itemName = rs.getString("ITEM_NAME");
+                int userId = rs.getInt("USERID");
+                String userNickname = rs.getString("NICKNAME");
+                Date orderDate = rs.getDate("ORDER_DATE");
+                int totalPrice = rs.getInt("TOTAL_PRICE");
+                OrderDto order = new OrderDto(orderId, itemName, userId, userNickname, orderDate, totalPrice);
+                allOrders.add(order);
+            }
+        }
+        return allOrders;
+    }
 
     // 특정 사용자의 주문 조회
     public static List<OrderDto> getUserOrders(int userId) throws SQLException {

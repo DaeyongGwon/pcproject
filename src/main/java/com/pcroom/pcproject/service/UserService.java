@@ -1,5 +1,6 @@
 package com.pcroom.pcproject.service;
 
+import com.pcroom.pcproject.model.dao.TimeDao;
 import com.pcroom.pcproject.model.dao.UserDao;
 import com.pcroom.pcproject.model.dto.UserDto;
 import java.util.ArrayList;
@@ -64,7 +65,8 @@ public class UserService {
     }
 
     public String getUserStartTime(String username) {
+        TimeDao timeDao = new TimeDao();
         // UserDao의 메서드를 활용하여 사용자의 Start_Time 값을 가져옵니다.
-        return userDao.getUserStartTime(username);
+        return timeDao.getUserStartTime(username);
     }
 }

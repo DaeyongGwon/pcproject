@@ -174,6 +174,12 @@ public class UserPageController {
                 String seatNumber = seatNumberText.substring(startIndex);
                 int parsedSeatNumber = Integer.parseInt(seatNumber);
                 seatDao.updateSeatStatus(parsedSeatNumber, 1);
+                try {
+                    UserDao userDao = new UserDao();
+                    SeatAssignmentDAO.unassignSeat(userDao.getUserIdByNickname(SignInController.getToken()));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 Stage stage = (Stage) seatNumberLabel.getScene().getWindow();
                 stage.close();
                 logout();

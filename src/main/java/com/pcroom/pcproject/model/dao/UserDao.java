@@ -106,7 +106,6 @@ public class UserDao {
         }
     }
 
-
     public void updateUserInDatabase(UserDto user) {
         String query = "UPDATE users SET NICKNAME = ?, NAME = ?, BIRTHDAY = ?, ADDRESS = ?, PHONENUMBER = ?, EMAIL = ?, PASSWORD = ? WHERE ID = ?";
         try {
@@ -129,6 +128,7 @@ public class UserDao {
             disconnect(); // DB 연결 해제
         }
     }
+
     // 토큰을 이용하여 사용자 정보를 가져오는 메서드
     public UserDto getUserByToken(String token) {
         PreparedStatement stmt = null;
@@ -181,6 +181,7 @@ public class UserDao {
         }
         return user;
     }
+
     // 사용자의 닉네임으로 ID 값을 가져오는 메서드
     public int getUserIdByNickname(String nickname) {
         PreparedStatement stmt = null;
@@ -300,44 +301,5 @@ public class UserDao {
             disconnect(); // DB 연결 해제
         }
     }
-    // 사용자의 시작 시간을 가져오는 메서드
-    public String getUserStartTime(String username) {
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        String startTime = null;
-        try {
-            connect(); // DB 연결
-            // SQL 문장 작성
-            String sql = "SELECT START_TIME FROM TIMES WHERE ID = (SELECT ID FROM USERS WHERE NICKNAME = ?)";
-            stmt = connection.prepareStatement(sql);
-            // SQL 문장의 매개변수 설정
-            stmt.setString(1, username);
-            // SQL 문장 실행
-            rs = stmt.executeQuery();
-            // 결과 처리
-            if (rs.next()) {
-                startTime = rs.getString("START_TIME");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // 리소스 해제
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            disconnect(); // DB 연결 해제
-        }
-        return startTime;
-    }
+
 }
