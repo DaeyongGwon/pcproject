@@ -32,6 +32,24 @@ public class SeatAssignmentDAO {
             stmt.executeUpdate();
         }
     }
+    // 유저 아이디를 기준으로 좌석 번호를 가져오는 메서드
+    public static int getSeatIdByUserId(int userId) {
+        int seatId = -1;
+        String sql = "SELECT SEAT_ID FROM SEAT_ASSIGNMENTS WHERE USER_ID = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    seatId = rs.getInt("SEAT_ID");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return seatId;
+    }
+
     // 좌석 번호를 기준으로 사용자 정보를 가져오는 메서드
     public UserDto getUserBySeatNumber(int seatId) {
         UserDto user = null;
