@@ -8,6 +8,8 @@ import com.pcroom.pcproject.model.dto.SeatDto;
 import com.pcroom.pcproject.model.dto.UserDto;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -60,18 +62,33 @@ public class ManagerController {
     }
 
     private void refreshSeatsStatus() {
-        // 모든 좌석을 순회하며 상태를 업데이트
-        for (Node node : seatGrid.getChildren()) {
-            if (node instanceof Button) {
-                Button seatButton = (Button) node;
-                int seatId = GridPane.getRowIndex(node) * 8 + GridPane.getColumnIndex(node) + 1;
-                UserDto userDto = seatAssignmentDAO.getUserBySeatNumber(seatId);
-                String userNickname = (userDto != null) ? userDto.getNickname() : "Empty";
-                VBox labelsContainer = (VBox) seatButton.getGraphic();
-                Label userLabel = (Label) labelsContainer.getChildren().get(1);
-                userLabel.setText("접속 중인 사용자: \n" + userNickname);
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                for (Node node : seatGrid.getChildren()) {
+                    if (node instanceof Button) {
+                        Button seatButton = (Button) node;
+                        int seatId = GridPane.getRowIndex(node) * 8 + GridPane.getColumnIndex(node) + 1;
+                        UserDto userDto = seatAssignmentDAO.getUserBySeatNumber(seatId);
+                        String userNickname = (userDto != null) ? userDto.getNickname() : "Empty";
+                        Platform.runLater(() -> {
+                            VBox labelsContainer = (VBox) seatButton.getGraphic();
+                            Label userLabel = (Label) labelsContainer.getChildren().get(1);
+                            userLabel.setText("접속 중인 사용자: \n" + userNickname);
+                        });
+                    }
+                }
+                return null;
             }
-        }
+        };
+
+        task.setOnFailed(e -> {
+            Throwable ex = task.getException();
+            ex.printStackTrace();
+            showAlert("오류", "좌석 상태를 갱신하는 중 오류가 발생했습니다: " + ex.getMessage());
+        });
+
+        new Thread(task).start();
     }
 
     private void createSeats(int rows, int cols) throws SQLException {
