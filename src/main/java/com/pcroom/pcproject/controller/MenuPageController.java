@@ -1,22 +1,37 @@
 package com.pcroom.pcproject.controller;
 
-import com.pcroom.pcproject.model.FoodModel;
-import com.pcroom.pcproject.model.FoodItem;
+import com.pcroom.pcproject.model.dao.OrderDao;
+import com.pcroom.pcproject.model.dao.OrderItemDAO;
+import com.pcroom.pcproject.model.dao.TimeDao;
+import com.pcroom.pcproject.model.dao.UserDao;
+import com.pcroom.pcproject.model.dto.OrderDto;
+import com.pcroom.pcproject.model.dto.OrderItemDTO;
+import com.pcroom.pcproject.model.dto.TimeDto;
+import com.pcroom.pcproject.service.FoodService;
+import com.pcroom.pcproject.model.dto.FoodDto;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MenuPageController {
     public TextField FoodSearch;
@@ -24,6 +39,10 @@ public class MenuPageController {
     public VBox cartItems;
     @FXML
     public VBox cartVBox;
+    @FXML
+    public Label cartList;
+    @FXML
+    public Button placeOrderButton;
     @FXML
     private ScrollPane categoryScrollPane;
     @FXML
@@ -36,10 +55,10 @@ public class MenuPageController {
     private Label totalPriceLabel;
 
     private List<Node> filteredItems = new ArrayList<>(); // 필터링된 상품들을 저장할 리스트
-    private FoodModel foodModel;
+    private FoodService foodService;
 
     public MenuPageController() {
-        this.foodModel = new FoodModel();
+        this.foodService = new FoodService();
     }
 
     @FXML
@@ -57,12 +76,12 @@ public class MenuPageController {
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
         // 데이터베이스에서 메뉴 아이템 로드
-        List<FoodItem> items = foodModel.getFoodData();
+        List<FoodDto> items = foodService.getFoodData();
         items.forEach(item -> menuItemsPane.getChildren().add(createMenuItemNode(item)));
 
         // 화면 크기에 따라 항목 수 조정
         scrollPane.widthProperty().addListener((obs, oldVal, newVal) -> {
-            int newPrefColumns = Math.max(1, (int) (newVal.doubleValue() / 200));
+//            int newPrefColumns = Math.max(1, (int) (newVal.doubleValue() / 200));
             menuItemsPane.setPrefWrapLength(newVal.doubleValue());
         });
     }
@@ -73,7 +92,7 @@ public class MenuPageController {
             String category = ((Button) event.getSource()).getText();
             filteredItems.clear();
 
-            foodModel.getAllItems().forEach(item -> {
+            foodService.getAllItems().forEach(item -> {
                 if (item.getLabels().contains(category) || category.equals("전체")) {
                     filteredItems.add(createMenuItemNode(item));
                 }
@@ -100,7 +119,7 @@ public class MenuPageController {
             showAllItems();
         } else {
             filteredItems.clear();
-            foodModel.getAllItems().forEach(item -> {
+            foodService.getAllItems().forEach(item -> {
                 if (item.getTitle().toLowerCase().contains(keyword.toLowerCase())) {
                     filteredItems.add(createMenuItemNode(item));
                 }
@@ -111,7 +130,7 @@ public class MenuPageController {
 
     private void showAllItems() {
         menuItemsPane.getChildren().clear();
-        foodModel.getAllItems().forEach(item -> menuItemsPane.getChildren().add(createMenuItemNode(item)));
+        foodService.getAllItems().forEach(item -> menuItemsPane.getChildren().add(createMenuItemNode(item)));
     }
 
     private void showFilteredItems() {
@@ -122,8 +141,154 @@ public class MenuPageController {
     public void closeCart(ActionEvent actionEvent) {
         cartVBox.setVisible(false);
         cartVBox.setManaged(false);
-        // 장바구니 비우기
-        cartItems.getChildren().clear();
+        // 장바구니 비우기 cartList을 제외한 모든 노드를 삭제
+        cartItems.getChildren().removeIf(node -> !node.equals(cartList));
+    }
+
+
+    @FXML
+    public void placeOrder(ActionEvent event) {
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("주문 확인");
+        confirmationAlert.setHeaderText(null);
+        confirmationAlert.setContentText("주문을 완료하시겠습니까?");
+
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                Date orderDate = new Date(System.currentTimeMillis());
+                UserDao userDao = new UserDao();
+                OrderItemDAO orderItemDAO = new OrderItemDAO();
+
+                int userId = userDao.getUserIdByNickname(SignInController.getToken());
+
+                for (Node node : cartItems.getChildren()) {
+                    if (node instanceof BorderPane cartItemBox) {
+                        HBox topBox = (HBox) cartItemBox.getTop();
+                        Label itemNameLabel = (Label) topBox.getChildren().get(0);
+                        String itemName = itemNameLabel.getText();
+
+                        int foodId = foodService.getFoodIdByName(itemName);
+                        System.out.println("음식 ID: " + foodId);
+
+                        HBox itemInfoBox = (HBox) cartItemBox.getBottom();
+                        Label quantityLabel = (Label) itemInfoBox.getChildren().get(0);
+                        int quantity = Integer.parseInt(quantityLabel.getText().substring(4));
+
+                        Label priceLabel = (Label) itemInfoBox.getChildren().get(2);
+                        String priceText = priceLabel.getText().substring(priceLabel.getText().indexOf(":") + 2);
+                        int totalPrice = Integer.parseInt(priceText.replaceAll("[^\\d]", ""));
+
+                        // 주문 테이블에 상품 정보 추가
+                        OrderDto order = new OrderDto(itemName, userId, orderDate, totalPrice);
+                        OrderDao.addOrder(order);
+
+                        // 위 주문의 orderID 가져옵니다.
+                        List<OrderDto> userOrders = OrderDao.getUserOrders(userId);
+                        if (userOrders.isEmpty()) {
+                            throw new SQLException("주문을 추가했지만 사용자 주문 목록이 비어 있습니다.");
+                        }
+
+                        int newOrderId = userOrders.get(userOrders.size() - 1).getOrderId();
+                        System.out.println("새로운 주문 ID: " + newOrderId);
+
+                        OrderItemDTO orderItem = new OrderItemDTO(newOrderId, foodId, quantity, totalPrice);
+                        orderItemDAO.addOrderItem(orderItem);
+                    }
+                }
+
+                // 결제가 가능한지 확인하고 가능하면 결제 진행
+                if (isPaymentPossible()) {
+                    processPayment();
+
+                    // 주문 완료 후 장바구니 비우기
+                    cartItems.getChildren().clear();
+                    cartVBox.setVisible(false);
+                    cartVBox.setManaged(false);
+                    totalPriceLabel.setText("0원");
+
+                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                    successAlert.setTitle("주문 완료");
+                    successAlert.setHeaderText(null);
+                    successAlert.setContentText("주문이 완료되었습니다.");
+                    successAlert.showAndWait();
+                } else {
+                    Alert warningAlert = new Alert(Alert.AlertType.WARNING);
+                    warningAlert.setTitle("결제 실패");
+                    warningAlert.setHeaderText(null);
+                    warningAlert.setContentText("잔여 시간이 부족하여 주문을 완료할 수 없습니다. 잔여 시간을 충전해주세요.");
+                    warningAlert.showAndWait();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("오류 발생");
+                errorAlert.setHeaderText(null);
+                errorAlert.setContentText("주문을 처리하는 중에 오류가 발생했습니다.");
+                errorAlert.showAndWait();
+            }
+        }
+    }
+    private boolean isPaymentPossible() {
+        UserDao userDao = new UserDao();
+        int userId = userDao.getUserIdByNickname(SignInController.getToken());
+        TimeDao timeDao = new TimeDao();
+        int remainingTime = timeDao.getTimeByUserId(userId).getRemainingTime(); // 사용자의 잔여 시간을 조회합니다.
+        int totalPrice = calculateTotalPrice(); // 결제할 총 가격을 계산하는 메소드, 이 부분은 별도의 메소드로 구현되어 있다고 가정합니다.
+        int requiredTime = (totalPrice / 1000) * 60; // 1000원당 60분으로 계산하여 필요한 시간을 계산합니다.
+        return remainingTime >= requiredTime;
+    }
+
+    private int calculateTotalPrice() {
+        // 저장된 totalPrice 값을 반환합니다.
+        int totalPrice = Integer.parseInt(totalPriceLabel.getText().replaceAll("[^0-9]", ""));
+        return totalPrice;
+    }
+
+    // 잔여 시간을 조회하여 결제를 처리하는 메소드
+    private void processPayment() {
+        UserDao userDao = new UserDao();
+        int userId = userDao.getUserIdByNickname(SignInController.getToken());
+        TimeDao timeDao = new TimeDao();
+        int remainingTime = timeDao.getTimeByUserId(userId).getRemainingTime(); // 사용자의 잔여 시간을 조회합니다.
+        int totalPrice = calculateTotalPrice(); // 결제할 총 가격을 계산하는 메소드, 이 부분은 별도의 메소드로 구현되어 있다고 가정합니다.
+        int requiredTime = (int) Math.ceil((double) totalPrice / 1000 * 60);
+        if (remainingTime >= requiredTime) {
+            // 잔여 시간이 충분한 경우 결제를 진행합니다.
+            TimeDto newTimeDto = new TimeDto();
+            newTimeDto.setId(userId);
+            remainingTime -= requiredTime; // 결제에 필요한 시간만큼 잔여 시간을 차감합니다.
+            newTimeDto.setRemainingTime(remainingTime);
+            timeDao.updateTime(newTimeDto); // 잔여 시간을 업데이트합니다.
+            // 결제가 완료되면 잔여 시간을 갱신하고 사용자에게 결제 완료 메시지를 보여줍니다.
+            System.out.println("결제가 완료되었습니다. 잔여 시간: " + remainingTime + "분");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information");
+            alert.setHeaderText(null);
+            alert.setContentText("결제가 완료되었습니다. 잔여 시간: " + remainingTime + "분");
+            alert.showAndWait();
+
+        } else {
+            // 잔여 시간이 부족한 경우 요금을 충전하도록 유도하는 메시지를 출력합니다.
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText(null);
+            alert.setContentText("잔여 시간이 부족합니다. 요금을 충전해주세요.");
+            alert.showAndWait();
+        }
+    }
+
+    public void getOrders(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/OrderPage.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("주문 내역");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // 장바구니
@@ -206,7 +371,6 @@ public class MenuPageController {
 
             cartItemBox.setTop(topBox); // 상단에 상품명과 삭제 버튼을 배치
             cartItemBox.setBottom(itemInfoBox); // 아이템 정보 HBox를 하단에 배치하여 가운데 정렬
-
             cartItems.getChildren().add(cartItemBox);
         }
 
@@ -225,11 +389,10 @@ public class MenuPageController {
                 totalPrice += currentPrice; // 총 가격에 현재 아이템의 가격을 더함
             }
         }
-
         totalPriceLabel.setText(totalPrice + "원");
     }
 
-    private Node createMenuItemNode(FoodItem item) {
+    private Node createMenuItemNode(FoodDto item) {
         BorderPane itemBox = new BorderPane();
         itemBox.setPrefSize(180, 260);
         itemBox.setStyle("-fx-font-family: 'D2Coding'; -fx-background-color: white; -fx-background-radius: 10px; -fx-alignment: center-left; -fx-opacity: 1; -fx-transition: opacity 0.3s;");
@@ -287,7 +450,8 @@ public class MenuPageController {
                     lblDescription.setStyle("-fx-description: center-left;");
                     infoBox.getChildren().add(lblDescription);
                 }
-
+                cartVBox.setVisible(false);
+                cartVBox.setManaged(false);
                 HBox priceBox = null;
                 if (item.getOldPrice() > 0) {
                     priceBox = new HBox(5);
@@ -317,7 +481,6 @@ public class MenuPageController {
                 addButton.setPrefHeight(30);
                 addButton.setMaxWidth(Double.MAX_VALUE);
                 //addButton 클릭 시 cartVBox의 visible을 true로 변경, manage를 false로 변경
-
                 HBox.setHgrow(addButton, Priority.ALWAYS);
                 addButton.setCursor(Cursor.HAND);
                 addButton.setVisible(false);

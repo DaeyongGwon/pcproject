@@ -1,8 +1,8 @@
-package com.pcroom.pcproject.model;
+package com.pcroom.pcproject.model.dto;
 
 import java.util.List;
 
-public class FoodItem {
+public class FoodDto {
     private String title;
     private String description;
     private int price;
@@ -11,7 +11,7 @@ public class FoodItem {
     private String imagePath;
 
     // 생성자
-    public FoodItem(String title, String description, int price, int oldPrice, List<String> labels, String imagePath) {
+    public FoodDto(String title, String description, int price, int oldPrice, List<String> labels, String imagePath) {
         this.title = title;
         this.description = description;
         this.price = price;

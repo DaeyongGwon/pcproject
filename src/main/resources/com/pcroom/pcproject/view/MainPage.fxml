@@ -25,7 +25,7 @@
         <VBox alignment="CENTER" spacing="20" style="-fx-padding: 10; -fx-background-color: white;">
             <HBox fx:id="loggedOut" alignment="CENTER" spacing="20" style="-fx-padding: 10; -fx-background-color: white;">
                 <Button onAction="#loginPage" style="-fx-font-size: 18px; -fx-border-radius: 60; -fx-background-radius: 60; -fx-border-color: black; -fx-background-color: white;" text="회원" />
-                <Button style="-fx-font-size: 18px; -fx-background-radius: 60; -fx-border-radius: 60; -fx-background-color: white; -fx-border-color: black;" text="회원가입" />
+                <Button onAction="#signUpPage" style="-fx-font-size: 18px; -fx-background-radius: 60; -fx-border-radius: 60; -fx-background-color: white; -fx-border-color: black;" text="회원가입" />
             </HBox>
             <HBox fx:id="loggedIn" alignment="CENTER" spacing="20" style="-fx-padding: 10; -fx-background-color: white;" visible="false" managed="false">
                 <Button onAction="#logout" style="-fx-font-size: 18px; -fx-border-radius: 60; -fx-background-radius: 60; -fx-border-color: black; -fx-background-color: white;" text="로그아웃" />

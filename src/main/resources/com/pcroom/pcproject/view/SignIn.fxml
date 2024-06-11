@@ -21,7 +21,7 @@
             <children>
                 <Label layoutX="43.0" layoutY="117.0" style="-fx-font-size: 18;" text="Welcome to the Application" textFill="WHITE" />
                 <Label alignment="CENTER" contentDisplay="CENTER" layoutX="4.0" layoutY="170.0" prefHeight="39.0" prefWidth="300.0" style="-fx-text-fill: white;" text="This is the best application for managing." />
-                <Button fx:id="signUpButton" layoutX="115.0" layoutY="243.0" mnemonicParsing="false" style="-fx-border-radius: 50; -fx-border-color: white; -fx-background-color: #292930;" text="회원가입" textAlignment="CENTER" textFill="WHITE">
+                <Button onAction="#mobeTosignUpPage" fx:id="signUpButton" layoutX="115.0" layoutY="243.0" mnemonicParsing="false" style="-fx-border-radius: 50; -fx-border-color: white; -fx-background-color: #292930;" text="회원가입" textAlignment="CENTER" textFill="WHITE">
                     <font>
                         <Font name="Andale Mono" size="13.0" />
                     </font>

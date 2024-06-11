@@ -1,7 +1,11 @@
 package com.pcroom.pcproject.controller;
 
+import com.pcroom.pcproject.model.dao.TimeDao;
 import com.pcroom.pcproject.model.dao.UserDao;
+import com.pcroom.pcproject.model.dto.TimeDto;
+import com.pcroom.pcproject.service.UserService;
 import com.pcroom.pcproject.view.SignIn;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,8 +15,12 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.Instant;
+
 public class SignInController {
-    private final UserDao userDAO = new UserDao();
+    private final UserService userService = new UserService();
 
     public Button signUpButton;
     public Button SignInButton;
@@ -31,7 +39,6 @@ public class SignInController {
         Stage signInStage = new Stage();
         try {
             signIn.start(signInStage);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,17 +50,32 @@ public class SignInController {
 
     @FXML
     private void handleSignInButtonAction() {
-        String input_id = usernameField.getText();
-        String inpput_password = passwordField.getText();
+        String inputId = usernameField.getText();
+        String inputPassword = passwordField.getText();
 
         // 여기서 유저 정보 확인 후 로그인 처리
-        if (userDAO.authenticateUser(input_id, inpput_password)) {
+        if (userService.authenticateUser(inputId, inputPassword)) {
             // 로그인 성공
             showAlert("로그인 성공", "환영합니다!");
             // 토큰 발급
-            String token = generateToken(input_id); // 예시: 간단하게 사용자 이름을 토큰으로 사용
+            String token = generateToken(inputId); // 예시: 간단하게 사용자 이름을 토큰으로 사용
             // 토큰 저장
+            userService.saveTokenToUser(inputId, token); // 수정된 부분
             saveToken(token);
+
+            TimeDao timeDao = new TimeDao();
+            UserDao userDao = new UserDao();
+            int userId = userDao.getUserIdByNickname(token);
+            TimeDto existingTimeDto = timeDao.getTimeByUserId(userId);
+            if (existingTimeDto == null) {
+                // 기존 시간이 없으면 삽입
+                TimeDto newTimeDto = new TimeDto();
+                newTimeDto.setId(userId);
+                newTimeDto.setRemainingTime(0);
+                newTimeDto.setLastChecked(Timestamp.from(Instant.now()));
+                newTimeDto.setStartTime(Timestamp.from(Instant.now())); // 시작 시간은 현재로 설정
+                timeDao.insertTime(newTimeDto);
+            }
             // 메인 페이지로 이동
             moveToMainPage();
         } else {
@@ -61,7 +83,6 @@ public class SignInController {
             showAlert("로그인 실패", "아이디 또는 패스워드가 잘못되었습니다.");
         }
     }
-
 
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -73,15 +94,20 @@ public class SignInController {
 
     private void moveToMainPage() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/MainPage.fxml"));
-            //화면 크기 400, 500으로 변경
-            Scene scene = new Scene(loader.load(), 400, 500);
-            Stage mainStage = new Stage();
-            mainStage.setTitle("메인 페이지");
-            mainStage.setScene(scene);
-            mainStage.show();
-            primaryStage.close(); // 현재 로그인 창 닫기
-        } catch (Exception e) {
+            if (primaryStage != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/MainPage.fxml"));
+                //화면 크기 400, 500으로 변경
+                Scene scene = new Scene(loader.load(), 400, 500);
+                Stage mainStage = new Stage();
+                mainStage.setTitle("메인 페이지");
+                mainStage.setScene(scene);
+                mainStage.show();
+                // 로그인 페이지 닫기
+                primaryStage.close();
+            } else {
+                System.out.println("Primary stage is null.");
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -102,8 +128,18 @@ public class SignInController {
         SignInController.token = token;
     }
 
+    // DB에 토큰 저장하는 메서드 추가
+    private void saveTokenToDB(String username, String token) {
+        // 사용자 이름과 토큰을 DB에 저장하는 코드를 여기에 추가
+        userService.saveTokenToUser(username, token);
+    }
+
     public static void logout() {
         // 토큰을 null로 설정하여 로그아웃 처리
         token = null;
+    }
+
+    public void mobeTosignUpPage(ActionEvent actionEvent) {
+        SignUpController.moveToSignUpPage();
     }
 }

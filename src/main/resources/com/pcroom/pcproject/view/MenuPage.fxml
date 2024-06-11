@@ -84,11 +84,11 @@
                                 </ScrollPane>
                             </children>
                         </HBox>
-                        <HBox alignment="CENTER" minHeight="50.0" prefHeight="50.0" prefWidth="239.0" style="-fx-background-color: #f4f4f4;" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_RIGHT" minHeight="50.0" prefHeight="50.0" prefWidth="212.0" style="-fx-background-color: #f4f4f4;" HBox.hgrow="ALWAYS">
                             <children>
-                                <HBox alignment="CENTER_RIGHT" maxHeight="32.0" minHeight="10.0" prefHeight="32.0" prefWidth="204.0" style="-fx-border-radius: 20; -fx-border-color: black; -fx-background-color: white; -fx-background-radius: 20;">
+                                <HBox alignment="CENTER_RIGHT" maxHeight="32.0" minHeight="10.0" prefHeight="32.0" prefWidth="326.0" style="-fx-border-radius: 20; -fx-border-color: black; -fx-background-color: white; -fx-background-radius: 20;">
                                     <children>
-                                        <TextField fx:id="FoodSearch" minWidth="100.0" onAction="#searchFood" prefHeight="26.0" prefWidth="155.0" promptText="상품명 검색" style="-fx-border-color: white; -fx-background-color: white; -fx-background-radius: 20 0 0 20; -fx-border-radius: 20 0 0 20;" />
+                                        <TextField fx:id="FoodSearch" minWidth="100.0" onAction="#searchFood" prefHeight="26.0" prefWidth="284.0" promptText="상품명 검색" style="-fx-border-color: white; -fx-background-color: white; -fx-background-radius: 20 0 0 20; -fx-border-radius: 20 0 0 20;" />
                                         <Button id="clear_btn" alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxHeight="26.0" mnemonicParsing="false" onAction="#clearTextField" prefHeight="26.0" prefWidth="17.0" style="-fx-font-size: 17;" text="X" />
                                     </children>
                                 </HBox>
@@ -110,27 +110,27 @@
                 </ScrollPane>
             </children>
         </VBox>
-        <VBox fx:id="cartVBox" managed="false" style="-fx-background-color: #863ba8;" visible="false">
+        <VBox fx:id="cartVBox" managed="true" style="-fx-background-color: #5f6579;" visible="true">
             <children>
                 <VBox prefHeight="43.0" prefWidth="301.0" style="-fx-padding: 0 0 0 0;">
                     <children>
                   <HBox prefHeight="26.0" prefWidth="281.0">
                      <children>
-                              <Label alignment="TOP_LEFT" prefHeight="65.0" prefWidth="261.0" style="-fx-padding: 6px;" text="PC NO." textFill="#fff282">
+                              <Label alignment="TOP_LEFT" prefHeight="65.0" prefWidth="261.0" style="-fx-padding: 6px; -fx-font-size: 14;" text="PC NO." textFill="#fff282">
                                   <font>
                                       <Font size="11.0" />
                                   </font>
                               </Label>
-                        <Button onAction="#closeCart" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="21.0" prefWidth="28.0" style="-fx-font-weight: bold; -fx-background-color: #863ba8; -fx-text-fill: white; -fx-font-size: 20;" text="X" />
+                        <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#closeCart" prefHeight="21.0" prefWidth="28.0" style="-fx-font-weight: bold; -fx-background-color: #5f6579; -fx-text-fill: white; -fx-font-size: 20;" text="X" />
                      </children>
                   </HBox>
                     </children>
                 </VBox>
-                <VBox style="-fx-padding: 8px 10px 8px 10px;">
+                <VBox style="-fx-padding: 8px 10px 10px 10px;">
                     <children>
                         <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0px 0px 8px 0px;">
                             <children>
-                                <Button alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" prefWidth="100.0" style="-fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 5px; -fx-border-width: 0.5; -fx-background-radius: 5px; -fx-background-color: #863ba8;" text="≡ 장바구니 보기" />
+                                <Button onAction="#getOrders" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" prefWidth="100.0" style="-fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 5px; -fx-border-width: 0.5; -fx-background-radius: 5px; -fx-background-color: #5f6579;" text="≡ 주문내역 보기" />
                             </children>
                         </HBox>
                         <VBox style="-fx-background-color: white; -fx-background-radius: 8px; radi: 8px;" VBox.vgrow="ALWAYS">
@@ -141,7 +141,7 @@
                                             <content>
                                                 <VBox fx:id="cartItems" alignment="TOP_CENTER" fillWidth="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: white;">
                                                     <children>
-                                                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="270.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-background-color: white;" text="장바구니에 담은 상품 목록" VBox.vgrow="ALWAYS" />
+                                                        <Label fx:id="cartList" alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="270.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-background-color: white;" text="장바구니에 담은 상품 목록" VBox.vgrow="ALWAYS" />
                                                     </children>
                                                 </VBox>
                                             </content>
@@ -160,12 +160,46 @@
                         </VBox>
                     </children>
                 </VBox>
-                <VBox alignment="CENTER" prefHeight="42.0" prefWidth="300.0" style="-fx-background-color: #292930;">
+                <VBox alignment="CENTER" prefHeight="42.0" prefWidth="300.0" style="-fx-background-color: #362940;">
                     <children>
-                        <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 23px;" text="PC ROOM" />
+                        <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 23px;" text="피시방 주문" textFill="#535b79" />
                     </children>
                 </VBox>
-                <VBox prefHeight="280.0" prefWidth="300.0" />
+                <VBox prefWidth="301.0" style="-fx-padding: 8px 10px 8px 10px;">
+               <children>
+                  <HBox prefHeight="26.0" prefWidth="281.0">
+                     <children>
+                        <Label prefHeight="26.0" prefWidth="224.0" style="-fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold;" text="결제정보" textFill="WHITE">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="45.0" prefWidth="281.0">
+                     <children>
+                        <HBox alignment="CENTER" style="pad: 0 0 0 0;">
+                           <children>
+                              <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="55.0" style="-fx-background-color: #444a61; -fx-font-weight: bold; -fx-font-size: 12; -fx-background-radius: 5; -fx-border-radius: 5;" text="현금" textAlignment="CENTER" textFill="WHITE" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" style="-fx-padding: 0 0 0 3;">
+                           <children>
+                              <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="55.0" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-background-color: #292930; -fx-padding: 2; -fx-font-size: 12;" text="시간결제" textFill="#606ca1" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <VBox alignment="BOTTOM_CENTER" prefHeight="172.0" prefWidth="281.0" style="-fx-padding: 0 0 10 0;" VBox.vgrow="ALWAYS">
+                     <children>
+                        <TextField prefHeight="36.0" prefWidth="281.0" promptText="문의하실 내용을 입력하세요." style="-fx-border-color: black;" />
+                     </children></VBox>
+                  <VBox alignment="CENTER" style="-fx-padding: 0 0 5 0;" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Button fx:id="placeOrderButton" onAction="#placeOrder" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="37.0" prefWidth="281.0" style="-fx-background-color: #fbe54d; -fx-text-fill: black; -fx-font-family: D2Coding; -fx-font-weight: bold; -fx-font-size: 14;" text="주문하기" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </children></VBox>
             </children>
         </VBox>
     </children>
