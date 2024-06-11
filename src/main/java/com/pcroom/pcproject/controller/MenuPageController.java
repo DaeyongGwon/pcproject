@@ -242,7 +242,6 @@ public class MenuPageController {
     private int calculateTotalPrice() {
         // 저장된 totalPrice 값을 반환합니다.
         int totalPrice = Integer.parseInt(totalPriceLabel.getText().replaceAll("[^0-9]", ""));
-        System.out.println("총 가격: " + totalPrice);
         return totalPrice;
     }
 
