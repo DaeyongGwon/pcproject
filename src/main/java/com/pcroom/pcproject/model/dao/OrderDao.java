@@ -1,7 +1,6 @@
 package com.pcroom.pcproject.model.dao;
 
 import com.pcroom.pcproject.model.dto.OrderDto;
-import com.pcroom.pcproject.model.dto.SeatDto;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,10 +12,9 @@ public class OrderDao {
     private static final String USER = "pcroom";
     private static final String PASSWORD = "pcroom";
 
+    // 주문 추가
     public static void addOrder(OrderDto order) throws SQLException {
-
-        // 2. 유효한 경우에만 주문 추가
-        String query = "INSERT INTO ORDERS (ORDERID, ITEM_NAME, USERID, ORDER_DATE, TOTAL_PRICE, SEAT_NUMBER) VALUES (ORDER_ID_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO ORDERS (ORDERID, ITEM_NAME, USERID, ORDER_DATE, TOTAL_PRICE) VALUES (ORDER_ID_SEQ.NEXTVAL, ?, ?, ?, ?)";
         int orderId = -1; // 주문 ID를 저장할 변수 초기화
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement ps = conn.prepareStatement(query)){
@@ -24,7 +22,6 @@ public class OrderDao {
             ps.setInt(2, order.getUserId());
             ps.setDate(3, new java.sql.Date(order.getOrderDate().getTime()));
             ps.setInt(4, order.getTotalPrice());
-            ps.setInt(5, order.getSeatNumber());
             ps.executeUpdate();
 
             // 시퀀스로부터 현재 값 얻기
@@ -38,10 +35,35 @@ public class OrderDao {
         order.setOrderId(orderId);
     }
 
+
+    // 주문 조회
+    public static List<OrderDto> getOrders() throws SQLException {
+        List<OrderDto> orders = new ArrayList<>();
+        String query = "SELECT * FROM ORDERS";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String itemName = rs.getString("ITEM_NAME");
+                int userId = rs.getInt("USERID");
+                Date orderDate = rs.getDate("ORDER_DATE");
+                int totalPrice = rs.getInt("TOTAL_PRICE");
+                int orderId = rs.getInt("ORDERID");
+                OrderDto order = new OrderDto(itemName ,orderId, userId, orderDate, totalPrice);
+                orders.add(order);
+            }
+        }
+        return orders;
+    }
     // 모든 주문 조회
-    public static List<OrderDto> getAllOrders() throws SQLException {
+    public List<OrderDto> getAllOrders() throws SQLException {
         List<OrderDto> allOrders = new ArrayList<>();
-        String query = "SELECT ORDERS.*, USERS.NICKNAME FROM ORDERS JOIN USERS ON ORDERS.USERID = USERS.ID";
+        String query = "SELECT DISTINCT ORDERS.ORDERID, ORDERS.ITEM_NAME, ORDERS.USERID, USERS.NICKNAME, SEAT_ASSIGNMENTS.SEAT_ID, ORDERS.ORDER_DATE, ORDERS.TOTAL_PRICE " +
+                "FROM ORDERS " +
+                "JOIN USERS ON ORDERS.USERID = USERS.ID " +
+                "LEFT JOIN SEAT_ASSIGNMENTS ON ORDERS.USERID = SEAT_ASSIGNMENTS.USER_ID " +
+                "WHERE ORDERS.ORDER_DATE BETWEEN SEAT_ASSIGNMENTS.LOGIN_TIME AND COALESCE(SEAT_ASSIGNMENTS.LOGOUT_TIME, SYSDATE)" +
+                "ORDER BY ORDERS.ORDERID";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
@@ -52,12 +74,14 @@ public class OrderDao {
                 String userNickname = rs.getString("NICKNAME");
                 Date orderDate = rs.getDate("ORDER_DATE");
                 int totalPrice = rs.getInt("TOTAL_PRICE");
-                OrderDto order = new OrderDto(orderId, itemName, userId, userNickname, orderDate, totalPrice);
+                int seatId = rs.getInt("SEAT_ID");
+                OrderDto order = new OrderDto(orderId, itemName, userId, userNickname, seatId, orderDate, totalPrice);
                 allOrders.add(order);
             }
         }
         return allOrders;
     }
+
 
     // 특정 사용자의 주문 조회
     public static List<OrderDto> getUserOrders(int userId) throws SQLException {
@@ -70,9 +94,9 @@ public class OrderDao {
             while (rs.next()) {
                 String itemName = rs.getString("ITEM_NAME");
                 int orderId = rs.getInt("ORDERID");
-                java.sql.Date orderDate = rs.getDate("ORDER_DATE");
+                Date orderDate = rs.getDate("ORDER_DATE");
                 int totalPrice = rs.getInt("TOTAL_PRICE");
-                OrderDto order = new OrderDto(itemName, orderId, orderDate, totalPrice);
+                OrderDto order = new OrderDto(itemName, orderId, userId, orderDate, totalPrice);
                 userOrders.add(order);
             }
         }

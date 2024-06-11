@@ -4,47 +4,50 @@ import java.util.Date;
 
 public class OrderDto {
     private int orderId;
-    private String itemName;
     private int userId;
-    private String userNickname; // For getAllOrders method
+    private String userNickname; // 사용자 닉네임 필드 추가
+    private int seatId;
+    private String itemName;
     private Date orderDate;
     private int totalPrice;
-    private int seatNumber; // New field
 
-    // Constructors
-    public OrderDto(String itemName, int userId, Date orderDate, int totalPrice, int seatNumber) {
-        this.itemName = itemName;
-        this.userId = userId;
-        this.orderDate = orderDate;
-        this.totalPrice = totalPrice;
-        this.seatNumber = seatNumber;
-    }
+    // 생성자, 게터 및 세터
+    public OrderDto() {}
 
-    public OrderDto(String itemName, int userId, java.sql.Date orderDate, int totalPrice) {
+    public OrderDto(String itemName ,int userId, Date orderDate, int totalPrice) {
         this.itemName = itemName;
         this.userId = userId;
         this.orderDate = orderDate;
         this.totalPrice = totalPrice;
     }
 
-    public OrderDto(int orderId, String itemName, int userId, String userNickname, Date orderDate, int totalPrice) {
+    public OrderDto(String itemName, int orderId, int userId, Date orderDate, int totalPrice) {
+        this.itemName = itemName;
         this.orderId = orderId;
+        this.userId = userId;
+        this.orderDate = orderDate;
+        this.totalPrice = totalPrice;
+    }
+
+    // 모든 주문 조회 시 UserId -> Nickname으로 사용
+    public OrderDto(int orderId, String itemName, int userId, String userNickname, int seatId, Date orderDate, int totalPrice) {
         this.itemName = itemName;
+        this.orderId = orderId;
         this.userId = userId;
         this.userNickname = userNickname;
+        this.seatId = seatId;
         this.orderDate = orderDate;
         this.totalPrice = totalPrice;
     }
 
-    public OrderDto(String itemName, int userId, java.sql.Date orderDate, int totalPrice, int seatNumber, int seatNumber1) {
+    // 게터 및 세터
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
         this.itemName = itemName;
-        this.userId = userId;
-        this.orderDate = orderDate;
-        this.totalPrice = totalPrice;
-        this.seatNumber = seatNumber1;
     }
-
-    // Getters and setters
     public int getOrderId() {
         return orderId;
     }
@@ -53,28 +56,12 @@ public class OrderDto {
         this.orderId = orderId;
     }
 
-    public String getItemName() {
-        return itemName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
     public int getUserId() {
         return userId;
     }
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public String getUserNickname() {
-        return userNickname;
-    }
-
-    public void setUserNickname(String userNickname) {
-        this.userNickname = userNickname;
     }
 
     public Date getOrderDate() {
@@ -93,11 +80,19 @@ public class OrderDto {
         this.totalPrice = totalPrice;
     }
 
-    public int getSeatNumber() {
-        return seatNumber;
+    public String getUserNickname() {
+        return userNickname;
     }
 
-    public void setSeatNumber(int seatNumber) {
-        this.seatNumber = seatNumber;
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
+    }
+
+    public int getSeatId() {
+        return seatId;
+    }
+
+    public void setSeatId(int seatId) {
+        this.seatId = seatId;
     }
 }
