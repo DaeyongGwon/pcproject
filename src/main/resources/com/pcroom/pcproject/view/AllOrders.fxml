@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="695.0" style="-fx-background-color: rgb(37,37,37);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.AllOrdersController">
+    <children>
+        <VBox layoutX="47.0" layoutY="33.0" prefHeight="324.0" prefWidth="597.0" spacing="10.0">
+            <children>
+                <Label prefHeight="32.0" prefWidth="168.0" text="전체 주문 내역" textFill="WHITE">
+               <font>
+                  <Font name="D2Coding" size="24.0" />
+               </font></Label>
+            <Line endX="600.0" stroke="WHITE" />
+                <TableView fx:id="orderTableView" prefHeight="279.0" prefWidth="570.0">
+                    <columns>
+                        <TableColumn fx:id="orderIdColumn" prefWidth="85.0" text="주문 번호">
+                            <cellValueFactory><PropertyValueFactory property="orderId" /></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="itemNameColumn" prefWidth="125.0" text="상품 명">
+                            <cellValueFactory><PropertyValueFactory property="itemName" /></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="userNicknameColumn" prefWidth="95.0" text="사용자 닉네임">
+                            <cellValueFactory><PropertyValueFactory property="userNickname" /></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="orderDateColumn" prefWidth="155.0" text="주문 날짜">
+                            <cellValueFactory><PropertyValueFactory property="orderDate" /></cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="totalPriceColumn" prefWidth="100" text="총 가격">
+                            <cellValueFactory><PropertyValueFactory property="totalPrice" /></cellValueFactory>
+                        </TableColumn>
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

@@ -5,6 +5,7 @@ import java.util.Date;
 public class OrderDto {
     private int orderId;
     private int userId;
+    private String userNickname; // 사용자 닉네임 필드 추가
     private String itemName;
     private Date orderDate;
     private int totalPrice;
@@ -23,6 +24,16 @@ public class OrderDto {
         this.itemName = itemName;
         this.orderId = orderId;
         this.userId = userId;
+        this.orderDate = orderDate;
+        this.totalPrice = totalPrice;
+    }
+
+    // 모든 주문 조회 시 UserId -> Nickname으로 사용
+    public OrderDto(int orderId, String itemName, int userId, String userNickname, Date orderDate, int totalPrice) {
+        this.itemName = itemName;
+        this.orderId = orderId;
+        this.userId = userId;
+        this.userNickname = userNickname;
         this.orderDate = orderDate;
         this.totalPrice = totalPrice;
     }
@@ -65,5 +76,13 @@ public class OrderDto {
 
     public void setTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public String getUserNickname() {
+        return userNickname;
+    }
+
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
     }
 }

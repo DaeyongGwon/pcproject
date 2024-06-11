@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import java.util.Date?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<VBox prefHeight="526.0" prefWidth="631.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.UserDetailsController">
+   <children>
+      <HBox prefHeight="67.0" prefWidth="631.0">
+         <children>
+            <Pane prefHeight="67.0" prefWidth="15.0" />
+            <Label prefHeight="60.0" prefWidth="202.0" text="컴퓨터 사용 중">
+               <font>
+                  <Font name="D2Coding" size="25.0" />
+               </font>
+            </Label>
+            <Pane prefHeight="67.0" prefWidth="79.0" />
+            <Label prefHeight="60.0" prefWidth="144.0" text="남은 시간 : ">
+               <font>
+                  <Font name="D2Coding" size="24.0" />
+               </font>
+            </Label>
+            <Label fx:id="remainingTimeLabel" prefHeight="60.0" textFill="black">
+               <font>
+                  <Font name="D2Coding" size="24.0" />
+               </font>
+            </Label>
+            <Label prefHeight="60.0" text="시간 ">
+               <font>
+                  <Font name="D2Coding" size="24.0" />
+               </font>
+            </Label>
+            <Label fx:id="remainingTimeLabel1" prefHeight="60.0" textFill="black">
+               <font>
+                  <Font name="D2Coding" size="24.0" />
+               </font>
+            </Label>
+            <Label prefHeight="60.0" text="분">
+               <font>
+                  <Font name="D2Coding" size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <HBox prefHeight="214.0" prefWidth="631.0">
+         <children>
+            <Pane prefHeight="214.0" prefWidth="21.0" />
+            <VBox prefHeight="179.0" prefWidth="558.0">
+               <children>
+                  <GridPane hgap="10" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="558.0" vgap="10">
+                     <children>
+                        <Label text="ID :">
+                           <font>
+                              <Font name="D2Coding" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="nicknameLabel" textFill="black" GridPane.columnIndex="1">
+                           <font>
+                              <Font name="D2Coding" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label prefHeight="20.0" prefWidth="93.0" text="생년월일 :" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="D2Coding" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="birthdayLabel" textFill="black" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="D2Coding" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label text="이름 :" GridPane.columnIndex="2">
+                           <font>
+                              <Font name="D2Coding" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="nameLabel" textFill="black" GridPane.columnIndex="3">
+                           <font>
+                              <Font name="D2Coding" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label text="전화번호 : " GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="D2Coding" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="phoneNumberLabel" textFill="black" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="D2Coding" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="179.0" minWidth="10.0" prefWidth="139.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="163.0" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="193.0" minWidth="10.0" prefWidth="193.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                  </GridPane>
+                  <Pane prefHeight="21.0" prefWidth="558.0" />
+                  <GridPane hgap="10" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="558.0" vgap="10">
+                     <children>
+                        <Label text="주소 :">
+                           <font>
+                              <Font name="D2Coding" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="addressLabel" GridPane.columnIndex="1">
+                           <font>
+                              <Font name="D2Coding" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label text="이메일 :" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="D2Coding" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="emailLabel" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="D2Coding" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="NEVER" maxWidth="100.00002034505208" minWidth="10.0" prefWidth="92.33335367838542" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="471.33331298828125" minWidth="10.0" prefWidth="454.99997965494794" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                  </GridPane>
+               </children>
+            </VBox>
+         </children>
+         <children>
+            <Pane prefHeight="214.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+            <VBox prefHeight="214.0" prefWidth="42.0" />
+         </children>
+      </HBox>
+      <TableView fx:id="orderTableView" prefHeight="200.0" prefWidth="200.0">
+         <columns>
+            <TableColumn fx:id="orderIdColumn" prefWidth="100" text="주문 번호">
+               <cellValueFactory><PropertyValueFactory property="itemName" /></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="itemNameColumn" prefWidth="129.0" text="상품 이름">
+               <cellValueFactory><PropertyValueFactory property="itemName" /></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="orderDateColumn" prefWidth="134.0" text="주문 날짜">
+            <cellValueFactory><PropertyValueFactory property="orderDate" /></cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="totalPriceColumn" minWidth="0.0" prefWidth="171.0" text="총 가격">
+               <cellValueFactory><PropertyValueFactory property="totalPrice" /></cellValueFactory>
+            </TableColumn>
+         </columns>
+      </TableView>
+   </children>
+</VBox>
