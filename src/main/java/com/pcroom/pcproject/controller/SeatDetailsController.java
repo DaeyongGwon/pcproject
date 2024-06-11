@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -65,9 +66,9 @@ public class SeatDetailsController {
                 // 좌석 번호 추출
                 String seatNumberText = seatLabel.getText().replaceAll("[^\\d]", "");
                 int seatNumber = Integer.parseInt(seatNumberText);
-
+                UserDao userDao = new UserDao();
                 // 사용자 ID 가져오기
-                int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+                int userId = userDao.getUserIdByNickname(SignInController.getToken());
 
                 // 좌석 할당
                 SeatDto seat = seatDao.getSeatByNumber(seatNumber);
@@ -78,10 +79,10 @@ public class SeatDetailsController {
                     System.out.println("userId: " + userId
                             + ", seatNumber: " + seatNumber);
                     SeatAssignmentDAO.assignSeat(userId, seatNumber);
-
+                    TimeDao timeDao = new TimeDao();
                     // START_TIME 업데이트
                     LocalDateTime startTime = LocalDateTime.now();
-                    TimeDao.updateStartTime(userId, Timestamp.valueOf(startTime));
+                    timeDao.updateStartTime(userId, Timestamp.valueOf(startTime));
                     System.out.println("startTime: " + startTime);
 
                     // 좌석 상태 업데이트 후에 좌석 목록 다시 로드

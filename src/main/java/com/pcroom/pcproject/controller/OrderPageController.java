@@ -43,7 +43,8 @@ public class OrderPageController {
 
     private void loadOrders() throws SQLException {
         // 로그인한 사용자의 ID 가져오기
-        int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+        UserDao userDao = new UserDao();
+        int userId = userDao.getUserIdByNickname(SignInController.getToken());
 
         // OrderDao를 통해 주문 내역 가져오기
         List<OrderDto> userOrders = OrderDao.getUserOrders(userId);

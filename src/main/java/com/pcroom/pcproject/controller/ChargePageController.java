@@ -120,9 +120,10 @@ public class ChargePageController {
 
     private int getLoggedInUserId() {
         // 로그인한 사용자의 ID를 가져오는 로직
+        UserDao userDao = new UserDao();
         String token = SignInController.getToken();
-        System.out.println("로그인한 사용자의 ID: " + token + " ID : " + UserDao.getUserIdByNickname(token));
-        return UserDao.getUserIdByNickname(token);
+        System.out.println("로그인한 사용자의 ID: " + token + " ID : " + userDao.getUserIdByNickname(token));
+        return userDao.getUserIdByNickname(token);
     }
 
     // 닫기 버튼 클릭 시 페이지 닫기

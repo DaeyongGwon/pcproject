@@ -161,7 +161,8 @@ public class MenuPageController {
                 // 장바구니에 있는 상품들을 주문 테이블에 추가
                 for (Node node : cartItems.getChildren()) {
                     if (node instanceof BorderPane) {
-                        int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+                        UserDao userDao = new UserDao();
+                        int userId = userDao.getUserIdByNickname(SignInController.getToken());
                         BorderPane cartItemBox = (BorderPane) node;
                         HBox topBox = (HBox) cartItemBox.getTop();
                         Label itemNameLabel = (Label) topBox.getChildren().get(0);
@@ -212,7 +213,8 @@ public class MenuPageController {
         }
     }
     private boolean isPaymentPossible() {
-        int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+        UserDao userDao = new UserDao();
+        int userId = userDao.getUserIdByNickname(SignInController.getToken());
         TimeDao timeDao = new TimeDao();
         int remainingTime = timeDao.getTimeByUserId(userId).getRemainingTime(); // 사용자의 잔여 시간을 조회합니다.
         int totalPrice = calculateTotalPrice(); // 결제할 총 가격을 계산하는 메소드, 이 부분은 별도의 메소드로 구현되어 있다고 가정합니다.
@@ -229,7 +231,8 @@ public class MenuPageController {
 
     // 잔여 시간을 조회하여 결제를 처리하는 메소드
     private void processPayment() {
-        int userId = UserDao.getUserIdByNickname(SignInController.getToken());
+        UserDao userDao = new UserDao();
+        int userId = userDao.getUserIdByNickname(SignInController.getToken());
         TimeDao timeDao = new TimeDao();
         int remainingTime = timeDao.getTimeByUserId(userId).getRemainingTime(); // 사용자의 잔여 시간을 조회합니다.
         int totalPrice = calculateTotalPrice(); // 결제할 총 가격을 계산하는 메소드, 이 부분은 별도의 메소드로 구현되어 있다고 가정합니다.
@@ -240,7 +243,7 @@ public class MenuPageController {
             newTimeDto.setId(userId);
             remainingTime -= requiredTime; // 결제에 필요한 시간만큼 잔여 시간을 차감합니다.
             newTimeDto.setRemainingTime(remainingTime);
-            TimeDao.updateTime(newTimeDto); // 잔여 시간을 업데이트합니다.
+            timeDao.updateTime(newTimeDto); // 잔여 시간을 업데이트합니다.
             // 결제가 완료되면 잔여 시간을 갱신하고 사용자에게 결제 완료 메시지를 보여줍니다.
             System.out.println("결제가 완료되었습니다. 잔여 시간: " + remainingTime + "분");
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
