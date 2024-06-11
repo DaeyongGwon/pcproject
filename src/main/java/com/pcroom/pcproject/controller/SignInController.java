@@ -1,5 +1,8 @@
 package com.pcroom.pcproject.controller;
 
+import com.pcroom.pcproject.model.dao.TimeDao;
+import com.pcroom.pcproject.model.dao.UserDao;
+import com.pcroom.pcproject.model.dto.TimeDto;
 import com.pcroom.pcproject.service.UserService;
 import com.pcroom.pcproject.view.SignIn;
 import javafx.event.ActionEvent;
@@ -13,6 +16,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 public class SignInController {
     private final UserService userService = new UserService();
@@ -57,6 +62,20 @@ public class SignInController {
             // 토큰 저장
             userService.saveTokenToUser(inputId, token); // 수정된 부분
             saveToken(token);
+
+            TimeDao timeDao = new TimeDao();
+            UserDao userDao = new UserDao();
+            int userId = userDao.getUserIdByNickname(token);
+            TimeDto existingTimeDto = timeDao.getTimeByUserId(userId);
+            if (existingTimeDto == null) {
+                // 기존 시간이 없으면 삽입
+                TimeDto newTimeDto = new TimeDto();
+                newTimeDto.setId(userId);
+                newTimeDto.setRemainingTime(0);
+                newTimeDto.setLastChecked(Timestamp.from(Instant.now()));
+                newTimeDto.setStartTime(Timestamp.from(Instant.now())); // 시작 시간은 현재로 설정
+                timeDao.insertTime(newTimeDto);
+            }
             // 메인 페이지로 이동
             moveToMainPage();
         } else {
