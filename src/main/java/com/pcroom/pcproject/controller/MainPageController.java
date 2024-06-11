@@ -41,6 +41,12 @@ public class MainPageController {
 
     @FXML
     private HBox loggedIn;
+    private Stage mainStage; // 추가: 메인 페이지의 Stage를 저장하기 위한 필드
+
+    // 메인 페이지의 Stage를 설정하는 메서드
+    public void setMainStage(Stage mainStage) {
+        this.mainStage = mainStage;
+    }
 
     @FXML
     public void initialize() {
@@ -51,7 +57,6 @@ public class MainPageController {
 
                 createSeats(rows, cols);
                 updateSeatStatus();
-
                 seatStatus = new boolean[rows * cols];
                 for (int i = 0; i < seatStatus.length; i++) {
                     seatStatus[i] = Math.random() < 0.5;
@@ -136,16 +141,23 @@ public class MainPageController {
                 stage.setTitle("좌석 상세 정보");
                 stage.setScene(new Scene(seatDetailsRoot));
                 stage.show();
-
-                // 현재 메인 페이지를 닫음
                 Stage currentStage = (Stage) seatGrid.getScene().getWindow();
-                currentStage.close();
+                setMainStage(currentStage);
+                seatDetailsController.setMainStage(mainStage);
+
+            } else {
+                showAlert("좌석 사용 불가", "해당 좌석은 사용할 수 없습니다.");
+
             }
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
     }
-
+    // 회원가입 페이지 이동
+    public void signUpPage(ActionEvent actionEvent) {
+        SignUpController.moveToSignUpPage();
+        seatGrid.getScene().getWindow().hide();
+    }
     @FXML
     public void loginPage(ActionEvent actionEvent) {
         SignInController.moveToSignInPage();
@@ -173,7 +185,6 @@ public class MainPageController {
             }
         }
     }
-
 
     // 로그인 중인 유저 메인 페이지 라벨에 추가
     public void setLoggedInUserLabel(String username) {
