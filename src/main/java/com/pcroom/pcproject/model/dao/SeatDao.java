@@ -16,6 +16,7 @@ public class SeatDao {
     private static final String PASSWORD = "pcroom";
     private Connection connection;
 
+
     // DB 연결 메서드
     private void connect() {
         try {
@@ -34,6 +35,22 @@ public class SeatDao {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static int getSeatIdByUserId(int userId) {
+        int seatId = -1;
+        String query = "SELECT SEAT_ID FROM SEATS WHERE  = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                seatId = rs.getInt("SEAT_ID");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return seatId;
     }
 
     // DB에서 모든 좌석 정보를 가져오는 메서드
