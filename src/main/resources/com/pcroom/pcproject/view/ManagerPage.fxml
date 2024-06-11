@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.ManagerController">
+<VBox prefHeight="1000.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.ManagerController">
     <children>
         <VBox prefHeight="69.0" prefWidth="800.0" style="-fx-background-color: rgb(53,54,55);">
             <children>
@@ -27,7 +27,7 @@
                                 <Font name="D2Coding" size="24.0" />
                             </font>
                         </Label>
-                  <Pane prefHeight="67.0" prefWidth="50.0" />
+                  <Pane prefHeight="66.0" prefWidth="749.0" />
                   <VBox prefHeight="67.0" prefWidth="512.0">
                      <children>
                         <Pane prefHeight="13.0" prefWidth="512.0" />
@@ -102,7 +102,7 @@
             </HBox>
          </children>
       </VBox>
-      <HBox prefHeight="455.0" prefWidth="800.0">
+      <HBox prefHeight="850.0" prefWidth="1500.0">
          <children>
             <Pane prefHeight="100.0" prefWidth="25.0" />
               <GridPane fx:id="seatGrid" hgap="10" vgap="10" />

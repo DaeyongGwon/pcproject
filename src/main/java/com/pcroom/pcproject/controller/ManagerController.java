@@ -6,16 +6,22 @@ import com.pcroom.pcproject.model.dao.SeatDao;
 import com.pcroom.pcproject.model.dto.OrderDto;
 import com.pcroom.pcproject.model.dto.SeatDto;
 import com.pcroom.pcproject.model.dto.UserDto;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -41,23 +47,64 @@ public class ManagerController {
             int cols = 8;
 
             createSeats(rows, cols);
+
+            // 5초마다 좌석 상태를 새로 고침
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> refreshSeatsStatus()));
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.play();
         } catch (SQLException e) {
+            System.err.println("SQLException 발생: " + e.getMessage());
             e.printStackTrace();
+            showAlert("오류", "데이터베이스에서 좌석 정보를 가져오는 중 오류가 발생했습니다.");
+        }
+    }
+
+    private void refreshSeatsStatus() {
+        // 모든 좌석을 순회하며 상태를 업데이트
+        for (Node node : seatGrid.getChildren()) {
+            if (node instanceof Button) {
+                Button seatButton = (Button) node;
+                int seatId = GridPane.getRowIndex(node) * 8 + GridPane.getColumnIndex(node) + 1;
+                UserDto userDto = seatAssignmentDAO.getUserBySeatNumber(seatId);
+                String userNickname = (userDto != null) ? userDto.getNickname() : "Empty";
+                VBox labelsContainer = (VBox) seatButton.getGraphic();
+                Label userLabel = (Label) labelsContainer.getChildren().get(1);
+                userLabel.setText("접속 중인 사용자: \n" + userNickname);
+            }
         }
     }
 
     private void createSeats(int rows, int cols) throws SQLException {
+        Font font = Font.font("D2Coding", 16);
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 int seatId = i * cols + j + 1;
-                Button seatButton = new Button(String.valueOf(seatId));
-                seatButton.setOnAction(event -> handleSeatClick(seatId));
-                seatButton.setPrefSize(50, 50);
+                UserDto userDto = seatAssignmentDAO.getUserBySeatNumber(seatId);
+                String userNickname = (userDto != null) ? userDto.getNickname() : "Empty";
+
+                Button seatButton = new Button();
+                seatButton.setPrefSize(500, 500);
                 seatButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #000000; -fx-border-radius: 5px; -fx-background-radius: 5px;");
+
+                Label seatLabel = new Label("No: " + seatId + "\n");
+                seatLabel.setFont(font);
+
+                Label userLabel = new Label("접속 중인 사용자: \n" + userNickname);
+                userLabel.setFont(font);
+
+                VBox labelsContainer = new VBox(seatLabel, userLabel);
+                seatButton.setGraphic(labelsContainer);
+
+                // 버튼에 이벤트 핸들러 추가
+                int finalSeatId = seatId;
+                seatButton.setOnAction(event -> handleSeatClick(finalSeatId));
+
                 seatGrid.add(seatButton, j, i);
             }
         }
     }
+
 
     private void handleSeatClick(int seatId) {
         List<SeatDto> seatList = seatDao.getAllSeats();

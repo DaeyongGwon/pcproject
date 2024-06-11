@@ -22,6 +22,8 @@ public class AllOrdersController {
     @FXML
     private TableColumn<OrderDto, String> userNicknameColumn; // 사용자 닉네임을 보여줄 컬럼
 
+    @FXML
+    private TableColumn<OrderDto, Integer> seatIdColumn;
 
     @FXML
     private TableColumn<OrderDto, String> orderDateColumn;
@@ -33,7 +35,8 @@ public class AllOrdersController {
     public void initialize() {
         orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<>("itemName"));
-        userNicknameColumn.setCellValueFactory(new PropertyValueFactory<>("userNickname")); // 사용자 닉네임 컬럼에 대한 cellValueFactory 설정
+        userNicknameColumn.setCellValueFactory(new PropertyValueFactory<>("userNickname"));
+        seatIdColumn.setCellValueFactory(new PropertyValueFactory<>("seatId"));
         orderDateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
         totalPriceColumn.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
     }

@@ -56,9 +56,14 @@ public class OrderDao {
         return orders;
     }
     // 모든 주문 조회
-    public static List<OrderDto> getAllOrders() throws SQLException {
+    public List<OrderDto> getAllOrders() throws SQLException {
         List<OrderDto> allOrders = new ArrayList<>();
-        String query = "SELECT ORDERS.*, USERS.NICKNAME FROM ORDERS JOIN USERS ON ORDERS.USERID = USERS.ID";
+        String query = "SELECT DISTINCT ORDERS.ORDERID, ORDERS.ITEM_NAME, ORDERS.USERID, USERS.NICKNAME, SEAT_ASSIGNMENTS.SEAT_ID, ORDERS.ORDER_DATE, ORDERS.TOTAL_PRICE " +
+                "FROM ORDERS " +
+                "JOIN USERS ON ORDERS.USERID = USERS.ID " +
+                "LEFT JOIN SEAT_ASSIGNMENTS ON ORDERS.USERID = SEAT_ASSIGNMENTS.USER_ID " +
+                "WHERE ORDERS.ORDER_DATE BETWEEN SEAT_ASSIGNMENTS.LOGIN_TIME AND COALESCE(SEAT_ASSIGNMENTS.LOGOUT_TIME, SYSDATE)" +
+                "ORDER BY ORDERS.ORDERID";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
@@ -69,12 +74,14 @@ public class OrderDao {
                 String userNickname = rs.getString("NICKNAME");
                 Date orderDate = rs.getDate("ORDER_DATE");
                 int totalPrice = rs.getInt("TOTAL_PRICE");
-                OrderDto order = new OrderDto(orderId, itemName, userId, userNickname, orderDate, totalPrice);
+                int seatId = rs.getInt("SEAT_ID");
+                OrderDto order = new OrderDto(orderId, itemName, userId, userNickname, seatId, orderDate, totalPrice);
                 allOrders.add(order);
             }
         }
         return allOrders;
     }
+
 
     // 특정 사용자의 주문 조회
     public static List<OrderDto> getUserOrders(int userId) throws SQLException {
