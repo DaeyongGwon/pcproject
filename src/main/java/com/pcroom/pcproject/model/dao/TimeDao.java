@@ -140,4 +140,13 @@ public class TimeDao {
             disconnect(); // DB 연결 해제
         }
     }
+    // 사용자의 잔여 시간을 1분씩 감소시키는 메서드
+    public static void decrementRemainingTime(int userId) throws SQLException {
+        String sql = "UPDATE TIMES SET REMAINING_TIME = REMAINING_TIME - 1 WHERE ID = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            stmt.executeUpdate();
+        }
+    }
 }
