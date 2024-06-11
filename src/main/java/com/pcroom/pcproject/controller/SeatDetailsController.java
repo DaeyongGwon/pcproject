@@ -58,6 +58,11 @@ public class SeatDetailsController {
         seatStatus = new boolean[seatList.size()];
         SeatUtils.updateSeatStatus(seatList, seatStatus, seatGrid);
     }
+    private Stage mainStage; // 메인 페이지의 Stage를 저장하기 위한 필드
+
+    public void setMainStage(Stage mainStage) {
+        this.mainStage = mainStage;
+    }
 
     @FXML
     private void moveToNewWindow(ActionEvent event) {
@@ -125,14 +130,14 @@ public class SeatDetailsController {
 
                     // 현재 창 닫기
                     Stage currentStage = (Stage) statusLabel.getScene().getWindow();
-                    currentStage.close();
+                    currentStage.close();// 메인 페이지를 닫음
+                    mainStage.close();
                 }
             } catch (IOException | SQLException e) {
                 e.printStackTrace();
             }
         }
     }
-
     public void setSeatDetails(String seatNumber, String status, String startTime, String username) {
         seatLabel.setText("좌석 번호: " + seatNumber);
         statusLabel.setText("상태: " + status);
@@ -147,9 +152,4 @@ public class SeatDetailsController {
         return dateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
     }
 
-    @FXML
-    private void handleClose(ActionEvent event) {
-        Stage stage = (Stage) statusLabel.getScene().getWindow();
-        stage.close();
-    }
 }
