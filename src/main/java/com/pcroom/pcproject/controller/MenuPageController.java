@@ -1,6 +1,9 @@
 package com.pcroom.pcproject.controller;
 
-import com.pcroom.pcproject.model.dao.*;
+import com.pcroom.pcproject.model.dao.OrderDao;
+import com.pcroom.pcproject.model.dao.OrderItemDAO;
+import com.pcroom.pcproject.model.dao.TimeDao;
+import com.pcroom.pcproject.model.dao.UserDao;
 import com.pcroom.pcproject.model.dto.OrderDto;
 import com.pcroom.pcproject.model.dto.OrderItemDTO;
 import com.pcroom.pcproject.model.dto.TimeDto;
@@ -185,9 +188,8 @@ public class MenuPageController {
                         String priceText = priceLabel.getText().substring(priceLabel.getText().indexOf(":") + 2); // ":" 이후의 숫자 부분만 추출
                         int totalPrice = Integer.parseInt(priceText.replaceAll("[^\\d]", "")); // 숫자 이외의 문자 제거 후 숫자로 변환
 
-                        int seatNumber = SeatAssignmentDAO.getSeatIdByUserId(userId);
                         // 주문 테이블에 상품 정보 추가
-                        OrderDto order = new OrderDto(itemName, userId, orderDate, totalPrice, seatNumber);
+                        OrderDto order = new OrderDto(itemName, userId, orderDate, totalPrice);
                         OrderDao.addOrder(order);
                         // 위 주문의 orderID 가져옵니다.
                         // 주문 테이블에 추가된 주문의 ID를 가져옵니다.
