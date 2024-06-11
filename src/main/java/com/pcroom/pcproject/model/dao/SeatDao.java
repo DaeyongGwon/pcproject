@@ -101,7 +101,4 @@ public class SeatDao {
         }
     }
 
-    public void updateSeatStatus() {
-
-    }
 }
