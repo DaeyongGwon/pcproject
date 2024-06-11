@@ -2,6 +2,7 @@ package com.pcroom.pcproject.controller;
 
 import com.pcroom.pcproject.service.UserService;
 import com.pcroom.pcproject.view.SignIn;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -119,4 +120,7 @@ public class SignInController {
         token = null;
     }
 
+    public void mobeTosignUpPage(ActionEvent actionEvent) {
+        SignUpController.moveToSignUpPage();
+    }
 }

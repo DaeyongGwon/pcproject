@@ -2,6 +2,8 @@ package com.pcroom.pcproject.controller;
 
 import com.pcroom.pcproject.model.dto.UserDto;
 import com.pcroom.pcproject.service.UserService;
+import com.pcroom.pcproject.view.SignIn;
+import com.pcroom.pcproject.view.SignUp;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -44,6 +46,17 @@ public class SignUpController {
 
     private final UserService userService;
     private Stage primaryStage;
+
+    // SignUp 페이지를 띄우는 코드
+    public static void moveToSignUpPage() {
+        SignUp signUp = new SignUp();
+        Stage signUpStage = new Stage();
+        try {
+            signUp.start(signUpStage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public SignUpController() {
         this.userService = new UserService();
