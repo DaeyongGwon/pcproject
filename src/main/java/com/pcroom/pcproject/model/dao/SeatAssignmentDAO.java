@@ -47,7 +47,8 @@ public class SeatAssignmentDAO {
     // 좌석 번호를 기준으로 사용자 정보를 가져오는 메서드
     public UserDto getUserBySeatNumber(int seatId) {
         UserDto user = null;
-        String sql = "SELECT u.* FROM USERS u INNER JOIN SEAT_ASSIGNMENTS sa ON u.ID = sa.USER_ID WHERE sa.SEAT_ID = ?\n";
+        String sql = "SELECT u.* FROM USERS u INNER JOIN SEAT_ASSIGNMENTS sa ON u.ID = sa.USER_ID " +
+                "WHERE sa.SEAT_ID = ? AND sa.LOGIN_TIME IS NOT NULL AND sa.LOGOUT_TIME IS NULL";
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
