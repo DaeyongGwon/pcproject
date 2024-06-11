@@ -13,12 +13,24 @@ public class SeatAssignmentDAO {
     private static final String PASSWORD = "pcroom";
 
     // 좌석 할당 정보를 추가하는 메서드
-    public static void assignSeat(int userId, int seatId) throws SQLException {
-        String sql = "INSERT INTO SEAT_ASSIGNMENTS (USER_ID, SEAT_ID) VALUES (?, ?)";
+    public static void assignSeat(int userId, int seatId, Timestamp startTime) throws SQLException {
+        String sql = "INSERT INTO SEAT_ASSIGNMENTS (USER_ID, SEAT_ID, LOGIN_TIME) VALUES (?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, userId);
             stmt.setInt(2, seatId);
+            stmt.setTimestamp(3, startTime);
+            stmt.executeUpdate();
+        }
+    }
+    // 로그아웃 시 로그아웃 시간을 업데이트 하는 메서드
+    public static void updateLogoutTime(int userId, Timestamp loginTime, Timestamp logoutTime) throws SQLException {
+        String sql = "UPDATE SEAT_ASSIGNMENTS SET LOGOUT_TIME = ? WHERE USER_ID = ? AND LOGIN_TIME = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setTimestamp(1, logoutTime);
+            stmt.setInt(2, userId);
+            stmt.setTimestamp(3, loginTime);
             stmt.executeUpdate();
         }
     }
