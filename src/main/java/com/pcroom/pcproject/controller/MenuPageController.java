@@ -1,9 +1,11 @@
 package com.pcroom.pcproject.controller;
 
 import com.pcroom.pcproject.model.dao.OrderDao;
+import com.pcroom.pcproject.model.dao.OrderItemDAO;
 import com.pcroom.pcproject.model.dao.TimeDao;
 import com.pcroom.pcproject.model.dao.UserDao;
 import com.pcroom.pcproject.model.dto.OrderDto;
+import com.pcroom.pcproject.model.dto.OrderItemDTO;
 import com.pcroom.pcproject.model.dto.TimeDto;
 import com.pcroom.pcproject.service.FoodService;
 import com.pcroom.pcproject.model.dto.FoodDto;
@@ -162,24 +164,44 @@ public class MenuPageController {
                 for (Node node : cartItems.getChildren()) {
                     if (node instanceof BorderPane) {
                         UserDao userDao = new UserDao();
+                        OrderItemDAO orderItemDAO = new OrderItemDAO();
+
                         int userId = userDao.getUserIdByNickname(SignInController.getToken());
                         BorderPane cartItemBox = (BorderPane) node;
                         HBox topBox = (HBox) cartItemBox.getTop();
                         Label itemNameLabel = (Label) topBox.getChildren().get(0);
                         String itemName = itemNameLabel.getText();
+                        //orderId 가져오기
+                        // 여기서 음식명을 이용하여 음식의 ID를 가져옵니다.
+                        int foodId = foodService.getFoodIdByName(itemName);
+                        System.out.println("음식 ID: " + foodId);
+                        // orderID
+                        int orderId = OrderDao.getUserOrders(userId).get(0).getOrderId();
+                        System.out.println("주문 ID: " + orderId);
 
                         HBox itemInfoBox = (HBox) cartItemBox.getBottom();
                         Label quantityLabel = (Label) itemInfoBox.getChildren().get(0);
                         int quantity = Integer.parseInt(quantityLabel.getText().substring(4));
 
                         Label priceLabel = (Label) itemInfoBox.getChildren().get(2);
-                        int price = Integer.parseInt(priceLabel.getText().substring(4));
+
+                        String priceText = priceLabel.getText().substring(priceLabel.getText().indexOf(":") + 2); // ":" 이후의 숫자 부분만 추출
+                        int totalPrice = Integer.parseInt(priceText.replaceAll("[^\\d]", "")); // 숫자 이외의 문자 제거 후 숫자로 변환
 
                         // 주문 테이블에 상품 정보 추가
-                        OrderDto order = new OrderDto(itemName ,userId, orderDate, price);
+                        OrderDto order = new OrderDto(itemName, userId, orderDate, totalPrice);
                         OrderDao.addOrder(order);
+                        // 위 주문의 orderID 가져옵니다.
+                        // 주문 테이블에 추가된 주문의 ID를 가져옵니다.
+                        int newOrderId = OrderDao.getUserOrders(userId).get(0).getOrderId();
+                        System.out.println("새로운 주문 ID: " + newOrderId);
+
+
+                        OrderItemDTO orderItem = new OrderItemDTO(order.getOrderId(), foodId, quantity, totalPrice);
+                        orderItemDAO.addOrderItem(orderItem);
                     }
                 }
+
                 // 결제가 가능한지 확인하고 가능하면 결제 진행
                 if (isPaymentPossible()) {
                     processPayment();
