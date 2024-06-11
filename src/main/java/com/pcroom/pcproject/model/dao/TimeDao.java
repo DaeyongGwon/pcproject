@@ -9,7 +9,7 @@ public class TimeDao {
     private static final String PASSWORD = "pcroom";
 
     // 시간을 조회하는 메서드
-    public TimeDto getTimeByUserId(int userId) {
+    public static TimeDto getTimeByUserId(int userId) {
         TimeDto timeDto = null;
         String query = "SELECT * FROM TIMES WHERE ID = ?";
 
