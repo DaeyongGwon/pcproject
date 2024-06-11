@@ -20,9 +20,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -42,11 +39,11 @@ public class UserPageController {
     @FXML
     private Label remainingTimeLabel;
     @FXML
-    private LocalDateTime endTime = LocalDateTime.now();
 
-    @FXML
     private void initialize() {
         startTimer();
+        // 잔여 시간 감소 기능 추가
+        decrementRemainingTimePeriodically();
     }
 
     private void startTimer() {
@@ -65,28 +62,34 @@ public class UserPageController {
         timer.start();
     }
 
+    // 잔여 시간을 주기적으로 감소시키는 메서드
+    private void decrementRemainingTimePeriodically() {
+        Thread decrementThread = new Thread(() -> {
+            while (true) {
+                try {
+                    // 1분마다 잔여 시간 감소
+                    Thread.sleep(60_000); // 1분(60초) 대기
+                    UserDao userDao = new UserDao();
+                    int userId = userDao.getUserIdByNickname(SignInController.getToken());
+                    TimeDao timeDao = new TimeDao();
+                    TimeDao.decrementRemainingTime(userId); // 잔여 시간 감소
+                    System.out.println("남은 시간이 1분 감소되었습니다." + "남은시간 : " + timeDao.getTimeByUserId(userId).getRemainingTime() + "분");
+
+                } catch (InterruptedException | SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        decrementThread.setDaemon(true);
+        decrementThread.start();
+    }
+
     private void updateRemainingTime() {
         UserDao userDao = new UserDao();
         int userId = userDao.getUserIdByNickname(SignInController.getToken());
         TimeDto timeDto = timeDao.getTimeByUserId(userId);
 
         if (timeDto != null) {
-            if (previousTimeDto != null) {
-                int elapsedSeconds = (int) (timeDto.getLastChecked().getTime()
-                        - previousTimeDto.getLastChecked().getTime()) / 1000;
-                int remainingMinutes = previousTimeDto.getRemainingTime() - elapsedSeconds / 60;
-
-                remainingMinutes = Math.max(0, remainingMinutes);
-
-                if (remainingMinutes != previousTimeDto.getRemainingTime()) {
-                    timeDto.setRemainingTime(remainingMinutes);
-                    timeDao.updateTime(timeDto);
-                    System.out.println("남은 시간이 변경되었습니다: " + remainingMinutes + "분");
-
-                    updateRemainingTimeLabel(remainingMinutes);
-                }
-            }
-
             previousTimeDto = timeDto;
         }
     }
@@ -171,20 +174,6 @@ public class UserPageController {
                 String seatNumber = seatNumberText.substring(startIndex);
                 int parsedSeatNumber = Integer.parseInt(seatNumber);
                 seatDao.updateSeatStatus(parsedSeatNumber, 1);
-                UserDao userDao = new UserDao();
-                int userId = userDao.getUserIdByNickname(SignInController.getToken());
-                TimeDto timeDto = timeDao.getTimeByUserId(userId);
-                if (timeDto != null) {
-                    LocalDateTime startTime = timeDto.getStartTime().toLocalDateTime();
-                    LocalDateTime endTime = LocalDateTime.now();
-                    Duration duration = Duration.between(startTime, endTime);
-                    int elapsedMinutes = (int) duration.toMinutes();
-                    int remainingMinutes = timeDto.getRemainingTime() - elapsedMinutes;
-                    remainingMinutes = Math.max(0, remainingMinutes);
-                    System.out.println("사용 종료: " + elapsedMinutes + "분 사용, 남은 시간: " + remainingMinutes + "분");
-                    timeDto.setRemainingTime(remainingMinutes);
-                    timeDao.updateTime(timeDto);
-                }
                 Stage stage = (Stage) seatNumberLabel.getScene().getWindow();
                 stage.close();
                 logout();
@@ -238,7 +227,6 @@ public class UserPageController {
                     String seatNumber = seatNumberText.substring(startIndex);
                     int parsedSeatNumber = Integer.parseInt(seatNumber);
                     seatDao.updateSeatStatus(parsedSeatNumber, 1);
-                    System.out.println("id 값 : " + id);
                     try {
                         SeatAssignmentDAO.unassignSeat(id);
                     } catch (SQLException e) {
