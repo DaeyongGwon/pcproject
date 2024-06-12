@@ -2,12 +2,8 @@
 
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
 <VBox prefHeight="270.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.SeatDetailsController">
     <children>
@@ -46,7 +42,7 @@
                     </font>
                 </Button>
                 <Pane prefHeight="57.0" prefWidth="107.0" />
-                <Button prefHeight="33.0" prefWidth="89.0" style="-fx-background-radius: 15;" text="닫기">
+                <Button onAction="#closeButton" prefHeight="33.0" prefWidth="89.0" style="-fx-background-radius: 15;" text="닫기">
                     <font>
                         <Font name="D2Coding" size="18.0" />
                     </font>

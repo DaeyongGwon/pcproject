@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Line?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="1000.0" prefWidth="800.0" style="-fx-background-color: rgb(37,37,37);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pcroom.pcproject.controller.AllOrdersController">
     <children>
@@ -41,7 +32,7 @@
                         <TableColumn fx:id="orderDateColumn" prefWidth="157.0" text="주문 날짜">
                             <cellValueFactory><PropertyValueFactory property="orderDate" /></cellValueFactory>
                         </TableColumn>
-                        <TableColumn fx:id="totalPriceColumn" prefWidth="135.0" text="총 가격">
+                        <TableColumn fx:id="totalPriceColumn" prefWidth="135.0" text="가격">
                             <cellValueFactory><PropertyValueFactory property="totalPrice" /></cellValueFactory>
                         </TableColumn>
                     </columns>

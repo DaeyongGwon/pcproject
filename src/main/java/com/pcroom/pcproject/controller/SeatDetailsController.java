@@ -152,4 +152,8 @@ public class SeatDetailsController {
         return dateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
     }
 
+    public void closeButton(ActionEvent actionEvent) {
+        Stage stage = (Stage) statusLabel.getScene().getWindow();
+        stage.close();
+    }
 }
