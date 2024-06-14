@@ -28,7 +28,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-
+// 매니저를 위한 컨트롤러 클래스, 좌석 관리 및 사용자 정보를 표시하고 관리하는 기능을 제공, 김진석 작성
 public class ManagerController {
     private final SeatDao seatDao = new SeatDao();
     private final SeatAssignmentDAO seatAssignmentDAO = new SeatAssignmentDAO();
@@ -43,6 +43,7 @@ public class ManagerController {
     private Label userIdLabel;
 
     @FXML
+    // 컨트롤러를 초기화하고 좌석 상태를 주기적으로 새로 고침, 김진석 작성
     public void initialize() {
         try {
             int rows = 8;
@@ -61,6 +62,7 @@ public class ManagerController {
         }
     }
 
+    // 좌석 상태를 새로 고침, 공동 작성
     private void refreshSeatsStatus() {
         Task<Void> task = new Task<Void>() {
             @Override
@@ -90,7 +92,7 @@ public class ManagerController {
 
         new Thread(task).start();
     }
-
+    // 주어진 행과 열에 따라 좌석을 생성, 김진석 작성
     private void createSeats(int rows, int cols) throws SQLException {
         Font font = Font.font("D2Coding", 16);
 
@@ -122,7 +124,7 @@ public class ManagerController {
         }
     }
 
-
+    // 좌석을 클릭했을 때의 동작을 처리, 김진석 작성
     private void handleSeatClick(int seatId) {
         List<SeatDto> seatList = seatDao.getAllSeats();
         seatNumberLabel.setText(String.valueOf(seatId));
@@ -138,7 +140,7 @@ public class ManagerController {
             userIdLabel.setText("사용자 없음");
         }
     }
-
+    // 사용자 상세 정보를 표시, 김진석 작성
     private void showUserDetails(int seatId) {
         try {
             // 좌석 ID를 기반으로 사용자의 정보를 가져옴
@@ -170,7 +172,7 @@ public class ManagerController {
             showAlert("Error", "Failed to load user details.");
         }
     }
-
+    // 전체 주문 내역을 표시하는 화면을 염, 김진석 작성
     @FXML
     private void handleViewAllOrders() {
         try {
@@ -202,7 +204,7 @@ public class ManagerController {
             showAlert("Error", "Failed to retrieve orders from the database.");
         }
     }
-
+    // 오류 메시지를 표시하는 알림창을 생성, 김진석 작성
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);

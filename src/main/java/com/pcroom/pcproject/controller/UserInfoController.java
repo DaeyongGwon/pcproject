@@ -12,7 +12,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-
+// 사용자 정보를 표시하고, 사용 시간을 계산하여 표시, 사용자 정보와 사용 시간을 화면에 표시, 공동 작성
 public class UserInfoController {
     @FXML
     public Label usingTimeLabel;
@@ -34,6 +34,7 @@ public class UserInfoController {
     // UserService 클래스를 사용하여 사용자 정보를 가져옵니다.
     private final UserService userService = new UserService();
 
+    // 사용자 정보를 가져와 UI에 표시하고, 사용 시간을 계산하여 표시, 초기화 메서드, 공동 작성
     public void initialize() {
 
         // 토큰 값을 사용하여 현재 로그인한 사용자의 정보를 가져옵니다.
@@ -69,9 +70,11 @@ public class UserInfoController {
         usingTimeLabel.setText(usingTimeString);
 
     }
+
+    // 닫기 버튼 클릭 시 호출되는 메서드, 김진석 작성
     @FXML
     private void handleCloseButtonAction(ActionEvent event) {
-        // 현재 창을 닫는 로직 예시
+        // 현재 창을 닫는 로직
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();

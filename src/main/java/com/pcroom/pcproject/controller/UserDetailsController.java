@@ -13,7 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-
+// 사용자 세부 정보를 표시하고 관리, 사용자의 주문 내역 및 남은 시간을 표시, 김진석 작성
 public class UserDetailsController {
     @FXML
     private Label nicknameLabel;
@@ -34,10 +34,10 @@ public class UserDetailsController {
     private Label emailLabel;
 
     @FXML
-    private Label remainingTimeLabel; // 추가: 남은 시간을 표시할 라벨
+    private Label remainingTimeLabel; // 추가: 남은 시간을 표시할 라벨, 시간
 
     @FXML
-    private Label remainingTimeLabel1; // 추가: 남은 시간을 표시할 라벨
+    private Label remainingTimeLabel1; // 추가: 남은 시간을 표시할 라벨, 분
 
     @FXML
     private TableView<OrderDto> orderTableView;
@@ -54,18 +54,19 @@ public class UserDetailsController {
     @FXML
     private TableColumn<OrderDto, Integer> orderIdColumn;
 
+    // 초기화 메서드, TableView의 열을 초기화, 김진석 작성
     @FXML
     private void initialize() {
         initializeTable();
     }
-
+    // TableView의 각 열을 설정하는 메서드, 김진석 작성
     private void initializeTable() {
         orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<>("itemName"));
         orderDateColumn.setCellValueFactory(new PropertyValueFactory<>("orderDate"));
         totalPriceColumn.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
     }
-
+    // 사용자 세부 정보를 설정하여 화면에 표시하는 메서드, 공동 작성
     public void setUserDetails(String nickname, String name, Date birthday, String address, String phoneNumber, String email) {
         nicknameLabel.setText(nickname);
         nameLabel.setText(name);
@@ -88,7 +89,7 @@ public class UserDetailsController {
         remainingTimeLabel1.setText(String.valueOf(minutes));
 
     }
-
+    // 주어진 사용자의 주문 내역을 가져와 TableView에 설정하는 메서드, 공동 작성
     private void showOrderHistory(String nickname) {
         try {
             // 현재 로그인한 사용자의 ID를 얻어옴

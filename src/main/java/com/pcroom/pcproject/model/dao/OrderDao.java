@@ -12,7 +12,7 @@ public class OrderDao {
     private static final String USER = "pcroom";
     private static final String PASSWORD = "pcroom";
 
-    // 주문 추가
+    // 주문 추가, 공동 작성
     public static void addOrder(OrderDto order) throws SQLException {
         String query = "INSERT INTO ORDERS (ORDERID, ITEM_NAME, USERID, ORDER_DATE, TOTAL_PRICE) VALUES (ORDER_ID_SEQ.NEXTVAL, ?, ?, ?, ?)";
         int orderId = -1; // 주문 ID를 저장할 변수 초기화
@@ -36,7 +36,7 @@ public class OrderDao {
     }
 
 
-    // 주문 조회
+    // 주문 조회, 김진석 작성
     public static List<OrderDto> getOrders() throws SQLException {
         List<OrderDto> orders = new ArrayList<>();
         String query = "SELECT * FROM ORDERS";
@@ -55,7 +55,7 @@ public class OrderDao {
         }
         return orders;
     }
-    // 모든 주문 조회
+    // 모든 주문 조회, 김진석 작성
     public List<OrderDto> getAllOrders() throws SQLException {
         List<OrderDto> allOrders = new ArrayList<>();
         String query = "SELECT DISTINCT ORDERS.ORDERID, ORDERS.ITEM_NAME, ORDERS.USERID, USERS.NICKNAME, SEAT_ASSIGNMENTS.SEAT_ID, ORDERS.ORDER_DATE, ORDERS.TOTAL_PRICE " +
@@ -83,7 +83,7 @@ public class OrderDao {
     }
 
 
-    // 특정 사용자의 주문 조회
+    // 특정 사용자의 주문 조회, 공동 작성
     public static List<OrderDto> getUserOrders(int userId) throws SQLException {
         List<OrderDto> userOrders = new ArrayList<>();
         String query = "SELECT * FROM ORDERS WHERE USERID = ?";

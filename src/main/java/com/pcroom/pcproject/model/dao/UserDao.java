@@ -12,7 +12,7 @@ public class UserDao {
     private static final String PASSWORD = "pcroom";
     private Connection connection;
 
-    // DB 연결 메서드
+    // DB 연결 메서드, 권대용 작성
     private void connect() {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -21,7 +21,7 @@ public class UserDao {
         }
     }
 
-    // DB 연결 해제 메서드
+    // DB 연결 해제 메서드, 권대용 작성
     private void disconnect() {
         if (connection != null) {
             try {
@@ -31,7 +31,7 @@ public class UserDao {
             }
         }
     }
-
+    // 데이터베이스에서 모든 사용자 정보를 가져옴, 권대용 작성
     public List<UserDto> loadUsersFromDatabase() {
         List<UserDto> userList = new ArrayList<>();
         String query = "SELECT * FROM users";
@@ -60,7 +60,7 @@ public class UserDao {
         }
         return userList;
     }
-
+    // 사용자 인증을 수행, 권대용 작성
     public boolean authenticateUser(String nickname, String password) {
         String query = "SELECT * FROM users WHERE nickname = ? AND password = ?";
         try {
@@ -82,7 +82,7 @@ public class UserDao {
             disconnect(); // DB 연결 해제
         }
     }
-
+    // 데이터베이스에 사용자를 추가, 권대용 작성
     public void addUserToDatabase(UserDto user) {
         String query = "INSERT INTO users (NICKNAME, NAME, BIRTHDAY, ADDRESS, PHONENUMBER, EMAIL, PASSWORD) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -105,7 +105,7 @@ public class UserDao {
             disconnect(); // DB 연결 해제
         }
     }
-
+    // 데이터베이스에 있는 사용자 정보를 업데이트, 권대용 작성
     public void updateUserInDatabase(UserDto user) {
         String query = "UPDATE users SET NICKNAME = ?, NAME = ?, BIRTHDAY = ?, ADDRESS = ?, PHONENUMBER = ?, EMAIL = ?, PASSWORD = ? WHERE ID = ?";
         try {
@@ -129,7 +129,7 @@ public class UserDao {
         }
     }
 
-    // 토큰을 이용하여 사용자 정보를 가져오는 메서드
+    // 토큰을 이용하여 사용자 정보를 가져오는 메서드, 권대용 작성
     public UserDto getUserByToken(String token) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -182,7 +182,7 @@ public class UserDao {
         return user;
     }
 
-    // 사용자의 닉네임으로 ID 값을 가져오는 메서드
+    // 사용자의 닉네임으로 ID 값을 가져오는 메서드, 권대용 작성
     public int getUserIdByNickname(String nickname) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -227,7 +227,7 @@ public class UserDao {
         return userId;
     }
 
-    // DB에 있는 토큰을 가져오는 메서드
+    // DB에 있는 토큰을 가져오는 메서드, 권대용 작성
     public String getTokenFromUser(String username) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -271,7 +271,7 @@ public class UserDao {
         return null;
     }
 
-    // 토큰을 사용자에게 저장하는 메서드
+    // 토큰을 사용자에게 저장하는 메서드, 권대용 작성
     public void saveTokenToUser(String username, String token) {
         PreparedStatement stmt = null;
 

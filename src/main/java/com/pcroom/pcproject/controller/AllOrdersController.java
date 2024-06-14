@@ -8,6 +8,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.List;
 
+
+//모든 주문 내역을 관리하고 표시하는 컨트롤러 클래스
 public class AllOrdersController {
 
     @FXML
@@ -20,7 +22,7 @@ public class AllOrdersController {
     private TableColumn<OrderDto, String> itemNameColumn;
 
     @FXML
-    private TableColumn<OrderDto, String> userNicknameColumn; // 사용자 닉네임을 보여줄 컬럼
+    private TableColumn<OrderDto, String> userNicknameColumn;
 
     @FXML
     private TableColumn<OrderDto, Integer> seatIdColumn;
@@ -31,6 +33,8 @@ public class AllOrdersController {
     @FXML
     private TableColumn<OrderDto, Double> totalPriceColumn;
 
+
+    // 컨트롤러 클래스를 초기화, 이 메서드는 FXML 파일이 로드된 후 자동으로 호출, 김진석 작성
     @FXML
     public void initialize() {
         orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
@@ -41,6 +45,8 @@ public class AllOrdersController {
         totalPriceColumn.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
     }
 
+
+     // 주어진 주문 목록을 테이블에 설정, 김진석 작성
     public void setOrders(List<OrderDto> orders) {
         orderTableView.getItems().setAll(orders);
     }

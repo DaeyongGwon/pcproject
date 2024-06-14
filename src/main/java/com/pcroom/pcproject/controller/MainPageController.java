@@ -24,7 +24,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
+// 메인 페이지를 관리하는 컨트롤러 클래스, 사용자는 좌석을 선택하고 로그인 및 로그아웃 가능, 공동 작성
 public class MainPageController {
     private boolean[] seatStatus;
 
@@ -43,11 +43,12 @@ public class MainPageController {
     private HBox loggedIn;
     private Stage mainStage; // 추가: 메인 페이지의 Stage를 저장하기 위한 필드
 
-    // 메인 페이지의 Stage를 설정하는 메서드
+    // 메인 페이지의 Stage를 설정하는 메서드, 권대용 작성
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
     }
 
+    // 컨트롤러를 초기화하고 좌석 정보를 로드하며 로그인 상태를 설정, 공동 작성
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
@@ -78,12 +79,14 @@ public class MainPageController {
         });
     }
 
+    // 좌석 상태를 데이터베이스에서 가져와서 업데이트, 권대용 작성
     private void updateSeatStatus() throws SQLException {
         List<SeatDto> seatList = seatDao.getAllSeats();
         seatStatus = new boolean[seatList.size()];
         SeatUtils.updateSeatStatus(seatList, seatStatus, seatGrid);
     }
 
+    // 좌석 버튼을 생성하고 그리드에 추가, 권대용 작성
     private void createSeats(int rows, int cols) {
         List<SeatDto> seatList = seatDao.getAllSeats();
         for (int i = 0; i < rows; i++) {
@@ -106,6 +109,7 @@ public class MainPageController {
         }
     }
 
+    // 좌석 번호로 좌석 정보를 찾음, 권대용 작성
     private SeatDto findSeat(List<SeatDto> seatList, int seatNumber) {
         for (SeatDto seat : seatList) {
             if (seat.getSeatNumber() == seatNumber) {
@@ -115,6 +119,7 @@ public class MainPageController {
         return null;
     }
 
+    // 좌석 버튼을 클릭했을 때의 이벤트 핸들러, 공동 작성
     @FXML
     private void handleSeatButtonClick(int seatNumber) {
         String loggedInUser = SignInController.getToken();
@@ -153,17 +158,19 @@ public class MainPageController {
             e.printStackTrace();
         }
     }
-    // 회원가입 페이지 이동
+
+    // 회원가입 페이지 이동, 권대용 작성
     public void signUpPage(ActionEvent actionEvent) {
         SignUpController.moveToSignUpPage();
         seatGrid.getScene().getWindow().hide();
     }
+    // 로그인 페이지로 이동, 권대용 작성
     @FXML
     public void loginPage(ActionEvent actionEvent) {
         SignInController.moveToSignInPage();
         seatGrid.getScene().getWindow().hide();
     }
-
+    // 로그아웃을 수행하고 상태를 업데이트, 공동 작성
     @FXML
     public void logout(ActionEvent actionEvent) {
         SignInController.logout();
@@ -176,6 +183,7 @@ public class MainPageController {
         disableSeatButtons();
     }
 
+    // 모든 좌석 버튼을 비활성화 함, 김진석 작성
     private void disableSeatButtons() {
         ObservableList<Node> seats = seatGrid.getChildren();
         for (Node node : seats) {
@@ -185,12 +193,11 @@ public class MainPageController {
             }
         }
     }
-
-    // 로그인 중인 유저 메인 페이지 라벨에 추가
+    // 로그인 중인 유저 메인 페이지 라벨에 추가, 권대용 작성
     public void setLoggedInUserLabel(String username) {
         loggedInUserLabel.setText("로그인 중인 유저: " + username);
     }
-
+    // 알림 창을 표시, 권대용 작성
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

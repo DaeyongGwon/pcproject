@@ -18,7 +18,7 @@ public class TimeDao {
         }
     }
 
-    // DB 연결 해제 메서드
+    // DB 연결 해제 메서드, 권대용 작성
     private void disconnect() {
         if (connection != null) {
             try {
@@ -29,7 +29,7 @@ public class TimeDao {
         }
     }
 
-    // 시간을 조회하는 메서드
+    // 시간을 조회하는 메서드, 권대용 작성
     public TimeDto getTimeByUserId(int userId) {
         TimeDto timeDto = null;
         String query = "SELECT * FROM TIMES WHERE ID = ?";
@@ -59,7 +59,7 @@ public class TimeDao {
         return timeDto;
     }
 
-    // 시간을 삽입하는 메서드
+    // 시간을 삽입하는 메서드, 권대용 작성
     public void insertTime(TimeDto time) {
         String query = "INSERT INTO TIMES (ID, REMAINING_TIME, LAST_CHECKED, START_TIME) VALUES (?, ?, ?, ?)";
 
@@ -81,7 +81,7 @@ public class TimeDao {
         }
     }
 
-    // 시작 시간을 업데이트하는 메서드
+    // 시작 시간을 업데이트하는 메서드, 권대용 작성
     public void updateStartTime(int userId, Timestamp startTime) {
         String query = "UPDATE TIMES SET START_TIME = ? WHERE ID = ?";
 
@@ -101,7 +101,7 @@ public class TimeDao {
         }
     }
 
-    // 종료 시간을 업데이트하는 메서드
+    // 종료 시간을 업데이트하는 메서드, 권대용 작성
     public void updateEndTime(int userId, Timestamp endTime) {
         String query = "UPDATE TIMES SET LAST_CHECKED = ? WHERE ID = ?";
 
@@ -120,7 +120,7 @@ public class TimeDao {
         }
     }
 
-    // 시간을 업데이트하는 메서드
+    // 시간을 업데이트하는 메서드, 권대용 작성
     public void updateTime(TimeDto time) {
         String query = "UPDATE TIMES SET REMAINING_TIME = ? WHERE ID = ?";
 
@@ -140,7 +140,7 @@ public class TimeDao {
         }
     }
 
-    // 사용자의 잔여 시간을 1분씩 감소시키는 메서드
+    // 사용자의 잔여 시간을 1분씩 감소시키는 메서드, 권대용 작성
     public static void decrementRemainingTime(int userId) throws SQLException {
         String sql = "UPDATE TIMES SET REMAINING_TIME = REMAINING_TIME - 1 WHERE ID = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -150,7 +150,7 @@ public class TimeDao {
         }
     }
 
-    // 사용자의 시작 시간을 가져오는 메서드
+    // 사용자의 시작 시간을 가져오는 메서드, 권대용 작성
     public String getUserStartTime(String username) {
         String startTime = null;
         String sql = "SELECT START_TIME FROM TIMES WHERE ID = (SELECT ID FROM USERS WHERE NICKNAME = ?)";
@@ -176,7 +176,7 @@ public class TimeDao {
         return startTime;
     }
 
-    // 사용자의 남은 시간을 가져오는 메서드
+    // 사용자의 남은 시간을 가져오는 메서드, 권대용 작성
     public int getUserRemainingTime(String nickname) {
         int remainingTime = 0;
         String sql = "SELECT REMAINING_TIME FROM TIMES WHERE ID = (SELECT ID FROM USERS WHERE NICKNAME = ?)";

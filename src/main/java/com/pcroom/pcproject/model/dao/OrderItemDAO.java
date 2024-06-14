@@ -14,7 +14,7 @@ public class OrderItemDAO {
     private static final String PASSWORD = "pcroom";
     private Connection connection;
 
-    // DB 연결 메서드
+    // DB 연결 메서드, 권대용 작성
     private void connect() {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -23,7 +23,7 @@ public class OrderItemDAO {
         }
     }
 
-    // DB 연결 해제 메서드
+    // DB 연결 해제 메서드, 권대용 작성
     private void disconnect() {
         if (connection != null) {
             try {
@@ -33,7 +33,7 @@ public class OrderItemDAO {
             }
         }
     }
-
+    // 음식 주문 아이템 추가 메서드, 권대용 작성
     public void addOrderItem(OrderItemDTO orderItem) throws SQLException {
         connect();
         String query = "INSERT INTO ORDER_ITEMS (ORDER_ID, FOOD_ID, QUANTITY, PRICE) " +

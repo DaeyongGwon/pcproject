@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+// 사용자가 좌석을 선택하고, 해당 좌석을 사용할 수 있도록 관리, 공동 작성
 public class SeatDetailsController {
     private boolean[] seatStatus;
     private final SeatDao seatDao = new SeatDao();
@@ -48,11 +49,12 @@ public class SeatDetailsController {
     @FXML
     private Button moveToNewWindowButton;
 
+    // moveToNewWindowButton의 가시성을 설정하고, 좌석 상태를 업데이트, 컨트롤러 초기화 메서드, 김진석 작성
     @FXML
     public void initialize() {
         moveToNewWindowButton.setVisible(!"사용 중인 좌석 입니다.".equals(statusLabel.getText()));
     }
-
+    // 좌석 상태를 업데이트하는 메서드, 권대용 작성
     public void updateSeatStatus() throws SQLException {
         List<SeatDto> seatList = seatDao.getAllSeats();
         seatStatus = new boolean[seatList.size()];
@@ -64,6 +66,7 @@ public class SeatDetailsController {
         this.mainStage = mainStage;
     }
 
+    // 새 창으로 이동하는 메서드, 현재 좌석을 선택하고 해당 사용자에게 좌석을 할당, 공동 작성
     @FXML
     private void moveToNewWindow(ActionEvent event) {
         if (!"사용 중인 좌석 입니다.".equals(statusLabel.getText())) {
@@ -138,6 +141,7 @@ public class SeatDetailsController {
             }
         }
     }
+    // 좌석 상세 정보를 설정하는 메서드, 공동 작성
     public void setSeatDetails(String seatNumber, String status, String startTime, String username) {
         seatLabel.setText("좌석 번호: " + seatNumber);
         statusLabel.setText("상태: " + status);
@@ -146,12 +150,12 @@ public class SeatDetailsController {
 
         moveToNewWindowButton.setVisible(!"사용 중인 좌석 입니다.".equals(status));
     }
-
+    // 시간 형식을 포맷팅하는 메서드, 김진석 작성
     private String formatTime(String startTime) {
         LocalDateTime dateTime = LocalDateTime.parse(startTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         return dateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
     }
-
+    // 현재 창을 닫는 메서드, 권대용 작성
     public void closeButton(ActionEvent actionEvent) {
         Stage stage = (Stage) statusLabel.getScene().getWindow();
         stage.close();

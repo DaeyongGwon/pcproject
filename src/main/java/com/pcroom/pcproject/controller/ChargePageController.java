@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+// 요금 충전 페이지를 관리하는 컨트롤러 클래스, 사용자는 요금제를 선택하고 충전할 수 있음, 권대용 작성
 public class ChargePageController {
     public VBox infoBox;
     @FXML
@@ -31,13 +32,14 @@ public class ChargePageController {
     private int selectedPrice;
     private String selectedTime;
 
+    // 컨트롤러를 초기화하고 로그인한 유저의 이름을 표시, 권대용 작성
     @FXML
     public void initialize() {
         // 로그인한 유저의 이름
         chargeNameLabel.setText(SignInController.getToken() + " 님 환영합니다.");
     }
 
-    // 이벤트 핸들러
+    // 요금제 선택 박스를 클릭했을 때의 이벤트 핸들러, 선택된 요금제의 정보를 Label에 표시, 권대용 작성
     public void onChargeBoxClick(MouseEvent event) {
         VBox clickedBox = (VBox) event.getSource();
 
@@ -62,7 +64,7 @@ public class ChargePageController {
             chargeTimeLabel.setText("(" + time + ")");
         }
     }
-
+    //선택한 요금제를 충전하는 이벤트 핸들러, 권대용 작성
     @FXML
     private void onChooseBoxClick(MouseEvent event) {
         if (selectedPrice > 0 && selectedTime != null) {
@@ -104,20 +106,20 @@ public class ChargePageController {
         }
     }
 
-    // 우측 라벨을 클릭하는 이벤트 핸들러
+    // 우측 라벨을 클릭하는 이벤트 핸들러, 권대용 작성
     @FXML
     private void onInfoBoxClick(MouseEvent event) {
         // onChooseBoxClick 메서드 호출
         onChooseBoxClick(event);
     }
-
+    // 시간 문자열을 분 단위로 변환, 권대용 작성
     private int convertTimeToMinutes(String time) {
         String[] parts = time.split(":");
         int hours = Integer.parseInt(parts[0]);
         int minutes = Integer.parseInt(parts[1]);
         return hours * 60 + minutes;
     }
-
+    // 로그인한 사용자의 ID를 가져옴, 권대용 작성
     private int getLoggedInUserId() {
         // 로그인한 사용자의 ID를 가져오는 로직
         UserDao userDao = new UserDao();
@@ -126,7 +128,7 @@ public class ChargePageController {
         return userDao.getUserIdByNickname(token);
     }
 
-    // 닫기 버튼 클릭 시 페이지 닫기
+    // 닫기 버튼 클릭 시 페이지 닫기, 권대용 작성
     public void onCloseButtonClick(MouseEvent event) {
         // 숨기기 말고 닫기
         closeButton.getScene().getWindow().hide();

@@ -12,7 +12,7 @@ public class FoodDao {
     private static final String USER = "pcroom";
     private static final String PASSWORD = "pcroom";
 
-    // 데이터베이스에서 메뉴 아이템 로드
+    // 데이터베이스에서 메뉴 아이템 로드, 권대용 작성
     public List<FoodDto> loadMenuItemsFromDatabase() {
         List<FoodDto> items = new ArrayList<>();
         String query = "SELECT title, description, price, oldprice, labels, IMAGEPATH FROM FOOD ORDER BY FOODID ASC";
@@ -40,7 +40,7 @@ public class FoodDao {
     }
 
 
-    // 음식 이름을 이용하여 음식의 ID를 가져오는 메소드
+    // 음식 이름을 이용하여 음식의 ID를 가져오는 메소드, 권대용 작성
     public int getFoodIdByName(String foodName) {
         int foodId = 0;
         String query = "SELECT FOODID FROM FOOD WHERE TITLE = ?";

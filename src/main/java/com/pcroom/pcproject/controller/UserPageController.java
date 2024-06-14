@@ -25,7 +25,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import static com.pcroom.pcproject.controller.SignInController.logout;
-
+// 사용자 페이지 관련 기능을 제어, 사용자의 좌석 정보, 사용 시간, 기능 버튼 제어 등을 담당, 공동 작성
 public class UserPageController {
     private final SeatDao seatDao = new SeatDao();
     private final TimeDao timeDao = new TimeDao();
@@ -46,7 +46,7 @@ public class UserPageController {
         // 잔여 시간 감소 기능 추가
         decrementRemainingTimePeriodically();
     }
-
+    // AnimationTimer를 이용하여 1초마다 잔여 시간을 업데이트하는 메서드, 권대용 작성
     private void startTimer() {
         timer = new AnimationTimer() {
             long lastUpdate = 0;
@@ -63,7 +63,7 @@ public class UserPageController {
         timer.start();
     }
 
-    // 잔여 시간을 주기적으로 감소시키는 메서드
+    // 잔여 시간을 주기적으로 감소시키는 메서드, 권대용 작성
     private void decrementRemainingTimePeriodically() {
         Thread decrementThread = new Thread(() -> {
             while (true) {
@@ -84,7 +84,7 @@ public class UserPageController {
         decrementThread.setDaemon(true);
         decrementThread.start();
     }
-
+    // 사용자의 잔여 시간 정보를 업데이트, 권대용 작성
     private void updateRemainingTime() {
         UserDao userDao = new UserDao();
         int userId = userDao.getUserIdByNickname(SignInController.getToken());
@@ -94,7 +94,7 @@ public class UserPageController {
             previousTimeDto = timeDto;
         }
     }
-
+    // UI 상의 잔여 시간 라벨을 업데이트, 권대용 작성
     private void updateRemainingTimeLabel(int remainingMinutes) {
         long hours = remainingMinutes / 60;
         long minutes = remainingMinutes % 60;
@@ -117,7 +117,7 @@ public class UserPageController {
     private void charge(ActionEvent event) {
         showChargePage();
     }
-
+    // 충전 페이지 뷰를 로드하고 새 창으로 표시, 권대용 작성
     private void showChargePage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/pcroom/pcproject/view/Charge.fxml"));
@@ -130,7 +130,7 @@ public class UserPageController {
             e.printStackTrace();
         }
     }
-
+    // 주문 메뉴 버튼 클릭 시 메뉴 페이지를 보여줌, 김진석 작성
     @FXML
     private void orderMenu(ActionEvent event) {
         try {
@@ -144,7 +144,7 @@ public class UserPageController {
             e.printStackTrace();
         }
     }
-
+    // 사용자 페이지의 세부 정보를 설정, 공동 작성
     public void setUserPageDetails(String seatNumber, String status, String startTime) {
         seatNumberLabel.setText(seatNumber);
         usernameLabel.setText(status);
@@ -167,7 +167,7 @@ public class UserPageController {
             remainingTimeLabel.setText("00:00");
         }
     }
-
+    // 사용 종료 버튼 클릭 시 호출되는 메서드, 공동 작성
     @FXML
     private void handleClose(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -212,7 +212,7 @@ public class UserPageController {
             }
         });
     }
-
+    // 사용자 정보 버튼 클릭 시 사용자 정보 페이지를 보여줌, 권대용 작성
     @FXML
     private void onUserInfoButtonClick(ActionEvent event) {
         try {
@@ -227,6 +227,7 @@ public class UserPageController {
         }
     }
 
+    // 자리 이동 버튼 클릭 시 사용자에게 자리 이동 여부를 확인하는 경고창을 띄움, 공동 작성
     @FXML
     private void moveSeat(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

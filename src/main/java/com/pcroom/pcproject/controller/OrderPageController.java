@@ -12,7 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.SQLException;
 import java.util.List;
-
+// OrderPageController 클래스는 주문 페이지를 제어하는 역할, 권대용 작성
 public class OrderPageController {
     @FXML
     private TableView<OrderDto> orderTableView;
@@ -41,6 +41,7 @@ public class OrderPageController {
         totalPriceColumn.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
     }
 
+    //사용자의 주문 내역을 데이터베이스에서 가져와 TableView에 추가, 권대용 작성
     private void loadOrders() throws SQLException {
         // 로그인한 사용자의 ID 가져오기
         UserDao userDao = new UserDao();

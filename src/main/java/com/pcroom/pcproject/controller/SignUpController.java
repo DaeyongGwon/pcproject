@@ -21,7 +21,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
-
+// 사용자 회원가입 기능을 제어, 회원가입 처리 및 관련 기능을 수행, 권대용 작성
 public class SignUpController {
     @FXML
     private TextField signUpId;
@@ -97,7 +97,7 @@ public class SignUpController {
         }
         dayComboBox.setItems(days);
     }
-
+    // 회원가입 버튼 클릭 시 호출되는 메서드, 권대용 작성
     @FXML
     private void signUp(ActionEvent event) {
         String nickname = signUpId.getText();
@@ -135,7 +135,7 @@ public class SignUpController {
             System.out.println("필수 정보를 모두 입력해주세요.");
         }
     }
-
+    // 로그인 페이지로 이동하는 메서드, 권대용 작성
     private void navigateToLogin() {
         try {
             // 회원가입 페이지 닫기

@@ -16,7 +16,7 @@ public class SeatDao {
     private static final String PASSWORD = "pcroom";
     private Connection connection;
 
-    // DB 연결 메서드
+    // DB 연결 메서드, 권대용 작성
     private void connect() {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -25,7 +25,7 @@ public class SeatDao {
         }
     }
 
-    // DB 연결 해제 메서드
+    // DB 연결 해제 메서드, 권대용 작성
     private void disconnect() {
         if (connection != null) {
             try {
@@ -36,7 +36,7 @@ public class SeatDao {
         }
     }
 
-    // DB에서 모든 좌석 정보를 가져오는 메서드
+    // DB에서 모든 좌석 정보를 가져오는 메서드, 권대용 작성
     public List<SeatDto> getAllSeats() {
         List<SeatDto> seatList = new ArrayList<>();
         connect(); // DB 연결
@@ -54,7 +54,7 @@ public class SeatDao {
         }
         return seatList;
     }
-    // DB에서 좌석 번호로 좌석 정보를 가져오는 메서드
+    // DB에서 좌석 번호로 좌석 정보를 가져오는 메서드, 권대용 작성
     public SeatDto getSeatByNumber(int seatNumber) throws SQLException {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -86,7 +86,7 @@ public class SeatDao {
         return seat;
     }
 
-    // 좌석 상태를 업데이트하는 메서드
+    // 좌석 상태를 업데이트하는 메서드, 권대용 작성
     public void updateSeatStatus(int seatNumber, int activeStatus) {
         connect(); // DB 연결
         String query = "UPDATE SEATS SET ACTIVE = ? WHERE SEAT_NUMBER = ?";

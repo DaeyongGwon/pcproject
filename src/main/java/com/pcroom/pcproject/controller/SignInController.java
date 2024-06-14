@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
-
+// 사용자 로그인 기능을 제어, FXML과 연결된 UI 요소들을 관리하고, 로그인 처리 및 관련 기능을 수행, 권대용 작성
 public class SignInController {
     private final UserService userService = new UserService();
 
@@ -33,6 +33,7 @@ public class SignInController {
     private Stage primaryStage; // 메인 페이지로 이동하기 위해 Stage를 저장할 변수
     private static String token; // 토큰을 저장할 변수
 
+    // 로그인 페이지로 이동하는 정적 메서드, 권대용 작성
     public static void moveToSignInPage() {
         // 로그인 페이지를 띄우는 코드
         SignIn signIn = new SignIn();
@@ -43,11 +44,11 @@ public class SignInController {
             e.printStackTrace();
         }
     }
-
+    // 주 Stage를 설정하는 메서드, 권대용 작성
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
-
+    // 로그인 버튼 클릭 시 호출되는 메서드, 입력된 사용자 정보를 확인하고, 로그인 처리를 수행, 권대용 작성
     @FXML
     private void handleSignInButtonAction() {
         String inputId = usernameField.getText();
@@ -83,7 +84,7 @@ public class SignInController {
             showAlert("로그인 실패", "아이디 또는 패스워드가 잘못되었습니다.");
         }
     }
-
+    // Alert 창을 보여주는 메서드, 권대용 작성
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -91,7 +92,7 @@ public class SignInController {
         alert.setContentText(content);
         alert.showAndWait();
     }
-
+    // 메인 페이지로 이동하는 메서드. 권대용 작성
     private void moveToMainPage() {
         try {
             if (primaryStage != null) {
@@ -111,7 +112,7 @@ public class SignInController {
             e.printStackTrace();
         }
     }
-
+    // 간단한 토큰을 생성하는 메서드, 권대용 작성
     private String generateToken(String username) {
         // 간단히 사용자 이름을 토큰으로 사용
         return username;
@@ -120,7 +121,7 @@ public class SignInController {
     public static String getToken() {
         return token;
     }
-
+    // 토큰을 설정하는 메서드, 권대용 작성
     private void saveToken(String token) {
         // 토큰을 안전하게 저장 (예: 로컬 스토리지)
         // 여기서는 단순히 클래스 변수에 저장하는 예시를 사용
@@ -128,17 +129,17 @@ public class SignInController {
         SignInController.token = token;
     }
 
-    // DB에 토큰 저장하는 메서드 추가
+    // DB에 토큰 저장하는 메서드 추가, 권대용 작성
     private void saveTokenToDB(String username, String token) {
         // 사용자 이름과 토큰을 DB에 저장하는 코드를 여기에 추가
         userService.saveTokenToUser(username, token);
     }
-
+    // 로그아웃 처리를 수행하는 정적 메서드, 권대용 작성
     public static void logout() {
         // 토큰을 null로 설정하여 로그아웃 처리
         token = null;
     }
-
+    // 회원가입 페이지로 이동하는 메서드, 권대용 작성
     public void mobeTosignUpPage(ActionEvent actionEvent) {
         SignUpController.moveToSignUpPage();
     }

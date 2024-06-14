@@ -12,7 +12,7 @@ public class SeatAssignmentDAO {
     private static final String USER = "pcroom";
     private static final String PASSWORD = "pcroom";
 
-    // 좌석 할당 정보를 추가하는 메서드
+    // 좌석 할당 정보를 추가하는 메서드, 권대용 작성
     public static void assignSeat(int userId, int seatId, Timestamp startTime) throws SQLException {
         String sql = "INSERT INTO SEAT_ASSIGNMENTS (USER_ID, SEAT_ID, LOGIN_TIME) VALUES (?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -23,7 +23,7 @@ public class SeatAssignmentDAO {
             stmt.executeUpdate();
         }
     }
-    // 로그아웃 시 로그아웃 시간을 업데이트 하는 메서드
+    // 로그아웃 시 로그아웃 시간을 업데이트 하는 메서드, 권대용 작성
     public static void updateLogoutTime(int userId, Timestamp loginTime, Timestamp logoutTime) throws SQLException {
         String sql = "UPDATE SEAT_ASSIGNMENTS SET LOGOUT_TIME = ? WHERE USER_ID = ? AND LOGIN_TIME = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -35,7 +35,7 @@ public class SeatAssignmentDAO {
         }
     }
 
-    // 좌석 할당 정보를 삭제하는 메서드
+    // 좌석 할당 정보를 삭제하는 메서드, 권대용 작성
     public static void unassignSeat(int userId) throws SQLException {
         String sql = "DELETE FROM SEAT_ASSIGNMENTS WHERE USER_ID = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -44,7 +44,7 @@ public class SeatAssignmentDAO {
             stmt.executeUpdate();
         }
     }
-    // 좌석 번호를 기준으로 사용자 정보를 가져오는 메서드
+    // 좌석 번호를 기준으로 사용자 정보를 가져오는 메서드, 김진석 작성
     public UserDto getUserBySeatNumber(int seatId) {
         UserDto user = null;
         String sql = "SELECT u.* FROM USERS u INNER JOIN SEAT_ASSIGNMENTS sa ON u.ID = sa.USER_ID " +

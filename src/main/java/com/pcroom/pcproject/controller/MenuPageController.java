@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+// 메뉴 페이지를 관리하는 컨트롤러 클래스, 사용자가 음식 메뉴 선택 가능, 권대용 작성
 public class MenuPageController {
     public TextField FoodSearch;
     @FXML
@@ -85,7 +86,7 @@ public class MenuPageController {
             menuItemsPane.setPrefWrapLength(newVal.doubleValue());
         });
     }
-
+    // 카테고리별 필터링, 권대용 작성
     @FXML
     private void filterByCategory(ActionEvent event) {
         if (event.getSource() instanceof Button) {
@@ -102,18 +103,18 @@ public class MenuPageController {
             menuItemsPane.getChildren().addAll(filteredItems);
         }
     }
-
+    // 검색 텍스트 필드 클리어, 권대용 작성
     @FXML
     public void clearTextField(ActionEvent actionEvent) {
         FoodSearch.clear();
     }
-
+    // 검색 버튼 클릭 시 실행되는 메서드, 권대용 작성
     @FXML
     public void searchFood(ActionEvent event) {
         String keyword = FoodSearch.getText().trim();
         filterItemsByKeyword(keyword);
     }
-
+    // 키워드로 필터링하는 메서드, 권대용 작성
     private void filterItemsByKeyword(String keyword) {
         if (keyword.isEmpty()) {
             showAllItems();
@@ -127,17 +128,17 @@ public class MenuPageController {
             showFilteredItems();
         }
     }
-
+    // 모든 아이템을 보여주는 메서드, 권대용 작성
     private void showAllItems() {
         menuItemsPane.getChildren().clear();
         foodService.getAllItems().forEach(item -> menuItemsPane.getChildren().add(createMenuItemNode(item)));
     }
-
+    // 필터링된 아이템을 보여주는 메서드, 권대용 작성
     private void showFilteredItems() {
         menuItemsPane.getChildren().clear();
         menuItemsPane.getChildren().addAll(filteredItems);
     }
-
+    // 장바구니 닫기, 권대용 작성
     public void closeCart(ActionEvent actionEvent) {
         cartVBox.setVisible(false);
         cartVBox.setManaged(false);
@@ -145,7 +146,7 @@ public class MenuPageController {
         cartItems.getChildren().removeIf(node -> !node.equals(cartList));
     }
 
-
+    // 주문 버튼 클릭 시 실행되는 메서드, 권대용 작성
     @FXML
     public void placeOrder(ActionEvent event) {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -229,6 +230,8 @@ public class MenuPageController {
             }
         }
     }
+
+    // 결제가 가능한지 확인하는 메서드, 권대용 작성
     private boolean isPaymentPossible() {
         UserDao userDao = new UserDao();
         int userId = userDao.getUserIdByNickname(SignInController.getToken());
@@ -239,6 +242,7 @@ public class MenuPageController {
         return remainingTime >= requiredTime;
     }
 
+    // 총 가격 계산하는 메서드, 권대용 작성
     private int calculateTotalPrice() {
         // 저장된 totalPrice 값을 반환합니다.
         int totalPrice = Integer.parseInt(totalPriceLabel.getText().replaceAll("[^0-9]", ""));
@@ -378,6 +382,7 @@ public class MenuPageController {
         updateTotalPrice();
     }
 
+    // 총 가격 업데이트, 권대용 작성
     private void updateTotalPrice() {
         int totalPrice = 0;
         for (Node node : cartItems.getChildren()) {
@@ -392,6 +397,7 @@ public class MenuPageController {
         totalPriceLabel.setText(totalPrice + "원");
     }
 
+    // 메뉴 항목 노드 생성, 권대용 작성
     private Node createMenuItemNode(FoodDto item) {
         BorderPane itemBox = new BorderPane();
         itemBox.setPrefSize(180, 260);
